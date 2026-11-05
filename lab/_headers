@@ -1,0 +1,6 @@
+# 1.2.50-lab: the service worker and manifest must never be served from a long-lived cache,
+# so a new release is picked up on the next visit. (Pages already defaults HTML to max-age=0.)
+/sw.js
+  Cache-Control: no-cache
+/manifest.webmanifest
+  Cache-Control: no-cache

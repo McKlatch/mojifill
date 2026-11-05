@@ -1,0 +1,10 @@
+node_modules/
+.wrangler/
+dist/
+public/
+*.log
+.DS_Store
+.env
+.env.*
+lab/shots/
+shots/

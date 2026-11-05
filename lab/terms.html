@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<!-- lab only: noindex. build-prod.mjs removes this exact line for mojifill.app (smoke-checked). -->
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#08090b">
+<meta name="color-scheme" content="dark light">
+<meta name="description" content="MojiFill 利用規約・プライバシー・MITライセンス / Terms, privacy, MIT licence — free open-source PWA.">
+<link rel="canonical" href="https://mojifill.app/terms">
+<link rel="icon" type="image/png" sizes="32x32" href="./favicon-32.png?v=1.3.0">
+<link rel="apple-touch-icon" sizes="180x180" href="./apple-touch-icon.png?v=1.3.0">
+<title>利用規約・プライバシー — MojiFill</title>
+<style>
+:root {
+  --bg: #0f1419; --surface: #1a2332; --surface2: #243044; --border: #2d3a4f;
+  --text: #e8eef6; --muted: #8b9bb0; --accent: #3d9cf0; --on-accent: #0a0c12;
+  --radius: 12px; --tap: 48px;
+  --font: system-ui, -apple-system, "Segoe UI", Roboto, "Hiragino Sans", "Noto Sans JP", sans-serif;
+  color-scheme: dark;
+}
+@media (prefers-color-scheme: dark) { :root { --bg: #08090b; --surface: #121419; --surface2: #1b1e25; --border: #2a2e38; } }
+@media (prefers-color-scheme: light) {
+  :root { --bg: #f4f6f9; --surface: #ffffff; --surface2: #e8eef6; --border: #c5d0de; --text: #1a2332; --muted: #5a6b80; --accent: #1a7fd4; --on-accent: #ffffff; color-scheme: light; }
+}
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body { margin: 0; font-family: var(--font); background: var(--bg); color: var(--text); line-height: 1.6; padding: env(safe-area-inset-top, 0px) 0 calc(24px + env(safe-area-inset-bottom, 0px)); }
+a { color: var(--accent); }
+.wrap { max-width: 40rem; margin: 0 auto; padding: 0 16px; }
+.top { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 12px 0 4px; }
+.back { display: inline-flex; align-items: center; min-height: var(--tap); text-decoration: none; font-weight: 600; font-size: 0.95rem; }
+.lang { display: inline-flex; border: 1px solid var(--border); border-radius: 999px; overflow: hidden; }
+.lang button { font: inherit; font-size: 0.82rem; min-height: 40px; min-width: 64px; padding: 0 12px; border: 0; background: transparent; color: var(--muted); cursor: pointer; }
+.lang button[aria-pressed="true"] { background: var(--accent); color: var(--on-accent); font-weight: 700; }
+h1 { font-size: 1.3rem; margin: 8px 0 2px; line-height: 1.35; }
+.updated { color: var(--muted); font-size: 0.8rem; margin: 0 0 12px; }
+nav.toc { display: flex; flex-wrap: wrap; gap: 6px; margin: 0 0 14px; }
+nav.toc a { font-size: 0.82rem; text-decoration: none; border: 1px solid var(--border); border-radius: 999px; padding: 6px 12px; background: var(--surface); }
+section.card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px 16px; margin: 0 0 14px; scroll-margin-top: 12px; }
+section.card h2 { font-size: 1.05rem; margin: 0 0 8px; }
+section.card p, section.card li { font-size: 0.9rem; }
+section.card p { margin: 0 0 8px; }
+section.card ol, section.card ul { margin: 0 0 8px; padding-left: 1.3em; }
+section.card li { margin-bottom: 4px; }
+.foot { text-align: center; color: var(--muted); font-size: 0.8rem; margin-top: 18px; }
+html[data-lang="ja"] [lang="en"].l, html[data-lang="en"] [lang="ja"].l { display: none; }
+pre.license { white-space: pre-wrap; font-size: 0.78rem; background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; padding: 10px 12px; overflow-x: auto; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top">
+    <a class="back" id="termsBack" href="/"><span class="l" lang="ja">← MojiFillに戻る</span><span class="l" lang="en">← Back to MojiFill</span></a>
+    <div class="lang" role="group" aria-label="Language / 言語">
+      <button type="button" id="langJa" data-set-lang="ja" aria-pressed="true">日本語</button>
+      <button type="button" id="langEn" data-set-lang="en" aria-pressed="false">English</button>
+    </div>
+  </div>
+
+  <!-- ===================== 日本語 ===================== -->
+  <div class="l" lang="ja" id="ja">
+    <h1>利用規約・プライバシー</h1>
+    <p class="updated">最終更新：2026年11月6日 · MojiFill は無料のオープンソースアプリです</p>
+    <nav class="toc" aria-label="目次">
+      <a href="#terms">利用規約</a><a href="#licence">ライセンス (MIT)</a><a href="#privacy-link">プライバシー</a>
+    </nav>
+
+    <section class="card" id="terms">
+      <h2>利用規約</h2>
+      <ul>
+        <li><strong>無料：</strong>MojiFill のすべての機能は無料です。販売・課金・サブスクリプションはありません。</li>
+        <li><strong>目的：</strong>日本のウェブフォームに貼る文字（名前・カナ・日付・電話/〒など）を、端末内で整えるヘルパーです。法律・税務・入管手続きの助言ではありません。</li>
+        <li><strong>データの扱い：</strong>入力した内容はお使いのブラウザ（localStorage）にのみ保存され、MojiFill には送信されません（〒検索を使ったときは、郵便番号だけを zipcloud に送ります）。アカウントはありません。広告はありません。アクセス数の統計のため、Cloudflare Web Analytics（Cookie不使用）で訪問数だけを数えています。マーケティング目的の追跡やデータの販売は行いません。詳しくは<a href="/#privacy">プライバシー</a>をご覧ください。</li>
+        <li><strong>オープンソース：</strong>ソースコードは MIT ライセンスで公開しています。<a href="https://github.com/McKlatch/mojifill" target="_blank" rel="noopener noreferrer">GitHub でソースを見る</a>。</li>
+        <li><strong>免責：</strong>出力の正確性は保証しません。提出前に内容をご自身で確認してください。本アプリの利用により生じた損害について、開発者は法令で認められる範囲を超えて責任を負いません。</li>
+        <li><strong>お問い合わせ：</strong><a href="https://github.com/McKlatch/mojifill/issues" target="_blank" rel="noopener noreferrer">GitHub Issues</a>（または <a href="https://x.com/mcklatch" target="_blank" rel="noopener noreferrer">X @mcklatch</a>）</li>
+      </ul>
+    </section>
+
+    <section class="card" id="licence">
+      <h2>ライセンス (MIT)</h2>
+      <p>Copyright (c) 2026 David McClatchey / McKlatch</p>
+      <pre class="license">Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</pre>
+    </section>
+  </div>
+
+  <!-- ===================== English ===================== -->
+  <div class="l" lang="en" id="en">
+    <h1>Terms &amp; privacy</h1>
+    <p class="updated">Last updated: 6 November 2026 · MojiFill is a free open-source app</p>
+    <nav class="toc" aria-label="Contents">
+      <a href="#terms-en">Terms</a><a href="#licence-en">Licence (MIT)</a><a href="#privacy-link">Privacy</a>
+    </nav>
+
+    <section class="card" id="terms-en">
+      <h2>Terms</h2>
+      <ul>
+        <li><strong>Free:</strong> every MojiFill feature is free. There are no sales, charges or subscriptions.</li>
+        <li><strong>Purpose:</strong> an on-device helper that shapes text (names, kana, dates, phone/〒 and more) for Japanese web forms. Not legal, tax or immigration advice.</li>
+        <li><strong>Your data:</strong> what you type is stored only in your browser (localStorage) and is never sent to MojiFill (the 〒 lookup sends only the postcode to zipcloud). There is no account. No ads. We count visits for site statistics with Cloudflare Web Analytics (no cookies). No marketing tracking, no selling data. See <a href="/#privacy">Privacy</a> for details.</li>
+        <li><strong>Open source:</strong> the code is released under the MIT licence. <a href="https://github.com/McKlatch/mojifill" target="_blank" rel="noopener noreferrer">View the source on GitHub</a>.</li>
+        <li><strong>Disclaimer:</strong> output accuracy is not guaranteed. Check everything before you submit a form. To the extent permitted by law, the developer is not liable for damages arising from use of this app.</li>
+        <li><strong>Contact:</strong> <a href="https://github.com/McKlatch/mojifill/issues" target="_blank" rel="noopener noreferrer">GitHub Issues</a> (or <a href="https://x.com/mcklatch" target="_blank" rel="noopener noreferrer">@mcklatch on X</a>)</li>
+      </ul>
+    </section>
+
+    <section class="card" id="licence-en">
+      <h2>Licence (MIT)</h2>
+      <p>Copyright (c) 2026 David McClatchey / McKlatch</p>
+      <pre class="license">Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</pre>
+    </section>
+  </div>
+
+  <section class="card" id="privacy-link">
+    <h2><span class="l" lang="ja">プライバシー</span><span class="l" lang="en">Privacy</span></h2>
+    <p class="l" lang="ja">入力内容は端末内（localStorage）にのみ保存され、アカウントはありません。外部に送られるもの（ページ配信、Cloudflare Web Analytics による訪問数の統計、使ったときだけの〒→zipcloud）は、<a href="/#privacy">アプリ内のプライバシー</a>にまとめています。販売・返金はありません。お問い合わせは <a href="https://github.com/McKlatch/mojifill/issues" target="_blank" rel="noopener noreferrer">GitHub Issues</a> へ。</p>
+    <p class="l" lang="en">Your entries stay on your device (localStorage) and there is no account. What leaves your device (hosting, Cloudflare Web Analytics visit counting, and the optional 〒→zipcloud lookup) is set out in <a href="/#privacy">in-app Privacy</a>. There are no sales or refunds. Contact: <a href="https://github.com/McKlatch/mojifill/issues" target="_blank" rel="noopener noreferrer">GitHub Issues</a>.</p>
+  </section>
+
+  <!-- Old #tokushoho bookmarks land here; 特商法 sales disclosure removed — no paid transactions. -->
+  <section class="card" id="tokushoho" hidden aria-hidden="true"></section>
+  <section class="card" id="tokushoho-en" hidden aria-hidden="true"></section>
+  <section class="card" id="purchase" hidden aria-hidden="true"></section>
+  <section class="card" id="purchase-en" hidden aria-hidden="true"></section>
+
+  <p class="foot"><a href="/"><span class="l" lang="ja">← MojiFillに戻る</span><span class="l" lang="en">← Back to MojiFill</span></a>
+    · <a href="https://github.com/McKlatch/mojifill" target="_blank" rel="noopener noreferrer"><span class="l" lang="ja">ソースを見る</span><span class="l" lang="en">View the source</span></a></p>
+</div>
+<script>
+(function () {
+  var root = document.documentElement;
+  function setLang(l) {
+    root.setAttribute('data-lang', l);
+    root.lang = l;
+    document.getElementById('langJa').setAttribute('aria-pressed', String(l === 'ja'));
+    document.getElementById('langEn').setAttribute('aria-pressed', String(l === 'en'));
+    document.title = l === 'en' ? 'Terms & privacy — MojiFill' : '利用規約・プライバシー — MojiFill';
+  }
+  var m = /[?&]lang=(en|ja)\b/.exec(location.search);
+  var lang = m ? m[1] : null;
+  if (!lang) { try { var s = localStorage.getItem('mojifill.lang'); if (s === 'en') lang = 'en'; } catch (e) { /* ignore */ } }
+  setLang(lang || 'ja');
+  var btns = document.querySelectorAll('[data-set-lang]');
+  for (var i = 0; i < btns.length; i++) {
+    btns[i].addEventListener('click', function () {
+      var l = this.getAttribute('data-set-lang');
+      setLang(l);
+      try { history.replaceState(null, '', location.pathname + (l === 'en' ? '?lang=en' : '')); } catch (e) { /* ignore */ }
+      window.scrollTo(0, 0);
+    });
+  }
+})();
+</script>
+</body>
+</html>
