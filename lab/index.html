@@ -1394,112 +1394,7 @@ header.app-bar .badge { gap: 4px; padding: 4px 7px; white-space: nowrap; }
   justify-content: center;
   padding: 12px 0 4px;
 }
-.meishi-card {
-  width: min(100%, 340px);
-  aspect-ratio: 91 / 55;
-  background: #fff;
-  color: #111;
-  border: 1px solid var(--border);
-  border-radius: 6px;
-  box-shadow: 0 6px 20px rgba(0,0,0,0.18);
-  padding: 8% 7%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  gap: 3px;
-  font-family: var(--font);
-  overflow: hidden;
-}
-.meishi-card .mei-line {
-  font-size: clamp(0.72rem, 3.2vw, 0.95rem);
-  line-height: 1.25;
-  word-break: break-word;
-  color: #222;
-}
-.meishi-card .mei-line.mei-emph {
-  font-size: clamp(1rem, 4.8vw, 1.35rem);
-  font-weight: 700;
-  letter-spacing: 0.03em;
-}
-.meishi-card .mei-line.mei-kana {
-  font-size: clamp(0.68rem, 2.8vw, 0.85rem);
-  color: #444;
-}
-.meishi-card .mei-empty {
-  color: #999;
-  font-size: 0.85rem;
-}
-.meishi-card .mei-line.mei-job {
-  font-size: clamp(0.7rem, 3vw, 0.9rem);
-  font-weight: 600;
-  color: #333;
-}
-.meishi-card .mei-line.mei-job-ja {
-  font-size: clamp(0.64rem, 2.6vw, 0.8rem);
-  color: #555;
-}
-.meishi-card .mei-line.mei-url {
-  font-size: clamp(0.64rem, 2.6vw, 0.8rem);
-  word-break: break-all;
-}
-.meishi-card.mei-theme-light {
-  background: #fff;
-  color: #111;
-}
-.meishi-card.mei-theme-light .mei-line { color: #222; }
-.meishi-card.mei-theme-light .mei-kana,
-.meishi-card.mei-theme-light .mei-job-ja { color: #444; }
-.meishi-card.mei-theme-dark {
-  background: #161b22;
-  color: #f2f4f8;
-  border-color: #2a3340;
-  box-shadow: 0 8px 24px rgba(0,0,0,0.45);
-}
-.meishi-card.mei-theme-dark .mei-line { color: #e8eef6; }
-.meishi-card.mei-theme-dark .mei-kana,
-.meishi-card.mei-theme-dark .mei-job-ja { color: #9aa8b8; }
-.meishi-card.mei-theme-dark .mei-line.mei-job { color: #d5dde8; }
-.meishi-card.mei-theme-dark .mei-empty { color: #7a8796; }
-.meishi-card.mei-theme-ink {
-  background: #fff;
-  color: #000;
-  border: 2px solid #000;
-  box-shadow: none;
-  filter: grayscale(1);
-}
-.meishi-card.mei-theme-ink .mei-line,
-.meishi-card.mei-theme-ink .mei-kana,
-.meishi-card.mei-theme-ink .mei-job-ja,
-.meishi-card.mei-theme-ink .mei-line.mei-job { color: #000; }
-.meishi-card.mei-theme-ink .mei-empty { color: #444; }
-.meishi-card.mei-align-left {
-  text-align: left;
-  align-items: stretch;
-}
-.meishi-card.mei-align-center {
-  text-align: center;
-  align-items: center;
-}
-.meishi-card.mei-density-compact {
-  padding: 5% 6%;
-  gap: 1px;
-}
-.meishi-card.mei-density-compact .mei-line {
-  font-size: clamp(0.62rem, 2.7vw, 0.82rem);
-  line-height: 1.18;
-}
-.meishi-card.mei-density-compact .mei-line.mei-emph {
-  font-size: clamp(0.88rem, 4.1vw, 1.12rem);
-}
-.meishi-card.mei-density-compact .mei-line.mei-kana,
-.meishi-card.mei-density-compact .mei-line.mei-job-ja,
-.meishi-card.mei-density-compact .mei-line.mei-url {
-  font-size: clamp(0.56rem, 2.3vw, 0.72rem);
-}
-.meishi-card.mei-density-comfortable {
-  padding: 8% 7%;
-  gap: 3px;
-}
+/* 1.3.1-lab: the card face CSS moved to <style id="meiFaceCss"> (shared with the print window) */
 .meishi-style {
   display: flex;
   flex-direction: column;
@@ -2641,6 +2536,140 @@ body {
 .sponsor-bar a, .sponsor-link { color: var(--accent); margin-right: 8px; }
 .sponsor-links { display: flex; flex-wrap: wrap; gap: 8px; margin: 6px 0; }
 .pro-status { font-weight: 700; color: var(--success); margin-bottom: 8px; }
+/* ===================== 1.3.1-lab design pass: logo, Japanese background, desktop two columns, meishi ===================== */
+/* Header mark: the app icon itself (one flat washi tile, mark fills the frame — no extra plate, border or shadow) */
+header.app-bar h1.brand { display: inline-flex; align-items: center; gap: 8px; }
+.brand-mark { display: block; width: 28px; height: 28px; border-radius: 7px; flex: 0 0 auto; }
+@media (max-width: 420px) { .brand-mark { width: 26px; height: 26px; border-radius: 6px; } header.app-bar h1.brand { gap: 7px; } }
+@media (max-width: 380px) { .brand-mark { width: 22px; height: 22px; border-radius: 5px; } header.app-bar h1.brand { gap: 5px; letter-spacing: -0.03em; } }
+@media (max-width: 345px) { .brand-mark { width: 20px; height: 20px; border-radius: 5px; } header.app-bar h1.brand { gap: 4px; } }
+
+/* Background: washi paper + faint 青海波 (seigaiha) waves. Light = kinari off-white, dark = ai-iro / sumi. Inline SVG only. */
+:root {
+  --mf-seigaiha-light: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='44' height='22' viewBox='0 0 44 22'%3E%3Ccircle cx='22' cy='-11.0' r='22' fill='%23f6f1e6'/%3E%3Ccircle cx='22' cy='-11.0' r='21.45' fill='none' stroke='%23ebe2d1' stroke-width='1.1'/%3E%3Ccircle cx='22' cy='-11.0' r='16.17' fill='none' stroke='%23ebe2d1' stroke-width='1.1'/%3E%3Ccircle cx='22' cy='-11.0' r='10.89' fill='none' stroke='%23ebe2d1' stroke-width='1.1'/%3E%3Ccircle cx='22' cy='-11.0' r='5.61' fill='none' stroke='%23ebe2d1' stroke-width='1.1'/%3E%3Ccircle cx='0' cy='0.0' r='22' fill='%23f6f1e6'/%3E%3Ccircle cx='0' cy='0.0' r='21.45' fill='none' stroke='%23ebe2d1' stroke-width='1.1'/%3E%3Ccircle cx='0' cy='0.0' r='16.17' fill='none' stroke='%23ebe2d1' stroke-width='1.1'/%3E%3Ccircle cx='0' cy='0.0' r='10.89' fill='none' stroke='%23ebe2d1' stroke-width='1.1'/%3E%3Ccircle cx='0' cy='0.0' r='5.61' fill='none' stroke='%23ebe2d1' stroke-width='1.1'/%3E%3Ccircle cx='44' cy='0.0' r='22' fill='%23f6f1e6'/%3E%3Ccircle cx='44' cy='0.0' r='21.45' fill='none' stroke='%23ebe2d1' stroke-width='1.1'/%3E%3Ccircle cx='44' cy='0.0' r='16.17' fill='none' stroke='%23ebe2d1' stroke-width='1.1'/%3E%3Ccircle cx='44' cy='0.0' r='10.89' fill='none' stroke='%23ebe2d1' stroke-width='1.1'/%3E%3Ccircle cx='44' cy='0.0' r='5.61' fill='none' stroke='%23ebe2d1' stroke-width='1.1'/%3E%3Ccircle cx='22' cy='11.0' r='22' fill='%23f6f1e6'/%3E%3Ccircle cx='22' cy='11.0' r='21.45' fill='none' stroke='%23ebe2d1' stroke-width='1.1'/%3E%3Ccircle cx='22' cy='11.0' r='16.17' fill='none' stroke='%23ebe2d1' stroke-width='1.1'/%3E%3Ccircle cx='22' cy='11.0' r='10.89' fill='none' stroke='%23ebe2d1' stroke-width='1.1'/%3E%3Ccircle cx='22' cy='11.0' r='5.61' fill='none' stroke='%23ebe2d1' stroke-width='1.1'/%3E%3Ccircle cx='0' cy='22.0' r='22' fill='%23f6f1e6'/%3E%3Ccircle cx='0' cy='22.0' r='21.45' fill='none' stroke='%23ebe2d1' stroke-width='1.1'/%3E%3Ccircle cx='0' cy='22.0' r='16.17' fill='none' stroke='%23ebe2d1' stroke-width='1.1'/%3E%3Ccircle cx='0' cy='22.0' r='10.89' fill='none' stroke='%23ebe2d1' stroke-width='1.1'/%3E%3Ccircle cx='0' cy='22.0' r='5.61' fill='none' stroke='%23ebe2d1' stroke-width='1.1'/%3E%3Ccircle cx='44' cy='22.0' r='22' fill='%23f6f1e6'/%3E%3Ccircle cx='44' cy='22.0' r='21.45' fill='none' stroke='%23ebe2d1' stroke-width='1.1'/%3E%3Ccircle cx='44' cy='22.0' r='16.17' fill='none' stroke='%23ebe2d1' stroke-width='1.1'/%3E%3Ccircle cx='44' cy='22.0' r='10.89' fill='none' stroke='%23ebe2d1' stroke-width='1.1'/%3E%3Ccircle cx='44' cy='22.0' r='5.61' fill='none' stroke='%23ebe2d1' stroke-width='1.1'/%3E%3Ccircle cx='22' cy='33.0' r='22' fill='%23f6f1e6'/%3E%3Ccircle cx='22' cy='33.0' r='21.45' fill='none' stroke='%23ebe2d1' stroke-width='1.1'/%3E%3Ccircle cx='22' cy='33.0' r='16.17' fill='none' stroke='%23ebe2d1' stroke-width='1.1'/%3E%3Ccircle cx='22' cy='33.0' r='10.89' fill='none' stroke='%23ebe2d1' stroke-width='1.1'/%3E%3Ccircle cx='22' cy='33.0' r='5.61' fill='none' stroke='%23ebe2d1' stroke-width='1.1'/%3E%3C/svg%3E");
+  --mf-seigaiha-dark: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='44' height='22' viewBox='0 0 44 22'%3E%3Ccircle cx='22' cy='-11.0' r='22' fill='%230d1522'/%3E%3Ccircle cx='22' cy='-11.0' r='21.45' fill='none' stroke='%23152238' stroke-width='1.1'/%3E%3Ccircle cx='22' cy='-11.0' r='16.17' fill='none' stroke='%23152238' stroke-width='1.1'/%3E%3Ccircle cx='22' cy='-11.0' r='10.89' fill='none' stroke='%23152238' stroke-width='1.1'/%3E%3Ccircle cx='22' cy='-11.0' r='5.61' fill='none' stroke='%23152238' stroke-width='1.1'/%3E%3Ccircle cx='0' cy='0.0' r='22' fill='%230d1522'/%3E%3Ccircle cx='0' cy='0.0' r='21.45' fill='none' stroke='%23152238' stroke-width='1.1'/%3E%3Ccircle cx='0' cy='0.0' r='16.17' fill='none' stroke='%23152238' stroke-width='1.1'/%3E%3Ccircle cx='0' cy='0.0' r='10.89' fill='none' stroke='%23152238' stroke-width='1.1'/%3E%3Ccircle cx='0' cy='0.0' r='5.61' fill='none' stroke='%23152238' stroke-width='1.1'/%3E%3Ccircle cx='44' cy='0.0' r='22' fill='%230d1522'/%3E%3Ccircle cx='44' cy='0.0' r='21.45' fill='none' stroke='%23152238' stroke-width='1.1'/%3E%3Ccircle cx='44' cy='0.0' r='16.17' fill='none' stroke='%23152238' stroke-width='1.1'/%3E%3Ccircle cx='44' cy='0.0' r='10.89' fill='none' stroke='%23152238' stroke-width='1.1'/%3E%3Ccircle cx='44' cy='0.0' r='5.61' fill='none' stroke='%23152238' stroke-width='1.1'/%3E%3Ccircle cx='22' cy='11.0' r='22' fill='%230d1522'/%3E%3Ccircle cx='22' cy='11.0' r='21.45' fill='none' stroke='%23152238' stroke-width='1.1'/%3E%3Ccircle cx='22' cy='11.0' r='16.17' fill='none' stroke='%23152238' stroke-width='1.1'/%3E%3Ccircle cx='22' cy='11.0' r='10.89' fill='none' stroke='%23152238' stroke-width='1.1'/%3E%3Ccircle cx='22' cy='11.0' r='5.61' fill='none' stroke='%23152238' stroke-width='1.1'/%3E%3Ccircle cx='0' cy='22.0' r='22' fill='%230d1522'/%3E%3Ccircle cx='0' cy='22.0' r='21.45' fill='none' stroke='%23152238' stroke-width='1.1'/%3E%3Ccircle cx='0' cy='22.0' r='16.17' fill='none' stroke='%23152238' stroke-width='1.1'/%3E%3Ccircle cx='0' cy='22.0' r='10.89' fill='none' stroke='%23152238' stroke-width='1.1'/%3E%3Ccircle cx='0' cy='22.0' r='5.61' fill='none' stroke='%23152238' stroke-width='1.1'/%3E%3Ccircle cx='44' cy='22.0' r='22' fill='%230d1522'/%3E%3Ccircle cx='44' cy='22.0' r='21.45' fill='none' stroke='%23152238' stroke-width='1.1'/%3E%3Ccircle cx='44' cy='22.0' r='16.17' fill='none' stroke='%23152238' stroke-width='1.1'/%3E%3Ccircle cx='44' cy='22.0' r='10.89' fill='none' stroke='%23152238' stroke-width='1.1'/%3E%3Ccircle cx='44' cy='22.0' r='5.61' fill='none' stroke='%23152238' stroke-width='1.1'/%3E%3Ccircle cx='22' cy='33.0' r='22' fill='%230d1522'/%3E%3Ccircle cx='22' cy='33.0' r='21.45' fill='none' stroke='%23152238' stroke-width='1.1'/%3E%3Ccircle cx='22' cy='33.0' r='16.17' fill='none' stroke='%23152238' stroke-width='1.1'/%3E%3Ccircle cx='22' cy='33.0' r='10.89' fill='none' stroke='%23152238' stroke-width='1.1'/%3E%3Ccircle cx='22' cy='33.0' r='5.61' fill='none' stroke='%23152238' stroke-width='1.1'/%3E%3C/svg%3E");
+  --mf-washi-light: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='f'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9 0.035' numOctaves='2' seed='7'/%3E%3CfeColorMatrix values='0 0 0 0 0.45  0 0 0 0 0.38  0 0 0 0 0.25  0 0 0 0.09 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url%28%23f%29'/%3E%3C/svg%3E");
+  --mf-washi-dark: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='f'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9 0.035' numOctaves='2' seed='7'/%3E%3CfeColorMatrix values='0 0 0 0 0.55  0 0 0 0 0.65  0 0 0 0 0.85  0 0 0 0.05 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url%28%23f%29'/%3E%3C/svg%3E");
+}
+:root { --bg: #0d1522; }
+@media (prefers-color-scheme: light) { :root { --bg: #f6f1e6; --surface: #fffdf9; } }
+body {
+  background-color: var(--bg);
+  background-image: var(--mf-washi-dark), var(--mf-seigaiha-dark);
+  background-size: 220px 220px, 44px 22px;
+}
+@media (prefers-color-scheme: light) {
+  body { background-image: var(--mf-washi-light), var(--mf-seigaiha-light); }
+}
+/* the sticky header keeps a solid strip so the pattern never sits behind the controls */
+header.app-bar::before { background: color-mix(in srgb, var(--bg) 96%, transparent); }
+/* thin flat vermilion hairline under the header — a nod to the icon's 朱 ring */
+header.app-bar::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 1px; pointer-events: none; background: color-mix(in srgb, #c8553d 38%, transparent); }
+
+/* Desktop (≥1024px): two columns — input on the left, paste-ready output on the right, both on the first screen.
+   JS (mfSplit) moves the input/output blocks into .mf-col-in / .mf-col-out only at this width; below it the DOM is restored. */
+@media (min-width: 1024px) {
+  .app { max-width: 76rem; }
+  .sponsor-bar { max-width: 76rem; }
+  .mf-split { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 18px; align-items: start; }
+  .mf-split > .mf-col { min-width: 0; }
+  .mf-split > .mf-col > .card:last-child { margin-bottom: 0; }
+  .panel > .mf-split { margin-bottom: 16px; }
+  .mf-col-out > .card, .mf-col-out > .top-results { border-color: color-mix(in srgb, var(--accent) 22%, var(--border)); }
+  /* ladders inside a half column stay one card per row (values never squeezed) */
+  .mf-split .ladder:not(.top-list) { grid-template-columns: minmax(0, 1fr); }
+  /* the input side of the Fix card: arrow points across, not down */
+  .fix-card .mf-split { gap: 22px; }
+  .fix-card .mf-col-in .fix-arrow-big { display: inline-block; transform: rotate(-90deg); }
+  .fix-card .mf-col-out > :first-child { margin-top: 0; }
+  #top-address { display: none !important; }
+  /* tabs without an input/output pair stay a comfortable reading width */
+  #panel-work, #panel-marks, #panel-about { max-width: 52rem; margin-left: auto; margin-right: auto; }
+  /* meishi: the preview stays in view while you edit */
+  .mf-col-out > .mei-preview-card { position: sticky; top: 64px; }
+  .mei-design-card .meishi-style { display: grid; grid-template-columns: minmax(0, 1fr); }
+}
+
+/* Meishi page bits (the card face itself is in #meiFaceCss) */
+.meishi-stage { flex-direction: column; align-items: center; gap: 6px; }
+.meishi-stage[hidden], .mei-side-tag[hidden] { display: none; }
+.mei-stage-back { padding-top: 6px; }
+.mei-side-tag { font-size: 0.72rem; color: var(--muted); letter-spacing: 0.04em; }
+.mei-swatches button { display: inline-flex; align-items: center; justify-content: center; gap: 5px; }
+.mei-swatches button::before { content: ""; display: inline-block; width: 0.8em; height: 0.8em; border-radius: 50%; background: var(--sw); box-shadow: 0 0 0 1px color-mix(in srgb, var(--text) 28%, transparent); flex: 0 0 auto; }
+.mei-swatches button[data-val="ai"] { --sw: #27467a; } .mei-swatches button[data-val="shu"] { --sw: #b8432c; } .mei-swatches button[data-val="matsu"] { --sw: #3c6646; } .mei-swatches button[data-val="sumi"] { --sw: #2b2b2b; }
+.mei-content-card .card-head .btn-subtle { white-space: nowrap; }
+</style>
+<style id="meiFaceCss">
+/* 1.3.1-lab meishi face — shared by the preview and the print window (container units: --u = 1% of the card's long side) */
+.mei-frame { width: min(100%, 340px); container-type: inline-size; margin: 0 auto; }
+.mei-frame.mei-frame-tate { width: min(64%, 212px); }
+.meishi-card {
+  --u: 1cqw; --k: 1; --mei-acc: #27467a; --mei-sub: #57534c; --mei-seal: #c0392b;
+  position: relative; box-sizing: border-box; width: 100%; aspect-ratio: 91 / 55; overflow: hidden;
+  background: #fbf8f1; color: #1c1b19; border: 1px solid #d8d0c0; border-radius: calc(var(--u) * 1.4);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.18);
+  padding: calc(var(--u) * 7) calc(var(--u) * 7.5);
+  display: flex; flex-direction: column; justify-content: center;
+  font-family: system-ui, -apple-system, "Segoe UI", "Hiragino Sans", "Noto Sans JP", sans-serif;
+  text-align: left;
+}
+.meishi-card.mei-tate { --u: calc(1cqw * 91 / 55); aspect-ratio: 55 / 91; writing-mode: vertical-rl; padding: calc(var(--u) * 7.5) calc(var(--u) * 7); }
+.meishi-card .mei-body { display: flex; flex-direction: column; gap: calc(var(--u) * 0.8); min-width: 0; min-height: 0; }
+.meishi-card .mei-line { font-size: calc(var(--u) * 3.4 * var(--k)); line-height: 1.32; overflow-wrap: anywhere; line-break: strict; color: inherit; }
+.meishi-card .mei-line.mei-emph { font-size: calc(var(--u) * 6.2 * var(--k)); font-weight: 700; letter-spacing: 0.05em; line-height: 1.2; word-break: keep-all; }
+.meishi-card .mei-line.mei-kana { font-size: calc(var(--u) * 2.8 * var(--k)); color: var(--mei-sub); letter-spacing: 0.06em; }
+.meishi-card .mei-line.mei-job { font-size: calc(var(--u) * 3.2 * var(--k)); font-weight: 600; }
+.meishi-card .mei-line.mei-org { font-size: calc(var(--u) * 3.7 * var(--k)); font-weight: 700; letter-spacing: 0.06em; color: var(--mei-acc); }
+.meishi-card .mei-line.mei-dept { font-size: calc(var(--u) * 3 * var(--k)); }
+.meishi-card .mei-line.mei-sub-en { font-size: calc(var(--u) * 2.5 * var(--k)); font-weight: 400; letter-spacing: 0.02em; color: var(--mei-sub); }
+.meishi-card .mei-line.mei-contact { font-size: calc(var(--u) * 2.9 * var(--k)); }
+.meishi-card .mei-line.mei-url { font-size: calc(var(--u) * 2.7 * var(--k)); word-break: break-all; }
+.meishi-card .mei-line.mei-name-start:not(:first-child) { margin-block-start: calc(var(--u) * 2 * var(--k)); }
+.meishi-card .mei-line.mei-contact-start { margin-block-start: calc(var(--u) * 2.4 * var(--k)); }
+.meishi-card .mei-line.mei-furi { font-size: calc(var(--u) * 2.5 * var(--k)); letter-spacing: 0.18em; margin-block-end: calc(var(--u) * -0.5); }
+.meishi-card .mei-line.mei-emph.mei-long { font-size: calc(var(--u) * 5 * var(--k)); }
+.meishi-card .mei-line.mei-emph.mei-xlong { font-size: calc(var(--u) * 4.1 * var(--k)); }
+.meishi-card .mei-empty { font-size: calc(var(--u) * 3.6); color: #8a857c; }
+.meishi-card.mei-back .mei-line.mei-emph { letter-spacing: 0.02em; }
+.meishi-card.mei-tate .mei-line { text-orientation: mixed; }
+.meishi-card.mei-tate .mei-line.mei-emph { letter-spacing: 0.14em; }
+.meishi-card.mei-align-center .mei-body { text-align: center; align-items: center; }
+.meishi-card.mei-density-compact { --k: 0.88; padding: calc(var(--u) * 5) calc(var(--u) * 6); }
+.meishi-card.mei-density-compact .mei-body { gap: calc(var(--u) * 0.3); }
+.meishi-card.mei-c-ai { --mei-acc: #27467a; }
+.meishi-card.mei-c-shu { --mei-acc: #b8432c; }
+.meishi-card.mei-c-matsu { --mei-acc: #3c6646; }
+.meishi-card.mei-c-sumi { --mei-acc: #2b2b2b; }
+.meishi-card.mei-theme-dark { background: #1a1e26; color: #eef1f5; border-color: #2f3744; box-shadow: 0 8px 24px rgba(0,0,0,0.45); --mei-sub: #a8b3c2; --mei-seal: #ec7a63; }
+.meishi-card.mei-theme-dark.mei-c-ai { --mei-acc: #93b2e6; }
+.meishi-card.mei-theme-dark.mei-c-shu { --mei-acc: #ef8a72; }
+.meishi-card.mei-theme-dark.mei-c-matsu { --mei-acc: #8fc79c; }
+.meishi-card.mei-theme-dark.mei-c-sumi { --mei-acc: #d9dde3; }
+.meishi-card.mei-theme-ink { background: #fff; color: #000; border: 2px solid #000; box-shadow: none; --mei-sub: #000; --mei-acc: #000; --mei-seal: #000; }
+.meishi-card .mei-bar { position: absolute; inset-block: 0; inset-inline-start: 0; inline-size: calc(var(--u) * 2.4); background: var(--mei-acc); }
+.meishi-card.mei-accent-bar { padding-inline-start: calc(var(--u) * 10); }
+.meishi-card .mei-crest { position: absolute; top: calc(var(--u) * 4.5); right: calc(var(--u) * 4.5); width: calc(var(--u) * 8.5); height: calc(var(--u) * 8.5); color: var(--mei-acc); opacity: 0.9; }
+.meishi-card.mei-tate .mei-crest { right: calc(var(--u) * 4.5); }
+.meishi-card .mei-crest svg { display: block; width: 100%; height: 100%; }
+.meishi-card .mei-seal {
+  position: absolute; right: calc(var(--u) * 5.5); bottom: calc(var(--u) * 5.5);
+  width: calc(var(--u) * 10.5); height: calc(var(--u) * 10.5); box-sizing: border-box;
+  border: calc(var(--u) * 0.65) solid var(--mei-seal); border-radius: 50%; color: var(--mei-seal);
+  display: flex; align-items: center; justify-content: center; writing-mode: vertical-rl; text-orientation: upright;
+  font-family: "Hiragino Mincho ProN", "Yu Mincho", "Noto Serif JP", serif; font-weight: 700; line-height: 1; letter-spacing: 0;
+  font-size: calc(var(--u) * 3.3); transform: rotate(-5deg); opacity: 0.9;
+}
+.meishi-card .mei-seal[data-n="2"] { font-size: calc(var(--u) * 3.9); }
+.meishi-card .mei-seal[data-n="1"] { font-size: calc(var(--u) * 5.2); }
+.meishi-card .mei-seal[data-n="3"] { font-size: calc(var(--u) * 2.75); }
+.meishi-card .mei-seal[data-n="4"] { font-size: calc(var(--u) * 3.9); }
+.meishi-card.mei-tate .mei-seal { right: auto; left: calc(var(--u) * 5.5); }
+.meishi-card.mei-yoko.mei-has-seal, .meishi-card.mei-yoko.mei-accent-crest { padding-right: calc(var(--u) * 17); }
+.meishi-card.mei-tate.mei-accent-crest { padding-top: calc(var(--u) * 15); }
+.meishi-card.mei-tate.mei-has-seal { padding-bottom: calc(var(--u) * 17); }
+.meishi-card.mei-tate .mei-line.mei-name-tate { letter-spacing: 0.18em; }
+.meishi-card.mei-tate .mei-line.mei-latin-tate { margin-block-start: calc(var(--u) * -0.2); }
 </style>
 </head>
 <body>
@@ -2649,7 +2678,7 @@ body {
 <div class="lab-banner" role="status"><span data-i18n="chrome.labBanner">LAB — stable share:</span> <a href="https://mojifill.app">mojifill.app</a></div>
 
   <header class="app-bar">
-    <h1>MojiFill</h1>
+    <h1 class="brand"><img class="brand-mark" src="./icon-192.png?v=1.3.0" width="28" height="28" alt="" decoding="async"><span class="brand-name">MojiFill</span></h1>
     <div class="header-actions">
       <div class="lang-seg" role="group" id="langSeg" aria-label="Language">
         <button type="button" class="lang-opt" data-lang="en" aria-pressed="true">EN</button>
@@ -3518,19 +3547,81 @@ body {
     </div>
 
     <div id="meishiUnlocked" hidden>
-      <div class="card">
+      <!-- 1.3.1-lab: preview card (output) · design card + content card (input). Desktop puts the preview on the right. -->
+      <div class="card mei-preview-card" id="meishiPreviewCard">
         <h2 data-i18n="meishi.title">JP business card (名刺)</h2>
-        <p class="hint" style="margin-top:0" data-ja-html="91×55mmのプレビュー。デザインを選び、下で項目を追加・削除・並べ替え。レイアウトはプロフィールごとにこの端末に保存。">Live 91×55mm preview. Style the card, then add, remove, or reorder blocks below. Layout saved per profile on this device.</p>
+        <p class="hint" style="margin-top:0" data-ja-html="実寸比91×55mmのプレビュー。下でデザインと項目を変更。プロフィールごとにこの端末に保存。">Live 91×55mm preview. Change the design and the lines below. Saved per profile on this device.</p>
         <div class="meishi-stage">
-          <div class="meishi-card mei-theme-light mei-align-left mei-density-comfortable" id="meishiCard" aria-label="Meishi preview" data-ja-aria-label="名刺プレビュー"></div>
+          <div class="mei-frame" id="meishiFrame">
+            <div class="meishi-card mei-theme-light mei-align-left mei-density-comfortable" id="meishiCard" aria-label="Meishi preview" data-ja-aria-label="名刺プレビュー"></div>
+          </div>
+          <span class="mei-side-tag" id="meishiFrontTag" hidden data-ja-html="表 · 日本語">Front · Japanese</span>
         </div>
+        <div class="meishi-stage mei-stage-back" id="meishiBackStage" hidden>
+          <div class="mei-frame" id="meishiFrameBack">
+            <div class="meishi-card mei-back" id="meishiCardBack" aria-label="Meishi reverse side (English)" data-ja-aria-label="名刺の裏面（英語）"></div>
+          </div>
+          <span class="mei-side-tag" data-ja-html="裏 · English">Back · English</span>
+        </div>
+        <div class="btn-row">
+          <button type="button" class="btn-subtle" id="meishiCopyBtn" data-ja-html="テキストをコピー">Copy text block</button>
+          <button type="button" class="btn-subtle" id="meishiPrintBtn" data-ja-html="名刺を印刷">Print meishi</button>
+        </div>
+      </div>
+      <div class="card mei-design-card" id="meishiDesignCard">
+        <h2 data-ja-html="デザイン">Design</h2>
         <div class="meishi-style" id="meishiStyleRow">
+          <div class="ms-group" data-key="orient">
+            <span class="ms-label" data-ja-html="組み方">Layout</span>
+            <div class="ms-seg" role="group" aria-label="Layout" data-ja-aria-label="組み方">
+              <button type="button" data-val="yoko" aria-pressed="true" data-ja-html="横書き">Horizontal</button>
+              <button type="button" data-val="tate" aria-pressed="false" data-ja-html="縦書き">Vertical</button>
+            </div>
+          </div>
           <div class="ms-group" data-key="theme">
             <span class="ms-label" data-i18n="meishi.theme">Theme</span>
             <div class="ms-seg" role="group" aria-label="Theme" data-ja-aria-label="テーマ">
+              <button type="button" data-val="light" aria-pressed="true" data-ja-html="和紙">Washi</button>
               <button type="button" data-val="dark" data-ja-html="ダーク">Dark</button>
-              <button type="button" data-val="light" aria-pressed="true" data-ja-html="ライト">Light</button>
               <button type="button" data-val="ink" data-ja-html="インク">Ink</button>
+            </div>
+          </div>
+          <div class="ms-group" data-key="accent">
+            <span class="ms-label" data-ja-html="飾り">Accent</span>
+            <div class="ms-seg" role="group" aria-label="Accent" data-ja-aria-label="飾り">
+              <button type="button" data-val="none" aria-pressed="true" data-ja-html="なし">None</button>
+              <button type="button" data-val="bar" data-ja-html="帯">Bar</button>
+              <button type="button" data-val="crest" data-ja-html="紋">Crest</button>
+            </div>
+          </div>
+          <div class="ms-group" data-key="color">
+            <span class="ms-label" data-ja-html="色">Colour</span>
+            <div class="ms-seg mei-swatches" role="group" aria-label="Accent colour" data-ja-aria-label="差し色">
+              <button type="button" data-val="ai" aria-pressed="true" data-ja-html="藍">Indigo</button>
+              <button type="button" data-val="shu" data-ja-html="朱">Red</button>
+              <button type="button" data-val="matsu" data-ja-html="松葉">Pine</button>
+              <button type="button" data-val="sumi" data-ja-html="墨">Sumi</button>
+            </div>
+          </div>
+          <div class="ms-group" data-key="seal">
+            <span class="ms-label" data-ja-html="印">Seal</span>
+            <div class="ms-seg" role="group" aria-label="Seal" data-ja-aria-label="印">
+              <button type="button" data-val="none" aria-pressed="true" data-ja-html="なし">None</button>
+              <button type="button" data-val="hanko" data-ja-html="はんこ風">Hanko</button>
+            </div>
+          </div>
+          <div class="ms-group" data-key="furi">
+            <span class="ms-label" data-ja-html="フリガナ">Kana</span>
+            <div class="ms-seg" role="group" aria-label="Kana reading position" data-ja-aria-label="フリガナの位置">
+              <button type="button" data-val="below" aria-pressed="true" data-ja-html="名前の下">Below</button>
+              <button type="button" data-val="above" data-ja-html="名前の上">Above</button>
+            </div>
+          </div>
+          <div class="ms-group" data-key="back">
+            <span class="ms-label" data-ja-html="裏面">Back</span>
+            <div class="ms-seg" role="group" aria-label="Reverse side" data-ja-aria-label="裏面">
+              <button type="button" data-val="none" aria-pressed="true" data-ja-html="なし">None</button>
+              <button type="button" data-val="en" data-ja-html="英語面">English</button>
             </div>
           </div>
           <div class="ms-group" data-key="align">
@@ -3548,16 +3639,21 @@ body {
             </div>
           </div>
         </div>
-        <div class="btn-row">
-          <button type="button" class="btn-subtle" id="meishiCopyBtn" data-ja-html="テキストをコピー">Copy text block</button>
-          <button type="button" class="btn-subtle" id="meishiPrintBtn" data-ja-html="名刺を印刷">Print meishi</button>
+      </div>
+      <div class="card mei-content-card" id="meishiContentCard">
+        <div class="card-head">
+          <h2 data-ja-html="項目">Lines</h2>
+          <button type="button" class="btn-subtle" id="meishiStdOrderBtn" data-ja-html="日本式の順に並べる" title="Company → department → title → name → contact" data-ja-title="会社名 → 部署 → 役職 → 氏名 → 連絡先">Japanese order</button>
         </div>
+        <p class="hint" style="margin-top:0" data-ja-html="日本の名刺の標準順：会社名 → 部署 → 役職 → 氏名（フリガナ）→ 〒・住所・電話・URL。">Standard Japanese order: company → department → title → name (kana) → 〒, address, phone, URL.</p>
         <div class="meishi-blocks" id="meishiBlocks"></div>
         <div class="meishi-add-row">
           <select id="meishiAddType" aria-label="Block type to add" data-ja-aria-label="追加する項目">
+            <option value="company" data-ja-html="会社名">Company</option>
+            <option value="department" data-ja-html="部署">Department</option>
+            <option value="job_title" data-ja-html="役職・肩書き">Job title</option>
             <option value="name_latin" data-ja-html="名前（ローマ字）">Name (latin)</option>
             <option value="name_kana" data-ja-html="名前（カナ）">Name (kana)</option>
-            <option value="job_title" data-ja-html="肩書き">Job title</option>
             <option value="phone" data-ja-html="電話">Phone</option>
             <option value="postcode" data-ja-html="郵便番号">Postcode</option>
             <option value="address_line" data-ja-html="住所">Address line</option>
@@ -9490,15 +9586,22 @@ body {
   }
 
   function defaultMeishiStyle() {
-    return { theme: 'light', align: 'left', density: 'comfortable' };
+    return { theme: 'light', align: 'left', density: 'comfortable', orient: 'yoko', accent: 'none', color: 'ai', seal: 'none', furi: 'below', back: 'none' };
   }
 
+  /* 1.3.1-lab: new keys (orient/accent/color/seal/furi/back) default to the old look, so saved cards render as before. */
   function normalizeMeishiStyle(s) {
     s = s || {};
     var theme = s.theme === 'dark' || s.theme === 'ink' ? s.theme : 'light';
     var align = s.align === 'center' ? 'center' : 'left';
     var density = s.density === 'compact' ? 'compact' : 'comfortable';
-    return { theme: theme, align: align, density: density };
+    var orient = s.orient === 'tate' ? 'tate' : 'yoko';
+    var accent = s.accent === 'bar' || s.accent === 'crest' ? s.accent : 'none';
+    var color = ['shu', 'matsu', 'sumi'].indexOf(s.color) >= 0 ? s.color : 'ai';
+    var seal = s.seal === 'hanko' ? 'hanko' : 'none';
+    var furi = s.furi === 'above' ? 'above' : 'below';
+    var back = s.back === 'en' ? 'en' : 'none';
+    return { theme: theme, align: align, density: density, orient: orient, accent: accent, color: color, seal: seal, furi: furi, back: back };
   }
 
   var JOB_TITLE_MAP = {
@@ -9637,12 +9740,14 @@ body {
     };
   }
 
-  var MEISHI_BLOCK_TYPES = ['name_latin', 'name_kana', 'job_title', 'phone', 'postcode', 'address_line', 'url', 'custom'];
+  var MEISHI_BLOCK_TYPES = ['company', 'department', 'job_title', 'name_latin', 'name_kana', 'phone', 'postcode', 'address_line', 'url', 'custom'];
 
   function meishiTypeLabel(t) {
     return (uiLang === 'ja' ? {
-      name_latin: '名前（ローマ字）', name_kana: '名前（カナ）', job_title: '肩書き', phone: '電話', postcode: '郵便番号', address_line: '住所', url: 'URL', custom: '自由入力'
+      company: '会社名', department: '部署', name_latin: '名前（ローマ字）', name_kana: '名前（カナ）', job_title: '役職・肩書き', phone: '電話', postcode: '郵便番号', address_line: '住所', url: 'URL', custom: '自由入力'
     } : {
+      company: 'Company',
+      department: 'Department',
       name_latin: 'Name (latin)',
       name_kana: 'Name (kana)',
       job_title: 'Job title',
@@ -10818,6 +10923,9 @@ body {
           var u = prefillMeishiUrl();
           if (!String(blocks[idx].value || '').trim()) blocks[idx].value = u.url;
           if (!String(blocks[idx].label || '').trim()) blocks[idx].label = u.label;
+        } else if (sel.value === 'company' || sel.value === 'department') {
+          blocks[idx].value = '';
+          blocks[idx].valueJa = '';
         } else if (sel.value !== 'custom') {
           blocks[idx].value = prefillMeishiValue(sel.value);
         } else if (!blocks[idx].value) {
@@ -10839,9 +10947,31 @@ body {
         fields.appendChild(inp);
         return inp;
       }
-      if (block.type === 'job_title') {
+      if (block.type === 'company' || block.type === 'department') {
+        var isCo = block.type === 'company';
         addInput({
-          placeholder: 'English title',
+          placeholder: isCo ? L('Japanese (e.g. さくら商事株式会社)', '日本語（例：さくら商事株式会社）') : L('Japanese (e.g. 営業部)', '日本語（例：営業部）'),
+          aria: isCo ? L('Company name in Japanese', '会社名（日本語）') : L('Department in Japanese', '部署（日本語）'),
+          value: block.valueJa != null ? block.valueJa : '',
+          onInput: function (ev) {
+            blocks[idx].valueJa = ev.target.value;
+            setActiveMeishiBlocks(blocks);
+            updateMeishiPreview();
+          }
+        });
+        addInput({
+          placeholder: isCo ? L('English (e.g. Sakura Trading Co., Ltd.)', '英語（例：Sakura Trading Co., Ltd.）') : L('English (e.g. Sales Department)', '英語（例：Sales Department）'),
+          aria: isCo ? L('Company name in English', '会社名（英語）') : L('Department in English', '部署（英語）'),
+          value: block.value != null ? block.value : '',
+          onInput: function (ev) {
+            blocks[idx].value = ev.target.value;
+            setActiveMeishiBlocks(blocks);
+            updateMeishiPreview();
+          }
+        });
+      } else if (block.type === 'job_title') {
+        addInput({
+          placeholder: L('English title', '英語の役職'),
           aria: 'English job title',
           value: block.value != null ? block.value : '',
           onInput: function (ev) {
@@ -10854,7 +10984,7 @@ body {
           }
         });
         addInput({
-          placeholder: 'Japanese (auto from English)',
+          placeholder: L('Japanese (auto from English)', '日本語（英語から自動）'),
           aria: 'Japanese job title override',
           value: block.valueJa != null ? block.valueJa : '',
           onInput: function (ev) {
@@ -10937,13 +11067,21 @@ body {
 
   function meishiLinesFromBlocks() {
     var out = [];
-    getActiveMeishiBlocks().forEach(function (b) {
+    getActiveMeishiBlocks().forEach(function (b, bi) {
       if (b.type === 'job_title') {
         var en = String(b.value || '').trim() || prefillMeishiJob().en;
         var typedJa = String(b.valueJa || '').trim();
         var ja = typedJa || jobTitleEnToJa(en) || prefillMeishiJob().ja;
-        if (en) out.push({ type: 'job_title', text: en, copyText: en });
-        if (ja) out.push({ type: 'job_title_ja', text: ja, copyText: ja });
+        if (en) out.push({ type: 'job_title', text: en, copyText: en, src: bi });
+        if (ja) out.push({ type: 'job_title_ja', text: ja, copyText: ja, src: bi });
+        return;
+      }
+      if (b.type === 'company' || b.type === 'department') {
+        /* 1.3.1-lab: 会社名 / 部署 — Japanese line first, English under it (or on the English back) */
+        var oja = String(b.valueJa || '').trim();
+        var oen = String(b.value || '').trim();
+        if (oja) out.push({ type: b.type + '_ja', text: oja, src: bi });
+        if (oen) out.push({ type: b.type, text: oen, src: bi });
         return;
       }
       if (b.type === 'url') {
@@ -10953,74 +11091,197 @@ body {
         var shown = displayUrlForCard(url);
         var text = label ? (label + ' · ' + shown) : shown;
         var copy = label ? (label + '\n' + url) : url;
-        out.push({ type: 'url', text: text, copyText: copy });
+        out.push({ type: 'url', text: text, copyText: copy, src: bi });
         return;
       }
       var t = resolveMeishiBlockValue(b);
-      if (t) out.push({ type: b.type, text: t });
+      if (t) out.push({ type: b.type, text: t, src: bi });
     });
     return out;
   }
 
+  /* 1.3.1-lab: sort blocks into the usual Japanese order (company → department → title → name → contact). Stable inside each group. */
+  var MEISHI_STD_ORDER = ['company', 'department', 'job_title', 'name_kana', 'name_latin', 'postcode', 'address_line', 'phone', 'url', 'custom'];
+  function meishiStdOrder(blocks) {
+    var furiAbove = normalizeMeishiStyle(state.meishiStyle).furi === 'above';
+    var order = MEISHI_STD_ORDER.slice();
+    if (!furiAbove) { order[3] = 'name_latin'; order[4] = 'name_kana'; }
+    return blocks.map(function (b, i) { return { b: b, i: i, r: order.indexOf(b.type) < 0 ? order.length : order.indexOf(b.type) }; })
+      .sort(function (x, y) { return x.r - y.r || x.i - y.i; })
+      .map(function (x) { return x.b; });
+  }
+
   function updateMeishiPreview() {
     if (!meishiCard) return;
-    applyMeishiCardStyle();
-    var lines = meishiLinesFromBlocks();
-    meishiCard.innerHTML = '';
-    if (!lines.length) {
-      var empty = document.createElement('div');
-      empty.className = 'mei-empty';
-      empty.textContent = 'Add blocks to build the card';
-      meishiCard.appendChild(empty);
-      return;
-    }
-    lines.forEach(function (ln, i) {
-      var d = document.createElement('div');
-      d.className = 'mei-line';
-      if (ln.type === 'name_latin' || (i === 0 && ln.type !== 'name_kana' && ln.type !== 'job_title_ja' && ln.type !== 'url')) d.classList.add('mei-emph');
-      if (ln.type === 'name_kana') d.classList.add('mei-kana');
-      if (ln.type === 'job_title') d.classList.add('mei-job');
-      if (ln.type === 'job_title_ja') d.classList.add('mei-kana', 'mei-job-ja');
-      if (ln.type === 'url') d.classList.add('mei-url');
-      d.textContent = ln.text;
-      meishiCard.appendChild(d);
-    });
+    var s = normalizeMeishiStyle(state.meishiStyle);
+    renderMeishiFace(meishiCard, 'front');
+    var frame = document.getElementById('meishiFrame');
+    var frameB = document.getElementById('meishiFrameBack');
+    var backStage = document.getElementById('meishiBackStage');
+    var backCard = document.getElementById('meishiCardBack');
+    var frontTag = document.getElementById('meishiFrontTag');
+    if (frame) frame.classList.toggle('mei-frame-tate', s.orient === 'tate');
+    if (backStage) backStage.hidden = s.back !== 'en';
+    if (frontTag) frontTag.hidden = s.back !== 'en';
+    if (backCard && s.back === 'en') renderMeishiFace(backCard, 'back');
   }
 
   function meishiPrintCss(style) {
     var s = normalizeMeishiStyle(style);
-    var bg = '#fff';
-    var fg = '#111';
-    var kana = '#444';
-    var border = '1px solid #ccc';
-    if (s.theme === 'dark') {
-      bg = '#161b22';
-      fg = '#f2f4f8';
-      kana = '#9aa8b8';
-      border = '1px solid #2a3340';
-    } else if (s.theme === 'ink') {
-      bg = '#fff';
-      fg = '#000';
-      kana = '#000';
-      border = '2px solid #000';
-    }
-    var align = s.align === 'center' ? 'center' : 'left';
-    var pad = s.density === 'compact' ? '5mm 6mm' : '8mm 7mm';
-    var gap = s.density === 'compact' ? '0.6mm' : '1.5mm';
-    var fs = s.density === 'compact' ? '10pt' : '11pt';
-    var emph = s.density === 'compact' ? '14pt' : '16pt';
-    var small = s.density === 'compact' ? '8pt' : '9pt';
+    var tate = s.orient === 'tate';
+    var faceCss = (document.getElementById('meiFaceCss') || {}).textContent || '';
     return [
-      '@page{size:91mm 55mm;margin:0}',
-      'html,body{margin:0;padding:0;height:100%}',
-      'body{display:flex;align-items:center;justify-content:center;font-family:system-ui,-apple-system,"Hiragino Sans","Noto Sans JP",sans-serif;background:#eee}',
-      '.card{width:91mm;height:55mm;box-sizing:border-box;padding:' + pad + ';display:flex;flex-direction:column;justify-content:center;gap:' + gap + ';background:' + bg + ';color:' + fg + ';border:' + border + ';text-align:' + align + '}',
-      '.line{font-size:' + fs + ';line-height:1.25;word-break:break-word;color:' + fg + '}',
-      '.line.emph{font-size:' + emph + ';font-weight:700;letter-spacing:.04em}',
-      '.line.kana,.line.job-ja{font-size:' + small + ';color:' + kana + '}',
-      '.line.job{font-size:' + fs + ';font-weight:600}',
-      '.line.url{font-size:' + small + ';word-break:break-all}'
+      '@page{size:' + (tate ? '55mm 91mm' : '91mm 55mm') + ';margin:0}',
+      'html,body{margin:0;padding:0}',
+      'body{font-family:system-ui,-apple-system,"Hiragino Sans","Hiragino Mincho ProN","Noto Sans JP",sans-serif;background:#fff;-webkit-print-color-adjust:exact;print-color-adjust:exact}',
+      '@page yoko{size:91mm 55mm;margin:0}@page tate{size:55mm 91mm;margin:0}',
+      faceCss,
+      /* print sizes come after the shared face CSS so the preview's 340px cap never applies on paper */
+      '.mei-frame{width:91mm;margin:0 auto;page:yoko;break-after:page;page-break-after:always}',
+      '.mei-frame.mei-frame-tate{width:55mm;page:tate}',
+      '.mei-frame:last-child{break-after:auto;page-break-after:auto}',
+      '.meishi-card{border-radius:0;box-shadow:none}'
     ].join('');
+  }
+
+  /* ---------- 1.3.1-lab: meishi faces (front = Japanese, optional back = English) ----------
+     One renderer for the preview and the print window (sizes are in container units, so the same CSS
+     fits the 340px preview and the real 91×55mm card). */
+  var MEI_CREST_SVG = '<svg viewBox="0 0 40 40" aria-hidden="true" focusable="false"><g fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="20" cy="20" r="18"/><circle cx="20" cy="20" r="13.2"/><circle cx="20" cy="12.6" r="6.6"/><circle cx="20" cy="27.4" r="6.6"/><circle cx="12.6" cy="20" r="6.6"/><circle cx="27.4" cy="20" r="6.6"/></g></svg>';
+  function meishiPhoneIntl(s) {
+    var d = digitsOnly(s || '');
+    if (!d || d.charAt(0) !== '0' || d.length < 9) return String(s || '');
+    var dashed = (typeof formatJpPhoneDashed === 'function') ? formatJpPhoneDashed(d) : '';
+    return '+81 ' + (dashed ? dashed.replace(/^0/, '') : d.slice(1));
+  }
+  function meishiSealText() {
+    var k = String((familyKanaEl && familyKanaEl.value) || '').replace(/[\s\u3000・]/g, '');
+    if (k) return k.slice(0, k.length > 4 ? 3 : 4);
+    var f = String((familyEl && familyEl.value) || '').trim();
+    var g = String((givenEl && givenEl.value) || '').trim();
+    return ((f.charAt(0) || '') + (g.charAt(0) || '')).toUpperCase() || '印';
+  }
+  /** Lines for one side. side 'front' (Japanese) or 'back' (English). Same order as the blocks. */
+  function meishiFaceLines(side) {
+    var s = normalizeMeishiStyle(state.meishiStyle);
+    var lines = meishiLinesFromBlocks();
+    var hasBack = s.back === 'en';
+    /* a vertical (縦書き) front is Japanese-only: English twins live on the English back */
+    var jaOnly = hasBack || s.orient === 'tate';
+    var out = [];
+    var pairJa = { job_title: 'job_title_ja', company: 'company_ja', department: 'department_ja' };
+    var pairEn = { job_title_ja: 'job_title', company_ja: 'company', department_ja: 'department' };
+    lines.forEach(function (ln) {
+      var t = ln.type;
+      if (side === 'back') {
+        if (t === 'name_kana' || pairEn[t]) {
+          if (pairEn[t] && !lines.some(function (o) { return o.type === pairEn[t] && o.src === ln.src; })) out.push(ln);
+          return;
+        }
+        if (t === 'name_latin') {
+          /* English side: given name first, family name in capitals (the usual Japanese-business style) */
+          var blk = getActiveMeishiBlocks()[ln.src] || {};
+          var fam = String(familyEl.value || '').trim(), giv = String(givenEl.value || '').trim();
+          if (!String(blk.value || '').trim() && fam && giv) { out.push({ type: t, text: [titleCase(giv)].concat(middleParts().map(titleCase)).concat([fam.toUpperCase()]).join(' '), src: ln.src }); return; }
+          out.push(ln);
+          return;
+        }
+        if (t === 'phone') { out.push({ type: t, text: 'Tel ' + meishiPhoneIntl(ln.text), copyText: ln.copyText || ln.text }); return; }
+        if (t === 'address_line') {
+          var en = String(readAddressFromDom().en || '').trim();
+          out.push(en ? { type: t, text: en } : ln);
+          return;
+        }
+        out.push(ln);
+        return;
+      }
+      /* front: with an English back, English-only lines that have a Japanese twin move to the back */
+      if (jaOnly && pairJa[t] && lines.some(function (o) { return o.type === pairJa[t] && o.src === ln.src; })) return;
+      if (t === 'phone') {
+        var pd = digitsOnly(ln.text);
+        var dashed = formatJpPhoneDashed(pd);
+        out.push({ type: t, text: 'TEL ' + (dashed || ln.text), copyText: ln.copyText || ln.text, src: ln.src });
+        return;
+      }
+      out.push(ln);
+    });
+    if (side === 'front' && s.orient === 'tate') {
+      /* 縦書き: the katakana name is the big name, romaji sits beside it */
+      var kI = -1, lI = -1;
+      out.forEach(function (l, i) { if (l.type === 'name_kana' && kI < 0) kI = i; if (l.type === 'name_latin' && lI < 0) lI = i; });
+      if (kI >= 0 && lI >= 0 && kI > lI) { var kk = out.splice(kI, 1)[0]; out.splice(lI, 0, kk); }
+    } else if (side === 'front' && s.furi === 'above') {
+      var ki = -1, li = -1;
+      out.forEach(function (l, i) { if (l.type === 'name_kana' && ki < 0) ki = i; if (l.type === 'name_latin' && li < 0) li = i; });
+      if (ki >= 0 && li >= 0 && ki !== li - 1) {
+        var k = out.splice(ki, 1)[0];
+        if (ki < li) li--;
+        out.splice(li, 0, k);
+      }
+    }
+    return out;
+  }
+  function meishiLineClass(ln, i, side) {
+    var c = ['mei-line'];
+    var t = ln.type;
+    var tateFront = side !== 'back' && normalizeMeishiStyle(state.meishiStyle).orient === 'tate';
+    if (tateFront && t === 'name_kana') return 'mei-line mei-emph mei-name-tate';
+    if (tateFront && t === 'name_latin') return 'mei-line mei-sub-en mei-latin-tate';
+    if (t === 'name_latin' || (i === 0 && ['name_kana', 'job_title_ja', 'url', 'company', 'company_ja', 'department', 'department_ja', 'job_title'].indexOf(t) < 0)) c.push('mei-emph');
+    if (t === 'name_kana') c.push('mei-kana');
+    if (t === 'job_title') c.push('mei-job');
+    if (t === 'job_title_ja') c.push('mei-kana', 'mei-job-ja');
+    if (t === 'url') c.push('mei-url');
+    if (t === 'company' || t === 'company_ja') c.push('mei-org');
+    if (t === 'department' || t === 'department_ja') c.push('mei-dept');
+    if ((t === 'company' || t === 'department') && side === 'front') c.push('mei-sub-en');
+    if (t === 'phone' || t === 'postcode' || t === 'address_line' || t === 'url') c.push('mei-contact');
+    return c.join(' ');
+  }
+  /** Fill a .meishi-card element for one side. */
+  function renderMeishiFace(el, side) {
+    var s = normalizeMeishiStyle(state.meishiStyle);
+    el.className = 'meishi-card' + (side === 'back' ? ' mei-back' : '') + ' mei-theme-' + s.theme + ' mei-align-' + s.align + ' mei-density-' + s.density +
+      ' mei-' + (side === 'back' ? 'yoko' : s.orient) + ' mei-accent-' + s.accent + ' mei-c-' + s.color + (s.seal === 'hanko' && side !== 'back' ? ' mei-has-seal' : '') + (s.furi === 'above' ? ' mei-furi-above' : '');
+    el.innerHTML = '';
+    var lines = meishiFaceLines(side);
+    if (s.accent === 'bar') { var bar = document.createElement('span'); bar.className = 'mei-bar'; bar.setAttribute('aria-hidden', 'true'); el.appendChild(bar); }
+    if (s.accent === 'crest') { var cr = document.createElement('span'); cr.className = 'mei-crest'; cr.innerHTML = MEI_CREST_SVG; el.appendChild(cr); }
+    var body = document.createElement('div');
+    body.className = 'mei-body';
+    el.appendChild(body);
+    if (!lines.length) {
+      var empty = document.createElement('div');
+      empty.className = 'mei-empty';
+      empty.textContent = L('Add blocks to build the card', '項目を追加して名刺を作成');
+      body.appendChild(empty);
+      return;
+    }
+    var nameStart = -1;
+    lines.forEach(function (ln, i) {
+      var d = document.createElement('div');
+      d.className = meishiLineClass(ln, i, side);
+      if ((ln.type === 'name_latin' || ln.type === 'name_kana') && nameStart < 0) { nameStart = i; d.classList.add('mei-name-start'); }
+      if (ln.type === 'name_kana' && s.furi === 'above' && s.orient !== 'tate' && lines[i + 1] && lines[i + 1].type === 'name_latin') d.classList.add('mei-furi');
+      if (ln.type === 'name_latin' && i > 0 && lines[i - 1].type === 'name_kana' && s.furi === 'above' && s.orient !== 'tate') d.classList.add('mei-under-furi');
+      if (i > 0 && ['phone', 'postcode', 'address_line', 'url'].indexOf(ln.type) >= 0 && ['phone', 'postcode', 'address_line', 'url'].indexOf(lines[i - 1].type) < 0) d.classList.add('mei-contact-start');
+      if (d.classList.contains('mei-emph')) {
+        var n = String(ln.text || '').length;
+        if (n > 22) d.classList.add('mei-xlong'); else if (n > (s.orient === 'tate' && side !== 'back' ? 9 : 16)) d.classList.add('mei-long');
+        if (s.orient === 'tate' && side !== 'back' && n > 13) d.classList.add('mei-xlong');
+      }
+      d.textContent = ln.text;
+      body.appendChild(d);
+    });
+    if (s.seal === 'hanko' && side !== 'back') {
+      var seal = document.createElement('span');
+      seal.className = 'mei-seal';
+      seal.setAttribute('aria-hidden', 'true');
+      var st = meishiSealText();
+      seal.setAttribute('data-n', String(Math.min(st.length, 4)));
+      seal.textContent = st;
+      el.appendChild(seal);
+    }
   }
 
   if (meishiAddBtn) {
@@ -11054,22 +11315,20 @@ body {
   }
   if (meishiPrintBtn) {
     meishiPrintBtn.addEventListener('click', function () {
-      var lines = meishiLinesFromBlocks();
-      var body = lines.map(function (ln) {
-        var cls = 'line';
-        if (ln.type === 'name_latin') cls += ' emph';
-        if (ln.type === 'name_kana') cls += ' kana';
-        if (ln.type === 'job_title') cls += ' job';
-        if (ln.type === 'job_title_ja') cls += ' kana job-ja';
-        if (ln.type === 'url') cls += ' url';
-        return '<div class="' + cls + '">' + escapeHtml(ln.text) + '</div>';
+      /* 1.3.1-lab: print the same faces as the preview — front, then the English back on page 2 when it is on */
+      var s = normalizeMeishiStyle(state.meishiStyle);
+      var sides = s.back === 'en' ? ['front', 'back'] : ['front'];
+      var body = sides.map(function (side) {
+        var el = document.createElement('div');
+        renderMeishiFace(el, side);
+        return '<div class="mei-frame' + (side === 'front' && s.orient === 'tate' ? ' mei-frame-tate' : '') + '">' + el.outerHTML + '</div>';
       }).join('');
       var html = [
         '<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Meishi</title>',
         '<style>',
         meishiPrintCss(state.meishiStyle),
         '</style></head><body>',
-        '<div class="card">' + body + '</div>',
+        body,
         '<script>window.onload=function(){try{window.print();}catch(e){}}<\\/script>',
         '</body></html>'
       ].join('');
@@ -11078,6 +11337,15 @@ body {
       w.document.open();
       w.document.write(html);
       w.document.close();
+    });
+  }
+  var meishiStdOrderBtn = document.getElementById('meishiStdOrderBtn');
+  if (meishiStdOrderBtn) {
+    meishiStdOrderBtn.addEventListener('click', function () {
+      setActiveMeishiBlocks(meishiStdOrder(getActiveMeishiBlocks().slice()));
+      renderMeishiBlocksEditor();
+      updateMeishiPreview();
+      showToast(L('Sorted into Japanese order', '日本式の順に並べました'));
     });
   }
 
@@ -12573,6 +12841,78 @@ body {
   rebuildDates();
   rebuildPhone();
   rebuildPost();
+
+  /* ---------- 1.3.1-lab: desktop two columns (≥1024px) — input left, paste-ready output right ----------
+     Moves existing nodes (ids, listeners and observers stay intact) into .mf-col-in / .mf-col-out, leaving a comment
+     marker where each one lived; below 1024px every node goes back to its marker, so mobile keeps the original DOM order. */
+  (function mfSplit() {
+    if (!window.matchMedia) return;
+    var mq = window.matchMedia('(min-width: 1024px)');
+    var applied = [];
+    function byId(id) { return document.getElementById(id); }
+    function cardOf(id) { var e = byId(id); return e ? e.closest('.card') : null; }
+    function plan() {
+      var fix = document.querySelector('#panel-fix .fix-card');
+      var addrCard = document.querySelector('#addressUnlocked > .card');
+      var addrIn = [], addrOut = [];
+      if (addrCard) {
+        var seenH2 = 0;
+        Array.prototype.forEach.call(addrCard.children, function (ch) {
+          if (ch.tagName === 'H2') seenH2++;
+          (seenH2 >= 2 ? addrOut : addrIn).push(ch);
+        });
+      }
+      return [
+        { in: [cardOf('family'), byId('hhCard'), byId('exportCard')], out: [byId('top-names'), cardOf('nameLadder'), byId('meaningCheckCard')] },
+        { in: [cardOf('furiInput')], out: [cardOf('furiLadder')] },
+        { in: [cardOf('dateInput')], out: [byId('top-dates'), cardOf('dateLadder')] },
+        { in: [cardOf('phoneInput')], out: [cardOf('postInput')] },
+        fix ? { in: [fix.querySelector('.fix-field'), byId('fixArrow'), fix.querySelector('.fix-opts')], out: [byId('fixEmpty'), byId('fixLadder'), byId('fixFit'), byId('fixSuggestWrap'), byId('fixNoChanges'), byId('fixChangesBox')] } : null,
+        addrCard ? { in: addrIn, out: addrOut } : null,
+        { in: [byId('meishiDesignCard'), byId('meishiContentCard')], out: [byId('meishiPreviewCard')] }
+      ];
+    }
+    function split() {
+      plan().forEach(function (p) {
+        if (!p) return;
+        var ins = p.in.filter(Boolean), outs = p.out.filter(Boolean);
+        if (!ins.length || !outs.length) return;
+        var all = ins.concat(outs);
+        var parent = all[0].parentNode;
+        if (!parent || !all.every(function (e) { return e.parentNode === parent; })) return;
+        var first = all.slice().sort(function (a, b) { return a.compareDocumentPosition(b) & 4 ? -1 : 1; })[0];
+        var wrap = document.createElement('div');
+        wrap.className = 'mf-split';
+        var ci = document.createElement('div'); ci.className = 'mf-col mf-col-in';
+        var co = document.createElement('div'); co.className = 'mf-col mf-col-out';
+        wrap.appendChild(ci); wrap.appendChild(co);
+        parent.insertBefore(wrap, first);
+        var marks = all.map(function (el) { var m = document.createComment('mf-split'); el.parentNode.insertBefore(m, el); return [m, el]; });
+        ins.forEach(function (e) { ci.appendChild(e); });
+        outs.forEach(function (e) { co.appendChild(e); });
+        parent.classList.add('mf-has-split');
+        applied.push({ parent: parent, wrap: wrap, marks: marks });
+      });
+      document.documentElement.classList.add('mf-desk');
+    }
+    function unsplit() {
+      applied.forEach(function (a) {
+        a.marks.forEach(function (pair) { if (pair[0].parentNode) pair[0].parentNode.replaceChild(pair[1], pair[0]); });
+        if (a.wrap.parentNode) a.wrap.parentNode.removeChild(a.wrap);
+        a.parent.classList.remove('mf-has-split');
+      });
+      applied = [];
+      document.documentElement.classList.remove('mf-desk');
+    }
+    function sync() {
+      var want = mq.matches;
+      if (want === (applied.length > 0)) return;
+      if (want) split(); else unsplit();
+    }
+    window.__mfSplitSync = function () { unsplit(); sync(); };
+    try { sync(); } catch (eSplit) { try { unsplit(); } catch (e2) { /* ignore */ } }
+    if (mq.addEventListener) mq.addEventListener('change', sync); else if (mq.addListener) mq.addListener(sync);
+  })();
 })();
 </script>
 </body>

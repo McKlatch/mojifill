@@ -796,13 +796,37 @@ try {
     await ev("document.getElementById('tab-about').click(); 1"); await sleep(200);
     okPaid(true, '1.2.40 Pro facts in EN');
     await ev(`localStorage.setItem('mojifill.lang','ja'); 1`);
-    // 1.2.41-lab: desktop 1280 — every tab visible without the 《》 rail, 2-column ladders, no sideways scroll
+    // 1.2.41-lab: desktop 1280 — every tab visible without the 《》 rail, no sideways scroll; 1.3.1-lab: input column left, output column right (same top)
     await P.send('Emulation.setDeviceMetricsOverride', { width: 1280, height: 800, deviceScaleFactor: 1, mobile: false });
     await ev(`localStorage.clear(); localStorage.setItem('mojifill.lang','ja'); localStorage.setItem('mojifill.profile.v1', ${JSON.stringify(soloProfile)}); 1`);
     await load(`${ORIGIN}/index.html?lang=ja&desk=141`);
     await ev("sessionStorage.clear(); document.getElementById('tab-names').click(); window.scrollTo(0,0); 1"); await sleep(300);
-    const d141 = await ev("(function(){var tabs=Array.from(document.querySelectorAll('.tabs .tab'));var vw=document.documentElement.clientWidth;var allIn=tabs.every(function(b){var r=b.getBoundingClientRect();return r.left>=0&&r.right<=vw&&r.top<220;});var rows=new Set(tabs.map(function(b){return Math.round(b.getBoundingClientRect().top)})).size;var steps=Array.from(document.querySelectorAll('.tab-step')).filter(function(b){return b.getBoundingClientRect().width>0}).length;var l=Array.from(document.querySelectorAll('#nameLadder > .copy-card')).slice(0,2).map(function(c){return Math.round(c.getBoundingClientRect().top)});var w=document.querySelector('.app').getBoundingClientRect().width;return {allIn:allIn,rows:rows,steps:steps,twoCol:l.length===2&&l[0]===l[1],w:Math.round(w),ov:document.documentElement.scrollWidth>vw+1,top:Math.round(document.querySelector('#top-names .copy-card').getBoundingClientRect().bottom)};})()");
-    ok(d141.allIn && d141.rows === 1 && d141.steps === 0 && d141.twoCol && d141.w > 800 && !d141.ov && d141.top < 800, `1.2.41 desktop 1280: tabs in one row, 2-col ladder, results on the first screen (${JSON.stringify(d141)})`);
+    const d141 = await ev("(function(){var tabs=Array.from(document.querySelectorAll('.tabs .tab'));var vw=document.documentElement.clientWidth;var allIn=tabs.every(function(b){var r=b.getBoundingClientRect();return r.left>=0&&r.right<=vw&&r.top<220;});var rows=new Set(tabs.map(function(b){return Math.round(b.getBoundingClientRect().top)})).size;var steps=Array.from(document.querySelectorAll('.tab-step')).filter(function(b){return b.getBoundingClientRect().width>0}).length;var pin=document.getElementById('family').closest('.card').getBoundingClientRect();var lad=document.getElementById('nameLadder').closest('.card');var top=document.getElementById('top-names').getBoundingClientRect();var inCol=!!document.getElementById('family').closest('.mf-col-in')&&!!lad.closest('.mf-col-out');var w=document.querySelector('.app').getBoundingClientRect().width;return {allIn:allIn,rows:rows,steps:steps,twoCol:inCol&&pin.right<=top.left&&Math.abs(pin.top-top.top)<4,w:Math.round(w),ov:document.documentElement.scrollWidth>vw+1,top:Math.round(document.querySelector('#top-names .copy-card').getBoundingClientRect().bottom)};})()");
+    ok(d141.allIn && d141.rows === 1 && d141.steps === 0 && d141.twoCol && d141.w > 800 && !d141.ov && d141.top < 800, `1.3.1 desktop 1280: tabs in one row, input | output side by side, results on the first screen (${JSON.stringify(d141)})`);
+    // 1.3.1-lab: two-column split on desktop, restored DOM order on mobile, meishi design options
+    {
+      const d131 = await ev("(function(){var m=document.getElementById('meishiPreviewCard');return {splits:document.querySelectorAll('.mf-split').length,mei:!!(m&&m.closest('.mf-col-out')),fixOut:!!document.getElementById('fixLadder').closest('.mf-col-out'),fixIn:!!document.getElementById('fixInput').closest('.mf-col-in'),logo:(function(){var i=document.querySelector('header.app-bar h1 .brand-mark');return i&&i.complete&&i.naturalWidth>0&&Math.round(i.getBoundingClientRect().width);})()};})()");
+      ok(d131.splits >= 6 && d131.mei && d131.fixOut && d131.fixIn && d131.logo >= 24, `1.3.1 desktop: input/output columns on names/fix/meishi/…, header logo loaded (${JSON.stringify(d131)})`);
+      await P.send('Emulation.setDeviceMetricsOverride', { width: 390, height: 750, deviceScaleFactor: 2, mobile: true });
+      await sleep(250);
+      const m131 = await ev("(function(){var p=document.getElementById('panel-names');var fam=document.getElementById('family').closest('.card');var kids=[].slice.call(p.children);return {splits:document.querySelectorAll('.mf-split').length,order:kids.indexOf(document.getElementById('top-names'))<kids.indexOf(fam)&&kids.indexOf(fam)<kids.indexOf(document.getElementById('nameLadder').closest('.card')),fix:document.getElementById('fixInput').closest('.fix-card').firstElementChild.classList.contains('fix-head')};})()");
+      ok(m131.splits === 0 && m131.order && m131.fix, `1.3.1 back to 390px: columns removed, original DOM order restored (${JSON.stringify(m131)})`);
+      await ev("document.getElementById('tab-meishi').click(); 1"); await sleep(150);
+      const def131 = await ev("(function(){var c=document.getElementById('meishiCard');return {yoko:c.classList.contains('mei-yoko'),seal:!!c.querySelector('.mei-seal'),back:!document.getElementById('meishiBackStage').hidden,bar:!!c.querySelector('.mei-bar')};})()");
+      ok(def131.yoko && !def131.seal && !def131.back && !def131.bar, `1.3.1 meishi: saved/default style keeps the old look (horizontal, no seal, no back, no bar) (${JSON.stringify(def131)})`);
+      const pick = (k, v) => ev(`(function(){document.querySelector('#meishiStyleRow .ms-group[data-key="${k}"] button[data-val="${v}"]').click();return 1;})()`);
+      await pick('back', 'en'); await pick('seal', 'hanko'); await pick('accent', 'bar');
+      await ev("(function(){var s=document.getElementById('meishiAddType');s.value='company';document.getElementById('meishiAddBtn').click();var r=document.querySelectorAll('#meishiBlocks .meishi-block');var ins=r[r.length-1].querySelectorAll('input');ins[0].value='さくら商事株式会社';ins[0].dispatchEvent(new Event('input',{bubbles:true}));ins[1].value='Sakura Trading Co., Ltd.';ins[1].dispatchEvent(new Event('input',{bubbles:true}));document.getElementById('meishiStdOrderBtn').click();return 1;})()");
+      await sleep(150);
+      const on131 = await ev("(function(){var f=document.getElementById('meishiCard'),b=document.getElementById('meishiCardBack');var ft=f.textContent,bt=b.textContent;var first=document.querySelector('#meishiBlocks .meishi-block select').value;return {back:!document.getElementById('meishiBackStage').hidden,seal:!!f.querySelector('.mei-seal'),bar:!!f.querySelector('.mei-bar'),frontJa:ft.indexOf('さくら商事株式会社')>=0&&ft.indexOf('Sakura Trading')<0,backEn:bt.indexOf('Sakura Trading Co., Ltd.')>=0&&bt.indexOf('さくら')<0,first:first,ov:document.documentElement.scrollWidth>391};})()");
+      ok(on131.back && on131.seal && on131.bar && on131.frontJa && on131.backEn && on131.first === 'company' && !on131.ov, `1.3.1 meishi: English back, hanko seal, accent bar, 会社名 JA front / EN back, Japanese order puts company first (${JSON.stringify(on131)})`);
+      await pick('orient', 'tate');
+      const t131 = await ev("(function(){var c=document.getElementById('meishiCard');var r=c.getBoundingClientRect();return {tate:c.classList.contains('mei-tate')&&getComputedStyle(c).writingMode==='vertical-rl',portrait:r.height>r.width,backYoko:document.getElementById('meishiCardBack').classList.contains('mei-yoko')};})()");
+      ok(t131.tate && t131.portrait && t131.backYoko, `1.3.1 meishi: 縦書き front is portrait vertical-rl; English back stays horizontal (${JSON.stringify(t131)})`);
+      await pick('orient', 'yoko'); await pick('back', 'none'); await pick('seal', 'none'); await pick('accent', 'none');
+      await P.send('Emulation.setDeviceMetricsOverride', { width: 1280, height: 800, deviceScaleFactor: 1, mobile: false });
+      await sleep(200);
+    }
     await ev(`localStorage.setItem('mojifill.pro.v1', JSON.stringify({unlocked:true,code:'TEST',at:Date.now()})); 1`);
     await load(`${ORIGIN}/index.html?lang=ja&desk=141p`);
     await ev("document.getElementById('tab-address').click(); 1"); await sleep(300);
@@ -1142,7 +1166,7 @@ try {
       await Q.send('Page.enable'); await Q.send('Runtime.enable'); await Q.send('Network.enable');
       // A stale cache from an older release must be removed when the new worker activates.
       await load2(`${ORIGIN}/favicon-32.png`);
-      await ev2("caches.open('mojifill-1.2.52-lab').then(function(c){return c.put('/old', new Response('old'));}).then(function(){return 1;})");
+      await ev2("caches.open('mojifill-1.3.0-lab').then(function(c){return c.put('/old', new Response('old'));}).then(function(){return 1;})");
       const hits0 = swHits;
       await load2(`${ORIGIN}/?lang=ja`);
       const ctl = await ev2("navigator.serviceWorker.ready.then(function(){return new Promise(function(r){if(navigator.serviceWorker.controller)return r();navigator.serviceWorker.addEventListener('controllerchange',function(){r();});setTimeout(r,8000);});}).then(function(){var c=navigator.serviceWorker.controller;return c?new URL(c.scriptURL).pathname:'none';})");
@@ -1150,8 +1174,9 @@ try {
       ok(swHits > hits0, '1.2.50 SW: the browser fetched /sw.js from the server (a real file, not blob:)');
       ok(await ev2("navigator.serviceWorker.getRegistration().then(function(r){return !!r && r.scope === location.origin + '/' && !!r.active && r.active.scriptURL === location.origin + '/sw.js';})"), "1.2.50 SW: registration scope '/' with /sw.js active");
       const keys = await ev2("caches.keys()");
-      ok(keys.indexOf('mojifill-1.3.0-lab') >= 0 && keys.indexOf('mojifill-1.2.53-lab') < 0, `1.3.0 SW: CACHE mojifill-1.3.0-lab present, old 1.2.53 cache deleted (${keys.join(',')})`);
-      const shell = await ev2("caches.open('mojifill-1.3.0-lab').then(function(c){return c.keys();}).then(function(ks){return ks.map(function(k){var u=new URL(k.url);return u.pathname+u.search;});})");
+      const SW_CACHE = (fs.readFileSync(path.join(LAB, 'sw.js'), 'utf8').match(/const CACHE='([^']+)'/) || [])[1];
+      ok(SW_CACHE === 'mojifill-1.3.1-lab' && keys.indexOf(SW_CACHE) >= 0 && keys.indexOf('mojifill-1.3.0-lab') < 0, `1.3.1 SW: CACHE ${SW_CACHE} present, old 1.3.0 cache deleted (${keys.join(',')})`);
+      const shell = await ev2("caches.open('" + SW_CACHE + "').then(function(c){return c.keys();}).then(function(ks){return ks.map(function(k){var u=new URL(k.url);return u.pathname+u.search;});})");
       for (const k of ['/', '/terms', '/manifest.webmanifest?v=1.3.0', '/favicon-32.png?v=1.3.0', '/icon-192.png?v=1.3.0', '/icon-512.png?v=1.3.0', '/icon-maskable-512.png?v=1.3.0', '/apple-touch-icon.png?v=1.3.0']) ok(shell.indexOf(k) >= 0, `1.3.0 SW precache: ${k}`);
       ok(shell.every((k) => k.indexOf('/api/') !== 0), '1.2.50 SW: /api/ never cached');
       const man = (await Q.send('Page.getAppManifest')).result || await Q.send('Page.getAppManifest');
