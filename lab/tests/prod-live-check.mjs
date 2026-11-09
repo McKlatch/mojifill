@@ -41,7 +41,7 @@ try {
   const inst = await ev("(function(){var b=document.getElementById('headerInstallBtn');var vis=!!b&&!b.hidden&&b.getBoundingClientRect().width>0&&getComputedStyle(b).display!=='none';return {btn:vis, elig: typeof window.mfInstallUiEligible==='function'?window.mfInstallUiEligible():null};})()");
   ok(!inst.btn && !inst.elig, 'desktop 1280: install button not visible ' + JSON.stringify(inst));
   // buy → link (capture window.open)
-  const buy = await ev("(function(){var u=null;var o=window.open;window.open=function(x){u=x;return null;};var b=document.getElementById('proBuyBtn');var vis=!!b&&!b.hidden;b.click();window.open=o;return {vis:vis,url:u,text:b.textContent.trim()};})()");
+  const buy = await ev("(function(){var u=null;var o=window.open;window.open=function(x){u=x;return null;};var b=document.getElementById('proBuyBtn');var vis=!!b&&!b.hidden;if(b)b.click();window.open=o;return {vis:vis,url:u,text:b?b.textContent.trim():null};})()");
   ok(!buy.vis || !/buy\.stripe\.com/.test(buy.url||''), 'free: no live Stripe buy button');
   await load(O + '/terms'); await sleep(300);
   ok(await ev("!!document.getElementById('tokushoho')"), '/terms online renders #tokushoho');

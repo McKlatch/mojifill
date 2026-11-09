@@ -67,5 +67,5 @@ fs.cpSync(path.join(LAB, 'functions'), path.join(out, 'functions'), { recursive:
 // 1.3.2-lab: how-it-works demo media (About tab)
 if (fs.existsSync(path.join(LAB, 'demo'))) fs.cpSync(path.join(LAB, 'demo'), path.join(out, 'public', 'demo'), { recursive: true });
 const listing = fs.readdirSync(path.join(out, 'public')).sort();
-if (listing.some((f) => /PRO_CODES|\.md$|\.txt$/i.test(f))) fail('unexpected file in public/: ' + listing.join(', '));
+if (listing.some((f) => /PRO_CODES|\.md$/i.test(f) || (/\.txt$/i.test(f) && f !== 'robots.txt'))) fail('unexpected file in public/: ' + listing.join(', '));
 console.log(`build-prod: ${path.join(out, 'public')} = ${listing.join(', ')} + functions/api/geo.js · CACHE ${cache} (sw.js) · from lab ${labVer}`);
