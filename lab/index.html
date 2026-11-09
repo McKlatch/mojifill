@@ -1032,9 +1032,10 @@ header.app-bar .badge { gap: 4px; padding: 4px 7px; white-space: nowrap; }
   line-height: 1;
 }
 .help-q:active { border-color: var(--accent); color: var(--text); }
-.tab.tab-flash {
-  box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 45%, transparent);
-}
+/* 1.3.3-lab: the flash is a one-shot fade on the newly active tab only; an inactive tab never keeps a ring */
+.tab.tab-flash[aria-selected="true"] { animation: mfTabFlash 0.7s ease-out 1; }
+@keyframes mfTabFlash { from { box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 45%, transparent); } to { box-shadow: 0 0 0 3px transparent; } }
+@media (prefers-reduced-motion: reduce) { .tab.tab-flash[aria-selected="true"] { animation: none; } }
 .help-overlay {
   position: fixed;
   inset: 0;
@@ -2609,6 +2610,10 @@ header.app-bar::after { content: ""; position: absolute; left: 0; right: 0; bott
 @media (max-width: 420px) { .brand-mark { width: 26px; height: 26px; } }
 @media (max-width: 380px) { .brand-mark { width: 22px; height: 22px; } }
 @media (max-width: 345px) { .brand-mark { width: 20px; height: 20px; } }
+/* 1.3.3-lab: optical centring — trim the wordmark's box to cap height so flex centring lines the mark up with the
+   capitals in every system font (SF / Segoe / Roboto / Noto put different space above and below); 1px nudge elsewhere */
+header.app-bar h1.brand .brand-name { text-box: trim-both cap alphabetic; }
+@supports not (text-box: trim-both cap alphabetic) { header.app-bar h1.brand .brand-mark { position: relative; top: 1px; } }
 
 /* Marks: uniform tiles — symbol large on top, short label below, ? in the tile's top-right corner */
 #marksChips, #spacesChips { display: grid; grid-template-columns: repeat(auto-fill, minmax(96px, 1fr)); gap: 8px; }
@@ -2665,6 +2670,47 @@ html { scrollbar-gutter: stable; }
   #panel-work.active > .card, #aboutTools > .card { break-inside: avoid; display: inline-block; width: 100%; margin: 0 0 16px; }
   #panel-about > .demo-card { margin-bottom: 16px; }
 }
+/* ---------- 1.3.3-lab: hanko + crest card ---------- */
+.mei-art-slots { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; margin: 8px 0 4px; }
+.mei-art-slot { border: 1px solid var(--border); border-radius: 12px; padding: 10px; min-width: 0; }
+.mei-art-head { display: flex; align-items: center; gap: 10px; }
+.mei-art-head h3 { margin: 0; font-size: 0.92rem; }
+.mei-art-head .hint { margin: 2px 0 0; }
+.mei-art-thumb { flex: 0 0 auto; width: 56px; height: 56px; border-radius: 10px; border: 1px solid var(--border); background: #fbf8f1; color: #27467a; display: flex; align-items: center; justify-content: center; padding: 6px; box-sizing: border-box; }
+.mei-art-thumb svg, .mei-art-thumb img { width: 100%; height: 100%; display: block; object-fit: contain; }
+.mei-art-thumb.is-default { opacity: 0.75; }
+.mei-art-btns { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+.mei-upload { position: relative; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; overflow: hidden; }
+.mei-upload input[type="file"] { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; font-size: 0; }
+.mei-upload:focus-within { outline: 2px solid var(--accent); outline-offset: 2px; }
+.mei-clean { display: grid; gap: 6px; margin-top: 10px; font-size: 0.86rem; }
+.mei-clean[hidden] { display: none; }
+.mei-thr { display: flex; align-items: center; gap: 8px; }
+.mei-thr input[type="range"] { flex: 1; min-height: 0; padding: 0; }
+.mei-gen, .mei-advice { border: 1px solid var(--border); border-radius: 12px; margin-top: 10px; padding: 0 12px; }
+.mei-gen > summary, .mei-advice > summary { cursor: pointer; font-weight: 700; padding: 12px 0; min-height: 24px; }
+.mei-gen[open], .mei-advice[open] { padding-bottom: 12px; }
+.mei-gen-body { display: flex; flex-wrap: wrap; gap: 14px; align-items: flex-start; }
+.mei-gen-preview { flex: 0 0 auto; width: 148px; height: 148px; border-radius: 12px; border: 1px solid var(--border); background: #fbf8f1; display: flex; align-items: center; justify-content: center; }
+.mei-gen-preview svg { width: 132px; height: 132px; display: block; }
+.mei-gen-ctrls { flex: 1 1 240px; min-width: 0; display: grid; gap: 8px; }
+.mei-gen-ctrls .ms-group { margin: 0; }
+.mei-gen-custom { margin: 0; }
+.mei-gen-custom input { max-width: 12rem; }
+.mei-gen-actions { margin-top: 12px; }
+.mei-motifs { display: grid; grid-template-columns: repeat(auto-fill, minmax(76px, 1fr)); gap: 6px; }
+.mei-motif { display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 8px 4px 6px; border-radius: 10px; border: 1px solid var(--border); background: #fbf8f1; color: #1c1b19; font: inherit; font-size: 0.7rem; line-height: 1.2; cursor: pointer; min-height: 76px; }
+.mei-motif svg { width: 36px; height: 36px; }
+.mei-motif[aria-pressed="true"] { border-color: var(--accent); box-shadow: 0 0 0 2px var(--accent); }
+.mei-advice ul { margin: 0; padding-left: 1.2em; display: grid; gap: 6px; font-size: 0.88rem; line-height: 1.5; }
+.mei-art-import { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 12px; }
+.mei-art-import .hint { margin: 0; flex: 1 1 200px; }
+/* 1.3.3-lab: hanko / crest art (generated SVG or the user's own image) — same CSS on screen and in print */
+.meishi-card .mei-seal.mei-seal-art { border: 0; border-radius: 0; width: calc(var(--u) * 13.5); height: calc(var(--u) * 13.5); right: calc(var(--u) * 4.4); bottom: calc(var(--u) * 4.6); display: block; transform: rotate(-4deg); opacity: 0.94; writing-mode: horizontal-tb; }
+.meishi-card .mei-seal.mei-seal-art > svg, .meishi-card .mei-seal.mei-seal-art > img, .meishi-card .mei-crest > img { display: block; width: 100%; height: 100%; object-fit: contain; }
+.meishi-card.mei-tate .mei-seal.mei-seal-art { right: auto; left: calc(var(--u) * 4.6); }
+.meishi-card.mei-theme-ink .mei-seal-art, .meishi-card.mei-theme-ink .mei-crest { filter: grayscale(1) contrast(1.6) brightness(0.6); }
+.meishi-card.mei-theme-dark .mei-seal-art > img, .meishi-card.mei-theme-dark .mei-crest > img { filter: brightness(1.15); }
 </style>
 <style id="meiFaceCss">
 /* 1.3.1-lab meishi face — shared by the preview and the print window (container units: --u = 1% of the card's long side) */
@@ -3707,6 +3753,109 @@ html { scrollbar-gutter: stable; }
           </div>
         </div>
       </div>
+      <!-- 1.3.3-lab: hanko + crest — upload your own or generate one; processed and stored only on this device -->
+      <div class="card mei-art-card" id="meishiArtCard">
+        <h2 data-ja-html="はんこ・紋">Hanko &amp; crest</h2>
+        <p class="hint" style="margin-top:0" data-ja-html="画像はこのページ内（端末内）で処理・保存され、どこにもアップロードされません。">Images are processed and saved in this page, on this device — never uploaded.</p>
+        <div class="mei-art-slots">
+          <div class="mei-art-slot" data-slot="hanko">
+            <div class="mei-art-head">
+              <span class="mei-art-thumb" id="meiHankoThumb" aria-hidden="true"></span>
+              <div><h3 data-ja-html="はんこ（印）">Hanko (seal)</h3><p class="hint mei-art-state" id="meiHankoState"></p></div>
+            </div>
+            <div class="mei-art-btns">
+              <label class="btn-subtle mei-upload"><span data-ja-html="画像を選ぶ">Upload image</span><input type="file" id="meiHankoFile" accept="image/png,image/jpeg,image/webp,image/svg+xml,.svg"></label>
+              <button type="button" class="btn-subtle" id="meiHankoRemove" hidden data-ja-html="削除">Remove</button>
+            </div>
+            <div class="mei-clean" id="meiHankoClean" hidden>
+              <label class="hh-check"><input type="checkbox" id="meiHankoKnock" checked> <span data-ja-html="紙の背景を透明に">Remove paper background</span></label>
+              <label class="mei-thr"><span data-ja-html="しきい値">Threshold</span> <input type="range" id="meiHankoThr" min="120" max="250" step="5" value="205"></label>
+              <label class="hh-check"><input type="checkbox" id="meiHankoTint" checked> <span data-ja-html="朱色にする">Recolour to vermilion (朱)</span></label>
+            </div>
+          </div>
+          <div class="mei-art-slot" data-slot="crest">
+            <div class="mei-art-head">
+              <span class="mei-art-thumb" id="meiCrestThumb" aria-hidden="true"></span>
+              <div><h3 data-ja-html="紋・ロゴ">Crest / logo</h3><p class="hint mei-art-state" id="meiCrestState"></p></div>
+            </div>
+            <div class="mei-art-btns">
+              <label class="btn-subtle mei-upload"><span data-ja-html="画像を選ぶ">Upload image</span><input type="file" id="meiCrestFile" accept="image/png,image/jpeg,image/webp,image/svg+xml,.svg"></label>
+              <button type="button" class="btn-subtle" id="meiCrestRemove" hidden data-ja-html="削除">Remove</button>
+            </div>
+            <div class="mei-clean" id="meiCrestClean" hidden>
+              <label class="hh-check"><input type="checkbox" id="meiCrestKnock" checked> <span data-ja-html="紙の背景を透明に">Remove paper background</span></label>
+              <label class="mei-thr"><span data-ja-html="しきい値">Threshold</span> <input type="range" id="meiCrestThr" min="120" max="250" step="5" value="205"></label>
+              <label class="hh-check"><input type="checkbox" id="meiCrestTint"> <span data-ja-html="差し色にする">Recolour to the card colour</span></label>
+            </div>
+          </div>
+        </div>
+        <details class="mei-gen" id="meiHankoGen">
+          <summary data-ja-html="はんこを作る（生成）">Hanko generator</summary>
+          <div class="mei-gen-body">
+            <div class="mei-gen-preview" id="meiHankoGenPreview" aria-hidden="true"></div>
+            <div class="mei-gen-ctrls">
+              <div class="ms-group"><span class="ms-label" data-ja-html="形">Shape</span><div class="ms-seg" role="group" aria-label="Shape" data-ja-aria-label="形">
+                <button type="button" data-hg="shape" data-val="round" data-ja-html="丸印">Round</button>
+                <button type="button" data-hg="shape" data-val="square" data-ja-html="角印">Square</button></div></div>
+              <div class="ms-group"><span class="ms-label" data-ja-html="文字">Text</span><div class="ms-seg" role="group" aria-label="Seal text" data-ja-aria-label="印の文字">
+                <button type="button" data-hg="src" data-val="kana" data-ja-html="カナ">Kana</button>
+                <button type="button" data-hg="src" data-val="kanji" data-ja-html="漢字">Kanji</button>
+                <button type="button" data-hg="src" data-val="romaji" data-ja-html="ローマ字">Romaji</button>
+                <button type="button" data-hg="src" data-val="custom" data-ja-html="自由">Custom</button></div></div>
+              <div class="field mei-gen-custom"><input type="text" id="meiHankoCustom" maxlength="4" lang="ja" autocomplete="off" spellcheck="false" placeholder="1–4 characters" data-ja-placeholder="1〜4文字" aria-label="Custom seal text" data-ja-aria-label="印の文字（自由入力）" disabled></div>
+              <div class="ms-group"><span class="ms-label" data-ja-html="枠">Border</span><div class="ms-seg" role="group" aria-label="Border" data-ja-aria-label="枠の太さ">
+                <button type="button" data-hg="border" data-val="1" data-ja-html="細">Thin</button>
+                <button type="button" data-hg="border" data-val="2" data-ja-html="中">Medium</button>
+                <button type="button" data-hg="border" data-val="3" data-ja-html="太">Thick</button></div></div>
+              <div class="ms-group"><span class="ms-label" data-ja-html="色">Ink</span><div class="ms-seg" role="group" aria-label="Ink" data-ja-aria-label="色">
+                <button type="button" data-hg="ink" data-val="shu" data-ja-html="朱">Vermilion</button>
+                <button type="button" data-hg="ink" data-val="sumi" data-ja-html="墨">Sumi</button>
+                <button type="button" data-hg="ink" data-val="ai" data-ja-html="藍">Indigo</button></div></div>
+              <label class="hh-check"><input type="checkbox" id="meiHankoRough"> <span data-ja-html="かすれ（朱肉の質感）">Ink texture</span></label>
+            </div>
+          </div>
+          <div class="btn-row mei-gen-actions">
+            <button type="button" class="btn-primary" id="meiHankoUse" data-ja-html="これを使う">Use this</button>
+            <button type="button" class="btn-subtle" id="meiHankoPng">PNG</button>
+            <button type="button" class="btn-subtle" id="meiHankoSvgDl">SVG</button>
+          </div>
+        </details>
+        <details class="mei-gen" id="meiCrestGen">
+          <summary data-ja-html="紋を作る（生成）">Crest generator</summary>
+          <p class="hint" data-ja-html="単純な幾何学模様のオリジナル図案です（実在の家紋・登録商標の複製ではありません）。">Simple original geometric motifs — not copies of any real family crest or registered mark.</p>
+          <div class="mei-gen-body">
+            <div class="mei-gen-preview" id="meiCrestGenPreview" aria-hidden="true"></div>
+            <div class="mei-gen-ctrls">
+              <div class="mei-motifs" id="meiCrestMotifs" role="group" aria-label="Motif" data-ja-aria-label="図案"></div>
+              <div class="ms-group"><span class="ms-label" data-ja-html="色">Colour</span><div class="ms-seg" role="group" aria-label="Colour" data-ja-aria-label="色">
+                <button type="button" data-cg="ink" data-val="ai" data-ja-html="藍">Indigo</button>
+                <button type="button" data-cg="ink" data-val="shu" data-ja-html="朱">Red</button>
+                <button type="button" data-cg="ink" data-val="matsu" data-ja-html="松葉">Pine</button>
+                <button type="button" data-cg="ink" data-val="sumi" data-ja-html="墨">Sumi</button></div></div>
+              <label class="hh-check"><input type="checkbox" id="meiCrestRing" checked> <span data-ja-html="丸で囲む">Circle ring</span></label>
+            </div>
+          </div>
+          <div class="btn-row mei-gen-actions">
+            <button type="button" class="btn-primary" id="meiCrestUse" data-ja-html="これを使う">Use this</button>
+            <button type="button" class="btn-subtle" id="meiCrestPng">PNG</button>
+            <button type="button" class="btn-subtle" id="meiCrestSvgDl">SVG</button>
+          </div>
+        </details>
+        <details class="mei-advice" id="meiArtAdvice">
+          <summary data-ja-html="はんこ・家紋のアドバイス">Advice: hanko &amp; kamon</summary>
+          <ul data-ja-html="&lt;li&gt;名刺のはんこは&lt;strong&gt;飾り&lt;/strong&gt;です。印刷・生成した画像は実印・銀行印ではなく、印鑑登録・銀行・契約には絶対に使わないでください。&lt;/li&gt;&lt;li&gt;外国籍の住民も市区町村役場で&lt;strong&gt;印鑑登録&lt;/strong&gt;ができます。必要なのは彫刻された実物の印鑑です。カタカナやローマ字が使えることも多いですが、条件は自治体ごとに違うので確認を。&lt;/li&gt;&lt;li&gt;よく使うもの：日常の受け取りや書類には&lt;strong&gt;認め印&lt;/strong&gt;、登録した印は&lt;strong&gt;実印&lt;/strong&gt;、口座用は&lt;strong&gt;銀行印&lt;/strong&gt;。最近は署名（サイン）で済む手続きも増えています。&lt;/li&gt;&lt;li&gt;家紋は家ごとに受け継がれてきた紋章です。名刺に使うのは自分の家の紋かオリジナル図案だけに。他家の紋・企業ロゴ・登録商標は使わないでください。&lt;/li&gt;&lt;li&gt;一般的な情報で、法的な助言や保証ではありません。手続きは役所・銀行に確認してください。&lt;/li&gt;">
+            <li>A hanko on a meishi is <strong>decorative</strong>. A printed or generated image is not a registered seal (実印) or bank seal (銀行印) — never use it for seal registration, banking or contracts.</li>
+            <li>Foreign residents can register a seal at the city office (<strong>印鑑登録</strong>). You need a real carved seal; katakana or romaji is often accepted, but rules differ by municipality — check yours.</li>
+            <li>Common choices: <strong>認め印</strong> (mitome-in) for everyday receipts and paperwork, <strong>実印</strong> (jitsu-in) for the registered seal, <strong>銀行印</strong> for your bank account. Many procedures now accept a signature instead.</li>
+            <li>Kamon (家紋) are crests passed down in families. On a card, use only your own family’s crest or an original design — not another family’s crest, a company logo or a registered mark.</li>
+            <li>General information only, not legal advice or a guarantee — confirm with the city office or bank.</li>
+          </ul>
+        </details>
+        <div class="mei-art-import">
+          <label class="btn-subtle mei-upload"><span data-ja-html="JSONから画像を復元">Restore images from JSON</span><input type="file" id="meiArtImport" accept="application/json,.json"></label>
+          <span class="hint" data-ja-html="書き出し（名前タブ）で「はんこ・紋の画像」に✓を入れたJSONのみ。">From an Export JSON (Names tab) saved with “Hanko &amp; crest images” ticked.</span>
+        </div>
+      </div>
       <div class="card mei-content-card" id="meishiContentCard">
         <div class="card-head">
           <h2 data-ja-html="項目">Lines</h2>
@@ -3811,7 +3960,7 @@ html { scrollbar-gutter: stable; }
     <div class="privacy" id="privacy">
       <h2>Privacy · プライバシー</h2>
       <p><strong>Who:</strong> MojiFill is made by David McClatchey (individual developer), who is responsible for this notice. Contact: <a href="https://github.com/McKlatch/mojifill/issues" target="_blank" rel="noopener noreferrer">GitHub Issues</a> (or <a href="https://x.com/mcklatch" target="_blank" rel="noopener noreferrer">@mcklatch on X</a>).</p>
-      <p><strong>Your form data is processed on this device.</strong> Names, kana, dates, phone, address, family details and text you paste into Fix text are processed in this page and are not sent to a MojiFill server. There are no accounts. Saved items live in this browser’s <code>localStorage</code> only because you asked the app to keep them (keys <code>mojifill.profile.v1</code>, <code>mojifill.profiles.v1</code>, household in <code>mf.household</code> — never a residence card number; plus small UI preferences). That storage is needed for the features you use, so there is no cookie banner. Remove it with “Clear saved &amp; new demo” or by clearing site data.</p>
+      <p><strong>Your form data is processed on this device.</strong> Names, kana, dates, phone, address, family details and text you paste into Fix text are processed in this page and are not sent to a MojiFill server. There are no accounts. Saved items live in this browser’s <code>localStorage</code> only because you asked the app to keep them (keys <code>mojifill.profile.v1</code>, <code>mojifill.profiles.v1</code>, household in <code>mf.household</code> — never a residence card number; hanko / crest images you upload or generate for the business card in <code>mojifill.meishiArt.v1</code>, processed in this page and never uploaded; plus small UI preferences). That storage is needed for the features you use, so there is no cookie banner. Remove it with “Clear saved &amp; new demo” or by clearing site data.</p>
       <p><strong>What leaves your device, and only when:</strong></p>
       <ul>
         <li><strong>Hosting:</strong> pages are served by Cloudflare Pages; like any website, Cloudflare handles your IP address and browser details to deliver the page.</li>
@@ -5297,9 +5446,9 @@ html { scrollbar-gutter: stable; }
     ['ミャンマー', 'Myanmar'], ['ブラジル', 'Brazil'], ['スリランカ', 'Sri Lanka'], ['台湾', 'Taiwan'], ['米国', 'USA'], ['タイ', 'Thailand'], ['インド', 'India'],
     ['バングラデシュ', 'Bangladesh'], ['ペルー', 'Peru'], ['パキスタン', 'Pakistan'], ['カンボジア', 'Cambodia'], ['朝鮮', 'Chosen (朝鮮)'], ['英国', 'UK'], ['モンゴル', 'Mongolia']
   ];
-  var HH_EXPORT_FIELDS = ['name', 'relation', 'birth', 'residence', 'phone', 'address'];
+  var HH_EXPORT_FIELDS = ['name', 'relation', 'birth', 'residence', 'phone', 'address', 'seal'];
   /* Sensitive groups start unticked (birthdate, nationality/residence, phone, address). */
-  var HH_EXPORT_DEFAULTS = { name: true, relation: true, birth: false, residence: false, phone: false, address: false };
+  var HH_EXPORT_DEFAULTS = { name: true, relation: true, birth: false, residence: false, phone: false, address: false, seal: false };
   /* 在留カード number: 2 letters + 8 digits + 2 letters (e.g. AB12345678CD). Never stored or exported. */
   var HH_CARD_NO_RE = /[A-Z]{2}[\s\-]?\d{8}[\s\-]?[A-Z]{2}/gi;
   function hhStripCardNo(s) {
@@ -5454,6 +5603,11 @@ html { scrollbar-gutter: stable; }
         if (m.residenceStatus) person.residence.status = m.residenceStatus;
         if (m.cardExpiry) person.residence.cardExpiry = m.cardExpiry;
       }
+      /* 1.3.3-lab: hanko / crest images only when ticked (default off) — validated data URLs or generator settings */
+      if (f.seal && typeof opts.artOf === 'function') {
+        var art = opts.artOf(e.member && e.member.id);
+        if (art && (art.hanko || art.crest)) person.meishiArt = art;
+      }
       if (f.phone && p.phone) {
         var half = (D.toHalfwidth ? D.toHalfwidth(String(p.phone)) : String(p.phone)).replace(/[－ー―‐−–—]/g, '-').trim();
         person.phone = { half: half, digits: half.replace(/\D/g, '') };
@@ -5566,9 +5720,12 @@ html { scrollbar-gutter: stable; }
     try { tabEl.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' }); } catch (e) {
       try { tabEl.scrollIntoView(true); } catch (e2) { /* ignore */ }
     }
-    tabEl.classList.add('tab-flash');
+    /* 1.3.3-lab: clear the flash from EVERY tab first — a second step/swipe within 700 ms used to cancel the
+       previous tab's removal timer, leaving a permanent ring on each tab passed through */
     clearTimeout(tabFlashTimer);
-    tabFlashTimer = setTimeout(function () { tabEl.classList.remove('tab-flash'); }, 700);
+    tabs.forEach(function (t) { t.classList.remove('tab-flash'); });
+    tabEl.classList.add('tab-flash');
+    tabFlashTimer = setTimeout(function () { tabs.forEach(function (t) { t.classList.remove('tab-flash'); }); }, 700);
   }
   var TAB_KEY = 'mojifill.tab';
   function hashLooksLikeShareOrSpecial() {
@@ -5829,6 +5986,496 @@ html { scrollbar-gutter: stable; }
   var middlesEl = document.getElementById('middles');
   var familyKanaEl = document.getElementById('familyKana');
   var givenKanaEl = document.getElementById('givenKana');
+  /* ---------- 1.3.3-lab: hanko + crest images (upload / generate) — everything stays on this device ----------
+     Stored per profile in localStorage 'mojifill.meishiArt.v1' as either generator settings (re-drawn as SVG we build
+     ourselves) or a downscaled PNG/WebP data URL made with <canvas> from the user's own file. Nothing is uploaded. */
+  var MEI_ART_KEY = 'mojifill.meishiArt.v1';
+  var MEI_ART_MAX = 512;
+  var MEI_INK = { shu: '#c8402f', sumi: '#26221f', ai: '#27467a', matsu: '#2e6b4f' };
+  var MEI_INK_DARK = { shu: '#ec7a63', sumi: '#ece6da', ai: '#9db8ec', matsu: '#86c9a3' };
+  var MEI_MOTIFS = ['shippo', 'asanoha', 'kikko', 'seigaiha', 'tomoe', 'ume', 'bishi'];
+  var meiArtUid = 0;
+  function meiArtPid() { return (state.proUnlocked && state.activeProfileId) ? String(state.activeProfileId) : '_solo'; }
+  function meiArtReadAll() {
+    try { var o = JSON.parse(localStorage.getItem(MEI_ART_KEY) || 'null'); if (o && o.by && typeof o.by === 'object') return o; } catch (e) { /* ignore */ }
+    return { v: 1, by: {} };
+  }
+  function meiArtGet(slot, pid) {
+    var all = meiArtReadAll();
+    var rec = all.by[pid || meiArtPid()] || {};
+    return meiArtClean(rec[slot], slot);
+  }
+  function meiArtSet(slot, item, pid) {
+    var all = meiArtReadAll();
+    var id = pid || meiArtPid();
+    var rec = all.by[id] || {};
+    if (item) rec[slot] = item; else delete rec[slot];
+    if (Object.keys(rec).length) all.by[id] = rec; else delete all.by[id];
+    try { localStorage.setItem(MEI_ART_KEY, JSON.stringify(all)); return true; } catch (e) {
+      showToast(L('Not saved — this browser’s storage is full. Try a smaller image.', '保存できません（ブラウザの保存容量がいっぱいです）。小さい画像でお試しください。'));
+      return false;
+    }
+  }
+  function meiArtClear(pid) {
+    var all = meiArtReadAll();
+    delete all.by[pid || meiArtPid()];
+    try { localStorage.setItem(MEI_ART_KEY, JSON.stringify(all)); } catch (e) { /* ignore */ }
+  }
+  /** Whitelist an art record (also used for JSON import): raster data URL or generator settings only — never raw SVG/HTML. */
+  function meiArtClean(it, slot) {
+    if (!it || typeof it !== 'object') return null;
+    if (it.kind === 'img') {
+      var src = String(it.src || '');
+      if (src.length > 1600000 || !/^data:image\/(png|jpeg|webp);base64,[A-Za-z0-9+/]+=*$/.test(src)) return null;
+      return { kind: 'img', src: src };
+    }
+    if (it.kind === 'gen') {
+      var p = it.p || {};
+      if (slot === 'hanko') {
+        return { kind: 'gen', p: {
+          shape: p.shape === 'square' ? 'square' : 'round',
+          src: ['kana', 'romaji', 'kanji', 'custom'].indexOf(p.src) >= 0 ? p.src : 'kana',
+          text: String(p.text || '').replace(/[\s\u3000<>&"']/g, '').slice(0, 6),
+          border: [1, 2, 3].indexOf(+p.border) >= 0 ? +p.border : 2,
+          rough: !!p.rough,
+          ink: MEI_INK[p.ink] ? p.ink : 'shu'
+        } };
+      }
+      return { kind: 'gen', p: {
+        motif: MEI_MOTIFS.indexOf(p.motif) >= 0 ? p.motif : 'shippo',
+        ring: p.ring !== false,
+        ink: MEI_INK[p.ink] ? p.ink : 'ai'
+      } };
+    }
+    return null;
+  }
+  function meiEsc(s) { return String(s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
+  /** Seal text for the hanko generator (1–4 characters). */
+  function meiHankoText(p) {
+    var kana = String((familyKanaEl && familyKanaEl.value) || '').replace(/[\s\u3000・･]/g, '');
+    var fam = String((familyEl && familyEl.value) || '').replace(/[\s\u3000]/g, '');
+    var t = '';
+    if (p.src === 'custom') t = String(p.text || '').replace(/[\s\u3000]/g, '');
+    else if (p.src === 'kanji') t = /[\u3400-\u9fff\uf900-\ufaff]/.test(fam) ? fam.replace(/[^\u3400-\u9fff\uf900-\ufaff々]/g, '') : '';
+    else if (p.src === 'romaji') t = fam.replace(/[^A-Za-z]/g, '').toUpperCase();
+    else t = kana;
+    if (!t) t = kana || fam.replace(/[^A-Za-z\u3040-\u30ff\u3400-\u9fff]/g, '').toUpperCase() || '印';
+    var arr = Array.from(t);
+    return arr.slice(0, arr.every(function (c) { return /[A-Za-z]/.test(c); }) ? 6 : 4).join('');
+  }
+  /** Hanko SVG (100×100). Round = 丸印, square = 角印. 2–4 chars stack vertically; two columns read right → left. */
+  function meiHankoSvg(p, opts) {
+    p = (meiArtClean({ kind: 'gen', p: p }, 'hanko') || {}).p;
+    opts = opts || {};
+    var chars = Array.from(opts.text != null ? opts.text : meiHankoText(p)).slice(0, 6);
+    if (!chars.every(function (c) { return /[A-Za-z]/.test(c); })) chars = chars.slice(0, 4);
+    var n = chars.length || 1;
+    var col = opts.color || MEI_INK[p.ink];
+    var sw = [0, 3, 4.6, 6.4][p.border];
+    var id = 'mfh' + (++meiArtUid);
+    var latin = chars.every(function (c) { return /[A-Za-z]/.test(c); });
+    var font = latin ? 'Georgia, "Times New Roman", serif' : '"Hiragino Mincho ProN", "Yu Mincho", "Noto Serif JP", "Noto Serif CJK JP", serif';
+    var round = p.shape !== 'square';
+    var inner = round ? 31 : 34; /* half-size of the text box inside the border */
+    if (latin && n > 1) {
+      /* romaji reads left → right on one line, fitted to the seal */
+      var tw = inner * 2 * (round ? 0.86 : 0.94);
+      var lfs = Math.min(34, tw / (n * 0.62));
+      var txt = '<text x="50" y="50" transform="translate(50 50) scale(1 1.45) translate(-50 -50)" font-size="' + lfs.toFixed(2) + '" text-anchor="middle" dominant-baseline="central" textLength="' + Math.min(tw, lfs * n * 0.78).toFixed(2) + '" lengthAdjust="spacingAndGlyphs">' + meiEsc(chars.join('')) + '</text>';
+      return meiHankoWrap(p, opts, round, col, sw, id, font, n, 1, txt);
+    }
+    var cols = n === 4 || (n === 3 && !round) ? 2 : 1;
+    var colsChars = [];
+    if (cols === 1) colsChars = [chars];
+    else if (n === 4) colsChars = [chars.slice(0, 2), chars.slice(2)];
+    else colsChars = [chars.slice(0, 2), chars.slice(2)];
+    var out = [];
+    var colW = (inner * 2) / cols;
+    colsChars.forEach(function (cc, ci) {
+      /* first column on the RIGHT (traditional order) */
+      var cx = 50 + inner - colW * (ci + 0.5);
+      var rows = cc.length;
+      var rowH = (inner * 2) / rows;
+      var fs = Math.min(rowH * 0.94, colW * (rows === 1 && cols === 1 ? 0.9 : 0.94));
+      var sy = rows === 1 && cols === 2 ? (inner * 2 * 0.92) / fs : (rowH * 0.96) / fs;
+      cc.forEach(function (ch, ri) {
+        var cy = 50 - inner + rowH * (ri + 0.5);
+        var stretch = Math.max(0.6, Math.min(sy, 2.2));
+        /* a seal fills its box: narrow stacked glyphs are widened (like carved seal script), never squashed */
+        var sx = rows > 1 ? Math.max(1, Math.min(latin ? 1.4 : 1.75, (colW * 0.8) / fs)) : 1;
+        out.push('<text x="0" y="0" transform="translate(' + cx.toFixed(2) + ' ' + cy.toFixed(2) + ') scale(' + sx.toFixed(3) + ' ' + stretch.toFixed(3) + ')" font-size="' + fs.toFixed(2) + '" text-anchor="middle" dominant-baseline="central">' + meiEsc(ch) + '</text>');
+      });
+    });
+    return meiHankoWrap(p, opts, round, col, sw, id, font, n, cols, out.join(''));
+  }
+  function meiHankoWrap(p, opts, round, col, sw, id, font, n, cols, textMarkup) {
+    var frame = round
+      ? '<circle cx="50" cy="50" r="' + (47 - sw / 2).toFixed(2) + '" fill="none" stroke="' + col + '" stroke-width="' + sw + '"/>'
+      : '<rect x="' + (3 + sw / 2).toFixed(2) + '" y="' + (3 + sw / 2).toFixed(2) + '" width="' + (94 - sw).toFixed(2) + '" height="' + (94 - sw).toFixed(2) + '" rx="3" fill="none" stroke="' + col + '" stroke-width="' + sw + '"/>';
+    var filt = p.rough ? '<defs><filter id="' + id + '" x="-5%" y="-5%" width="110%" height="110%"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" seed="7" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="2.2" result="d"/><feColorMatrix in="n" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 -2.2 1.75" result="m"/><feComposite in="d" in2="m" operator="in"/></filter></defs>' : '';
+    return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="' + (opts.size || 100) + '" height="' + (opts.size || 100) + '" class="mf-hanko-svg" data-shape="' + (round ? 'round' : 'square') + '" data-n="' + n + '" data-cols="' + cols + '" aria-hidden="true" focusable="false">' + filt +
+      '<g' + (p.rough ? ' filter="url(#' + id + ')"' : '') + ' fill="' + col + '" stroke="' + col + '" stroke-width="0" font-family=\'' + font + '\' font-weight="700"><g stroke-width="' + (n > 2 ? 0.9 : 1.3) + '" stroke-linejoin="round">' + frame + textMarkup + '</g></g></svg>';
+  }
+  /** Original geometric kamon-style motifs (not copies of any family or registered crest). */
+  function meiCrestMotif(m) {
+    var P = function (a, r) { return [50 + r * Math.cos(a), 50 + r * Math.sin(a)]; };
+    var f = function (x) { return x.toFixed(2); };
+    var s = '';
+    var i, a;
+    if (m === 'shippo') {
+      s = '<g fill="none" stroke="currentColor" stroke-width="5"><circle cx="50" cy="50" r="40"/><circle cx="50" cy="30" r="20"/><circle cx="50" cy="70" r="20"/><circle cx="30" cy="50" r="20"/><circle cx="70" cy="50" r="20"/></g>';
+    } else if (m === 'asanoha') {
+      var lines = [];
+      for (i = 0; i < 6; i++) {
+        a = -Math.PI / 2 + i * Math.PI / 3;
+        var v = P(a, 42), v2 = P(a + Math.PI / 3, 42), c = P(a + Math.PI / 6, 21);
+        lines.push('M50 50L' + f(v[0]) + ' ' + f(v[1]), 'M' + f(v[0]) + ' ' + f(v[1]) + 'L' + f(c[0]) + ' ' + f(c[1]) + 'L' + f(v2[0]) + ' ' + f(v2[1]), 'M50 50L' + f(c[0]) + ' ' + f(c[1]));
+      }
+      var hex = [];
+      for (i = 0; i < 6; i++) { var h = P(-Math.PI / 2 + i * Math.PI / 3, 42); hex.push(f(h[0]) + ' ' + f(h[1])); }
+      s = '<g fill="none" stroke="currentColor" stroke-width="3.6" stroke-linejoin="round"><path d="M' + hex.join('L') + 'Z ' + lines.join(' ') + '"/></g>';
+    } else if (m === 'kikko') {
+      var ring = function (r) { var pts = []; for (var k = 0; k < 6; k++) { var q = P(-Math.PI / 2 + k * Math.PI / 3, r); pts.push(f(q[0]) + ' ' + f(q[1])); } return 'M' + pts.join('L') + 'Z'; };
+      s = '<path fill="currentColor" fill-rule="evenodd" d="' + ring(44) + ' ' + ring(36) + ' ' + ring(26) + ' ' + ring(19) + '"/><circle cx="50" cy="50" r="7" fill="currentColor"/>';
+    } else if (m === 'seigaiha') {
+      /* overlapping wave fans: each later (lower) fan hides the ones behind it via a mask — no paper colour needed */
+      var C = [[50, 56], [24, 78], [76, 78], [50, 100]];
+      var base = ++meiArtUid;
+      var disk = function (c) { return '<path d="M' + f(c[0] - 27) + ' ' + f(c[1]) + 'A27 27 0 0 1 ' + f(c[0] + 27) + ' ' + f(c[1]) + 'Z" fill="black"/>'; };
+      var defs = '<clipPath id="mfsgc' + base + '"><circle cx="50" cy="50" r="44"/></clipPath>';
+      var groups = '';
+      C.forEach(function (c, gi) {
+        var arcs = [];
+        [25, 18, 11, 4.5].forEach(function (r) { arcs.push('M' + f(c[0] - r) + ' ' + f(c[1]) + 'A' + r + ' ' + r + ' 0 0 1 ' + f(c[0] + r) + ' ' + f(c[1])); });
+        var later = C.slice(gi + 1);
+        var mk = '';
+        if (later.length) {
+          defs += '<mask id="mfsgm' + base + '_' + gi + '"><rect width="100" height="100" fill="white"/>' + later.map(disk).join('') + '</mask>';
+          mk = ' mask="url(#mfsgm' + base + '_' + gi + ')"';
+        }
+        groups += '<path' + mk + ' d="' + arcs.join(' ') + '"/>';
+      });
+      s = '<defs>' + defs + '</defs><g clip-path="url(#mfsgc' + base + ')" fill="none" stroke="currentColor" stroke-width="3.4">' + groups + '</g><circle cx="50" cy="50" r="44" fill="none" stroke="currentColor" stroke-width="3.4"/>';
+    } else if (m === 'tomoe') {
+      /* three separate commas: round head near the rim, tail sweeping clockwise and tapering before the next head */
+      var T0 = P(-Math.PI / 2, 42), E0 = P(-Math.PI / 2 + 1.55, 42), B0 = P(-Math.PI / 2, 12);
+      var one = 'M' + f(T0[0]) + ' ' + f(T0[1]) + 'A42 42 0 0 1 ' + f(E0[0]) + ' ' + f(E0[1]) + 'A36 36 0 0 0 ' + f(B0[0]) + ' ' + f(B0[1]) + 'A15 15 0 0 1 ' + f(T0[0]) + ' ' + f(T0[1]) + 'Z';
+      s = '<g fill="currentColor">' + [0, 120, 240].map(function (d) { return '<path d="' + one + '" transform="rotate(' + d + ' 50 50)"/>'; }).join('') + '</g>';
+    } else if (m === 'ume') {
+      var mid = 'mfum' + (++meiArtUid);
+      var petals = '';
+      for (i = 0; i < 5; i++) { a = -Math.PI / 2 + i * 2 * Math.PI / 5; var q = P(a, 24); petals += '<circle cx="' + f(q[0]) + '" cy="' + f(q[1]) + '" r="19"/>'; }
+      var dots = '';
+      for (i = 0; i < 5; i++) { a = -Math.PI / 2 + Math.PI / 5 + i * 2 * Math.PI / 5; var d = P(a, 11); dots += '<circle cx="' + f(d[0]) + '" cy="' + f(d[1]) + '" r="2.2" fill="black"/>'; }
+      s = '<defs><mask id="' + mid + '"><rect width="100" height="100" fill="white"/><circle cx="50" cy="50" r="7.5" fill="black"/>' + dots + '</mask></defs><g fill="currentColor" mask="url(#' + mid + ')">' + petals + '</g>';
+    } else {
+      var dia = function (cx, cy, r) { return 'M' + f(cx) + ' ' + f(cy - r) + 'L' + f(cx + r) + ' ' + f(cy) + 'L' + f(cx) + ' ' + f(cy + r) + 'L' + f(cx - r) + ' ' + f(cy) + 'Z'; };
+      s = '<path fill="currentColor" d="' + [dia(50, 27, 20), dia(73, 50, 20), dia(50, 73, 20), dia(27, 50, 20)].join(' ') + '"/>';
+    }
+    return s;
+  }
+  function meiCrestSvg(p, opts) {
+    p = (meiArtClean({ kind: 'gen', p: p }, 'crest') || {}).p;
+    opts = opts || {};
+    var col = opts.color || MEI_INK[p.ink];
+    var body = meiCrestMotif(p.motif);
+    var inner = p.ring ? '<circle cx="50" cy="50" r="46" fill="none" stroke="currentColor" stroke-width="4"/><g transform="translate(50 50) scale(0.74) translate(-50 -50)">' + body + '</g>' : body;
+    return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="' + (opts.size || 100) + '" height="' + (opts.size || 100) + '" class="mf-crest-svg" data-motif="' + p.motif + '" style="color:' + col + '" color="' + col + '" aria-hidden="true" focusable="false">' + inner + '</svg>';
+  }
+  /** Markup for a face: generator art is our own SVG; uploads are <img> of a validated raster data URL. */
+  function meiArtFaceHtml(slot, theme) {
+    var it = meiArtGet(slot);
+    if (!it) return '';
+    if (it.kind === 'img') return '<img src="' + it.src + '" alt="" draggable="false">';
+    var dark = theme === 'dark' ? { color: MEI_INK_DARK[it.p.ink] } : {};
+    return slot === 'hanko' ? meiHankoSvg(it.p, dark) : meiCrestSvg(it.p, dark);
+  }
+  /* ----- upload processing (FileReader + canvas, on-device) ----- */
+  var meiArtOrig = { hanko: null, crest: null };
+  function meiSanitizeSvgText(txt) {
+    var s = String(txt || '');
+    if (s.length > 2000000) return '';
+    s = s.replace(/<\?xml[^>]*>/gi, '').replace(/<!DOCTYPE[^>]*>/gi, '')
+      .replace(/<script[\s\S]*?<\/script\s*>/gi, '').replace(/<script[^>]*\/>/gi, '')
+      .replace(/<foreignObject[\s\S]*?<\/foreignObject\s*>/gi, '')
+      .replace(/\son[a-z]+\s*=\s*("[^"]*"|'[^']*'|[^\s>]+)/gi, '')
+      .replace(/(href|xlink:href)\s*=\s*("|')\s*(?!#|data:image\/(png|jpeg|webp))[^"']*\2/gi, '');
+    if (!/<svg[\s>]/i.test(s)) return '';
+    /* give the rasteriser a size when the file only has a viewBox */
+    if (!/<svg[^>]*\swidth=/i.test(s)) s = s.replace(/<svg/i, '<svg width="' + MEI_ART_MAX + '" height="' + MEI_ART_MAX + '"');
+    return s;
+  }
+  function meiLoadImage(src) {
+    return new Promise(function (res, rej) { var im = new Image(); im.onload = function () { res(im); }; im.onerror = function () { rej(new Error('img')); }; im.src = src; });
+  }
+  function meiReadFile(file) {
+    return new Promise(function (res, rej) {
+      var isSvg = /svg/i.test(file.type) || /\.svg$/i.test(file.name || '');
+      if (!isSvg && !/^image\/(png|jpeg|webp)$/i.test(file.type)) { rej(new Error('type')); return; }
+      if (file.size > 8 * 1024 * 1024) { rej(new Error('size')); return; }
+      var fr = new FileReader();
+      fr.onerror = function () { rej(new Error('read')); };
+      fr.onload = function () {
+        if (isSvg) {
+          var clean = meiSanitizeSvgText(fr.result);
+          if (!clean) { rej(new Error('svg')); return; }
+          var url = URL.createObjectURL(new Blob([clean], { type: 'image/svg+xml' }));
+          meiLoadImage(url).then(function (im) { URL.revokeObjectURL(url); res(im); }, function (e) { URL.revokeObjectURL(url); rej(e); });
+        } else meiLoadImage(fr.result).then(res, rej);
+      };
+      if (isSvg) fr.readAsText(file); else fr.readAsDataURL(file);
+    });
+  }
+  /** Draw the image into a ≤512px canvas and keep its pixels in memory (for re-processing with the slider). */
+  function meiImageToData(im) {
+    var w = im.naturalWidth || im.width || MEI_ART_MAX, h = im.naturalHeight || im.height || MEI_ART_MAX;
+    var k = Math.min(1, MEI_ART_MAX / Math.max(w, h));
+    var cw = Math.max(1, Math.round(w * k)), ch = Math.max(1, Math.round(h * k));
+    var c = document.createElement('canvas'); c.width = cw; c.height = ch;
+    var x = c.getContext('2d'); x.drawImage(im, 0, 0, cw, ch);
+    return x.getImageData(0, 0, cw, ch);
+  }
+  function meiHexRgb(h) { var n = parseInt(String(h).slice(1), 16); return [(n >> 16) & 255, (n >> 8) & 255, n & 255]; }
+  /** Knock out the paper (near-white → transparent, soft edge), optionally recolour the ink, then trim and encode. */
+  function meiProcessArt(src, o) {
+    var w = src.width, h = src.height;
+    var d = new Uint8ClampedArray(src.data);
+    var thr = Math.max(60, Math.min(254, +o.threshold || 200));
+    var soft = 28;
+    var tint = o.tint ? meiHexRgb(o.tint) : null;
+    var maxDark = 1;
+    if (tint) {
+      for (var j = 0; j < d.length; j += 4) { var lj = 0.299 * d[j] + 0.587 * d[j + 1] + 0.114 * d[j + 2]; if (d[j + 3] > 20) maxDark = Math.max(maxDark, 255 - lj); }
+    }
+    for (var i = 0; i < d.length; i += 4) {
+      var r = d[i], g = d[i + 1], b = d[i + 2], a = d[i + 3];
+      var lum = 0.299 * r + 0.587 * g + 0.114 * b;
+      var paper = Math.min(r, g, b);
+      if (o.knock) {
+        if (paper >= thr) a = 0;
+        else if (paper > thr - soft) a = Math.round(a * (thr - paper) / soft);
+      }
+      if (tint && a) {
+        var dens = Math.min(1, (255 - lum) / maxDark);
+        a = Math.round(a * Math.pow(dens, 0.75));
+        r = tint[0]; g = tint[1]; b = tint[2];
+      }
+      d[i] = r; d[i + 1] = g; d[i + 2] = b; d[i + 3] = a;
+    }
+    /* trim fully transparent margins so the mark fills its frame */
+    var x0 = w, y0 = h, x1 = -1, y1 = -1;
+    for (var y = 0; y < h; y++) for (var x = 0; x < w; x++) { if (d[(y * w + x) * 4 + 3] > 12) { if (x < x0) x0 = x; if (x > x1) x1 = x; if (y < y0) y0 = y; if (y > y1) y1 = y; } }
+    if (x1 < 0) return null;
+    var c = document.createElement('canvas'); c.width = w; c.height = h;
+    var cx = c.getContext('2d'); cx.putImageData(new ImageData(d, w, h), 0, 0);
+    var tw = x1 - x0 + 1, th = y1 - y0 + 1, side = Math.max(tw, th);
+    var out = document.createElement('canvas'); out.width = side; out.height = side;
+    out.getContext('2d').drawImage(c, x0, y0, tw, th, Math.round((side - tw) / 2), Math.round((side - th) / 2), tw, th);
+    var url = out.toDataURL('image/png');
+    if (url.length > 420000) {
+      var sm = document.createElement('canvas'); var s2 = Math.min(side, 320); sm.width = s2; sm.height = s2;
+      sm.getContext('2d').drawImage(out, 0, 0, s2, s2);
+      url = sm.toDataURL('image/png');
+      if (url.length > 420000) url = sm.toDataURL('image/webp', 0.9);
+    }
+    return url;
+  }
+  function meiCleanOpts(slot) {
+    var g = function (id) { return document.getElementById(id); };
+    var pre = slot === 'hanko' ? 'meiHanko' : 'meiCrest';
+    var acc = normalizeMeishiStyle(state.meishiStyle).color;
+    var accHex = { ai: MEI_INK.ai, shu: MEI_INK.shu, matsu: MEI_INK.matsu, sumi: MEI_INK.sumi }[acc] || MEI_INK.ai;
+    return {
+      knock: !!(g(pre + 'Knock') && g(pre + 'Knock').checked),
+      threshold: g(pre + 'Thr') ? +g(pre + 'Thr').value : 200,
+      tint: g(pre + 'Tint') && g(pre + 'Tint').checked ? (slot === 'hanko' ? MEI_INK.shu : accHex) : null
+    };
+  }
+  function meiApplyUpload(slot) {
+    var src = meiArtOrig[slot];
+    if (!src) return false;
+    var url = meiProcessArt(src, meiCleanOpts(slot));
+    if (!url) { showToast(L('Nothing left after cleaning — lower the threshold.', '背景除去で何も残りません。しきい値を下げてください。')); return false; }
+    if (!meiArtSet(slot, { kind: 'img', src: url })) return false;
+    meiEnableStyleFor(slot);
+    meiArtRender();
+    return true;
+  }
+  function meiEnableStyleFor(slot) {
+    var s = normalizeMeishiStyle(state.meishiStyle);
+    if (slot === 'hanko' && s.seal !== 'hanko') { s.seal = 'hanko'; setActiveMeishiStyle(s); }
+    if (slot === 'crest' && s.accent !== 'crest') { s.accent = 'crest'; setActiveMeishiStyle(s); }
+  }
+  /* ----- generators ----- */
+  var meiGen = {
+    hanko: { shape: 'round', src: 'kana', text: '', border: 2, rough: false, ink: 'shu' },
+    crest: { motif: 'asanoha', ring: true, ink: 'ai' }
+  };
+  function meiGenPreview() {
+    var hp = document.getElementById('meiHankoGenPreview');
+    if (hp) hp.innerHTML = meiHankoSvg(meiGen.hanko, { size: 132 });
+    var cp = document.getElementById('meiCrestGenPreview');
+    if (cp) cp.innerHTML = meiCrestSvg(meiGen.crest, { size: 132 });
+    var tiles = document.getElementById('meiCrestMotifs');
+    if (tiles && !tiles.childElementCount) {
+      MEI_MOTIFS.forEach(function (m) {
+        var b = document.createElement('button');
+        b.type = 'button'; b.className = 'mei-motif'; b.setAttribute('data-motif', m);
+        b.setAttribute('aria-label', meiMotifName(m)); b.title = meiMotifName(m);
+        tiles.appendChild(b);
+      });
+    }
+    if (tiles) [].forEach.call(tiles.children, function (b) {
+      var m = b.getAttribute('data-motif');
+      b.innerHTML = meiCrestSvg({ motif: m, ring: meiGen.crest.ring, ink: meiGen.crest.ink }, { size: 40 }) + '<span>' + meiEsc(meiMotifName(m)) + '</span>';
+      b.setAttribute('aria-pressed', m === meiGen.crest.motif ? 'true' : 'false');
+      b.setAttribute('aria-label', meiMotifName(m)); b.title = meiMotifName(m);
+    });
+    var gen = document.getElementById('meiHankoGen');
+    if (gen) gen.querySelectorAll('[data-hg]').forEach(function (b) {
+      var k = b.getAttribute('data-hg'), v = b.getAttribute('data-val');
+      b.setAttribute('aria-pressed', String(meiGen.hanko[k]) === v ? 'true' : 'false');
+    });
+    var cg = document.getElementById('meiCrestGen');
+    if (cg) cg.querySelectorAll('[data-cg]').forEach(function (b) {
+      b.setAttribute('aria-pressed', String(meiGen.crest[b.getAttribute('data-cg')]) === b.getAttribute('data-val') ? 'true' : 'false');
+    });
+    var ct = document.getElementById('meiHankoCustom');
+    if (ct) ct.disabled = meiGen.hanko.src !== 'custom';
+  }
+  function meiMotifName(m) {
+    var n = {
+      shippo: ['Shippō rings', '七宝'], asanoha: ['Hemp leaf', '麻の葉'], kikko: ['Hexagon', '亀甲'], seigaiha: ['Waves', '青海波'],
+      tomoe: ['Three swirls', '三つ巴風'], ume: ['Plum blossom', '梅鉢風'], bishi: ['Split diamond', '割菱風']
+    }[m] || [m, m];
+    return L(n[0], n[1]);
+  }
+  function meiDownload(name, blob) {
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a'); a.href = url; a.download = name; document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(function () { try { URL.revokeObjectURL(url); } catch (e) { /* ignore */ } }, 4000);
+  }
+  function meiSvgToPng(svg, size) {
+    var url = URL.createObjectURL(new Blob([svg], { type: 'image/svg+xml' }));
+    return meiLoadImage(url).then(function (im) {
+      var c = document.createElement('canvas'); c.width = size; c.height = size;
+      c.getContext('2d').drawImage(im, 0, 0, size, size);
+      URL.revokeObjectURL(url);
+      return new Promise(function (res) { c.toBlob(res, 'image/png'); });
+    });
+  }
+  /* ----- UI ----- */
+  function meiArtRender() {
+    try { updateMeishiPreview(); } catch (e) { meiArtUi(); }
+  }
+  /** Thumbs, state text and generator previews (called from updateMeishiPreview so name edits refresh them). */
+  function meiArtUi() {
+    if (!document.getElementById('meishiArtCard')) return;
+    ['hanko', 'crest'].forEach(function (slot) {
+      var pre = slot === 'hanko' ? 'meiHanko' : 'meiCrest';
+      var thumb = document.getElementById(pre + 'Thumb');
+      var st = document.getElementById(pre + 'State');
+      var rm = document.getElementById(pre + 'Remove');
+      var it = meiArtGet(slot);
+      if (thumb) {
+        if (it) thumb.innerHTML = meiArtFaceHtml(slot);
+        else thumb.innerHTML = slot === 'hanko' ? meiHankoSvg(meiGen.hanko) : MEI_CREST_SVG;
+        thumb.classList.toggle('is-default', !it);
+      }
+      if (st) st.textContent = it ? (it.kind === 'img' ? L('Your image · on this device', 'あなたの画像・この端末内') : L('Generated · on this device', '生成・この端末内')) : (slot === 'hanko' ? L('Default: drawn from your family name', '既定：姓から自動作成') : L('Default crest', '既定の紋'));
+      if (rm) rm.hidden = !it;
+      var cl = document.getElementById(pre + 'Clean');
+      if (cl) cl.hidden = !meiArtOrig[slot];
+    });
+    meiGenPreview();
+  }
+  function wireMeishiArt() {
+    var card = document.getElementById('meishiArtCard');
+    if (!card || card.getAttribute('data-wired')) return;
+    card.setAttribute('data-wired', '1');
+    window.__mfArt = { hankoSvg: meiHankoSvg, crestSvg: meiCrestSvg, motifs: MEI_MOTIFS.slice(), get: meiArtGet };
+    ['hanko', 'crest'].forEach(function (slot) {
+      var pre = slot === 'hanko' ? 'meiHanko' : 'meiCrest';
+      var file = document.getElementById(pre + 'File');
+      if (file) file.addEventListener('change', function () {
+        var f = file.files && file.files[0];
+        if (!f) return;
+        meiReadFile(f).then(function (im) {
+          meiArtOrig[slot] = meiImageToData(im);
+          var kn = document.getElementById(pre + 'Knock'); if (kn) kn.checked = true;
+          meiApplyUpload(slot);
+          showToast(L('Image processed on this device — not uploaded.', 'この端末内で処理しました（アップロードなし）。'));
+        }).catch(function (e) {
+          showToast(e && e.message === 'size' ? L('Image too large (max 8 MB).', '画像が大きすぎます（最大8MB）。') : L('Could not read that image (PNG, JPG, WebP or SVG).', '画像を読めません（PNG・JPG・WebP・SVG）。'));
+        }).then(function () { file.value = ''; });
+      });
+      ['Knock', 'Tint'].forEach(function (k) { var el = document.getElementById(pre + k); if (el) el.addEventListener('change', function () { meiApplyUpload(slot); }); });
+      var thr = document.getElementById(pre + 'Thr');
+      if (thr) thr.addEventListener('change', function () { meiApplyUpload(slot); });
+      var rm = document.getElementById(pre + 'Remove');
+      if (rm) rm.addEventListener('click', function () { meiArtSet(slot, null); meiArtOrig[slot] = null; meiArtRender(); });
+    });
+    var hg = document.getElementById('meiHankoGen');
+    if (hg) hg.addEventListener('click', function (e) {
+      var b = e.target.closest && e.target.closest('[data-hg]');
+      if (!b) return;
+      var k = b.getAttribute('data-hg'), v = b.getAttribute('data-val');
+      meiGen.hanko[k] = k === 'border' ? +v : v;
+      meiGenPreview();
+    });
+    var cg = document.getElementById('meiCrestGen');
+    if (cg) cg.addEventListener('click', function (e) {
+      var t = e.target.closest && e.target.closest('[data-cg],[data-motif]');
+      if (!t) return;
+      if (t.hasAttribute('data-motif')) meiGen.crest.motif = t.getAttribute('data-motif');
+      else meiGen.crest[t.getAttribute('data-cg')] = t.getAttribute('data-val');
+      meiGenPreview();
+    });
+    var rough = document.getElementById('meiHankoRough');
+    if (rough) rough.addEventListener('change', function () { meiGen.hanko.rough = rough.checked; meiGenPreview(); });
+    var ring = document.getElementById('meiCrestRing');
+    if (ring) ring.addEventListener('change', function () { meiGen.crest.ring = ring.checked; meiGenPreview(); });
+    var custom = document.getElementById('meiHankoCustom');
+    if (custom) custom.addEventListener('input', function () { meiGen.hanko.text = custom.value; meiGenPreview(); });
+    var useH = document.getElementById('meiHankoUse');
+    if (useH) useH.addEventListener('click', function () {
+      var p = meiArtClean({ kind: 'gen', p: meiGen.hanko }, 'hanko').p;
+      /* freeze the text so the seal keeps it even if the name changes later */
+      p.text = meiHankoText(p); p.src = 'custom';
+      if (meiArtSet('hanko', { kind: 'gen', p: p })) { meiArtOrig.hanko = null; meiEnableStyleFor('hanko'); meiArtRender(); showToast(L('Hanko set on the card', '名刺にはんこを設定しました')); }
+    });
+    var useC = document.getElementById('meiCrestUse');
+    if (useC) useC.addEventListener('click', function () {
+      if (meiArtSet('crest', meiArtClean({ kind: 'gen', p: meiGen.crest }, 'crest'))) { meiArtOrig.crest = null; meiEnableStyleFor('crest'); meiArtRender(); showToast(L('Crest set on the card', '名刺に紋を設定しました')); }
+    });
+    var dl = function (id, fn) { var b = document.getElementById(id); if (b) b.addEventListener('click', fn); };
+    dl('meiHankoPng', function () { meiSvgToPng(meiHankoSvg(meiGen.hanko, { size: 512 }), 512).then(function (b) { if (b) meiDownload('mojifill-hanko.png', b); }); });
+    dl('meiHankoSvgDl', function () { meiDownload('mojifill-hanko.svg', new Blob([meiHankoSvg(meiGen.hanko, { size: 512 })], { type: 'image/svg+xml' })); });
+    dl('meiCrestPng', function () { meiSvgToPng(meiCrestSvg(meiGen.crest, { size: 512 }), 512).then(function (b) { if (b) meiDownload('mojifill-crest.png', b); }); });
+    dl('meiCrestSvgDl', function () { meiDownload('mojifill-crest.svg', new Blob([meiCrestSvg(meiGen.crest, { size: 512 })], { type: 'image/svg+xml' })); });
+    var imp = document.getElementById('meiArtImport');
+    if (imp) imp.addEventListener('change', function () {
+      var f = imp.files && imp.files[0];
+      if (!f) return;
+      var fr = new FileReader();
+      fr.onload = function () {
+        var n = 0;
+        try {
+          var o = JSON.parse(String(fr.result || ''));
+          var people = (o && Array.isArray(o.people)) ? o.people : [];
+          var src = null;
+          people.forEach(function (p) { if (!src && p && p.meishiArt) src = p.meishiArt; });
+          if (src) ['hanko', 'crest'].forEach(function (slot) { var it = meiArtClean(src[slot], slot); if (it && meiArtSet(slot, it)) { n++; meiEnableStyleFor(slot); } });
+        } catch (e) { n = 0; }
+        meiArtRender();
+        showToast(n ? L('Hanko / crest restored on this device', 'はんこ・紋をこの端末に復元しました') : L('No hanko or crest images in that file', 'このファイルにはんこ・紋の画像はありません'));
+        imp.value = '';
+      };
+      fr.readAsText(f);
+    });
+    meiArtRender();
+  }
+
   var nameLadder = document.getElementById('nameLadder');
   var namesJumpChips = document.getElementById('namesJumpChips');
   if (namesJumpChips) {
@@ -6146,6 +6793,7 @@ html { scrollbar-gutter: stable; }
 
   function clearSavedProfile() {
     try { localStorage.removeItem(PROFILE_KEY); } catch (e) { /* ignore */ }
+    try { meiArtClear(); } catch (eArt) { /* ignore */ }
     state.birthDate = '';
     state.namedDates = [];
     state.namedDateSourceId = null;
@@ -7689,6 +8337,7 @@ html { scrollbar-gutter: stable; }
       'exp.f.residence': 'Nationality · residence',
       'exp.f.phone': 'Phone',
       'exp.f.address': 'Address',
+      'exp.f.seal': 'Hanko & crest images',
       'exp.sensitive': 'sensitive',
       'exp.warn': '⚠ Pasting this into an AI sends it to that company.',
       'exp.copyMd': 'Copy brief',
@@ -8223,6 +8872,7 @@ html { scrollbar-gutter: stable; }
       'exp.f.residence': '国籍・在留',
       'exp.f.phone': '電話',
       'exp.f.address': '住所',
+      'exp.f.seal': 'はんこ・紋の画像',
       'exp.sensitive': '要注意',
       'exp.warn': '⚠ AIに渡すと、そのサービスに送信されます。',
       'exp.copyMd': '指示書をコピー',
@@ -9467,7 +10117,7 @@ html { scrollbar-gutter: stable; }
     },
     privacy: {
       title: 'On-device & localStorage',
-      body: 'MojiFill runs in your browser. Names, dates, phone, and address details are not uploaded to a MojiFill server. There is no account. mojifill.app counts visits for site statistics with Cloudflare Web Analytics — no cookies, no localStorage, no fingerprinting. No ads, no marketing tracking, no selling data.\n\nOptional 〒 lookup sends only the postcode to zipcloud (Japan Post data) to prefill address fields — not your name.\n\nIf you edit your profile, a copy can be saved in this device’s localStorage (mojifill.profile.v1). Multiple profiles and household details stay on-device too (mojifill.profiles.v1, mf.household — never a residence card number). Export is made on this device only when you tap it. Share links keep data in the URL hash, encrypted on-device; the MojiFill server never receives the payload.\n\nClear site data or use “Clear saved & new demo” to wipe profile data. Free and open source (MIT). UK-based individual controller; honest on-device privacy.'
+      body: 'MojiFill runs in your browser. Names, dates, phone, and address details are not uploaded to a MojiFill server. There is no account. mojifill.app counts visits for site statistics with Cloudflare Web Analytics — no cookies, no localStorage, no fingerprinting. No ads, no marketing tracking, no selling data.\n\nOptional 〒 lookup sends only the postcode to zipcloud (Japan Post data) to prefill address fields — not your name.\n\nIf you edit your profile, a copy can be saved in this device’s localStorage (mojifill.profile.v1). Multiple profiles and household details stay on-device too (mojifill.profiles.v1, mf.household — never a residence card number). Hanko / crest images for the business card are processed in the page and kept only here (mojifill.meishiArt.v1) — never uploaded. Export is made on this device only when you tap it. Share links keep data in the URL hash, encrypted on-device; the MojiFill server never receives the payload.\n\nClear site data or use “Clear saved & new demo” to wipe profile data. Free and open source (MIT). UK-based individual controller; honest on-device privacy.'
     },
     furigana: {
       title: 'Furigana',
@@ -9517,7 +10167,7 @@ html { scrollbar-gutter: stable; }
     spaceIdeo: { title: '全角スペース', body: '日本語の幅広いスペース「　」（U+3000）。全角・文字数制限の欄でよく必要で、半角スペースと違い全角1マスとして数えます。' },
     spaceNbsp: { title: 'NBSP（U+00A0）', body: 'ノーブレークスペース。見た目はふつうのスペースでも改行のされ方が違い、半角スペースと別扱いする入力チェックもあります。プレビューでは·と表示。' },
     spaceZwsp: { title: 'ZWSP（U+200B）', body: 'ゼロ幅スペース — 見えません。弾いたり消したりする欄もあるので、必要なときだけ使ってください。プレビューではZWと表示。' },
-    privacy: { title: '端末内での処理とlocalStorage', body: 'MojiFillはブラウザ内で動きます。名前・日付・電話・住所はMojiFillのサーバーに送信されません。アカウントもありません。mojifill.appはアクセス数の統計のため、Cloudflare Web Analytics（Cookie・localStorage・フィンガープリント不使用）で訪問数を数えています。広告やマーケティング目的の追跡はなく、データの販売も行いません。\n\n〒検索（任意）は、住所欄を自動入力するために郵便番号だけをzipcloud（日本郵便のデータ）に送ります。名前は送りません。\n\nプロフィールを編集すると、この端末のlocalStorage（mojifill.profile.v1）に保存されることがあります。複数プロフィール、世帯情報も端末内に残ります（mojifill.profiles.v1、mf.household — 在留カード番号は保存しません）。エクスポートはタップしたときにこの端末で作成します。共有リンクはデータを端末内で暗号化してURLのハッシュに入れるため、MojiFillのサーバーは内容を受け取りません。\n\nプロフィールを消すには、サイトデータを削除するか「保存を消して新しいデモ」を使ってください。無料・オープンソース（MIT）。英国在住の個人が管理者です。端末内で完結するプライバシー。' },
+    privacy: { title: '端末内での処理とlocalStorage', body: 'MojiFillはブラウザ内で動きます。名前・日付・電話・住所はMojiFillのサーバーに送信されません。アカウントもありません。mojifill.appはアクセス数の統計のため、Cloudflare Web Analytics（Cookie・localStorage・フィンガープリント不使用）で訪問数を数えています。広告やマーケティング目的の追跡はなく、データの販売も行いません。\n\n〒検索（任意）は、住所欄を自動入力するために郵便番号だけをzipcloud（日本郵便のデータ）に送ります。名前は送りません。\n\nプロフィールを編集すると、この端末のlocalStorage（mojifill.profile.v1）に保存されることがあります。複数プロフィール、世帯情報も端末内に残ります（mojifill.profiles.v1、mf.household — 在留カード番号は保存しません）。名刺用のはんこ・紋の画像もページ内で処理し、この端末（mojifill.meishiArt.v1）にだけ保存します。アップロードはしません。エクスポートはタップしたときにこの端末で作成します。共有リンクはデータを端末内で暗号化してURLのハッシュに入れるため、MojiFillのサーバーは内容を受け取りません。\n\nプロフィールを消すには、サイトデータを削除するか「保存を消して新しいデモ」を使ってください。無料・オープンソース（MIT）。英国在住の個人が管理者です。端末内で完結するプライバシー。' },
     furigana: { title: 'ふりがな', body: '漢字（またはローマ字）の横や上に書く読みのかな。窓口で名前を読み上げられるようにするためのものです。外国人住民は、名前がローマ字でもカタカナの「フリガナ」欄を書くことがよくあります。' },
     ideographic: { title: '全角スペース', body: '日本語の幅広いスペース「　」（U+3000）。文字数・全角の欄でよく必要で、ふつうのスペースとは別の文字。全角1マスとして数えたい空白に使います。' },
     hepburn: { title: 'ヘボン式ローマ字', body: '日本語の音をローマ字で書く一般的な方式（例：しんじゅく → Shinjuku）。MojiFillのプレビューはヘボン式なので、自動のかなが合っているか確認できます。好みの綴りと違えばかなを修正してください。' },
@@ -11205,6 +11855,7 @@ html { scrollbar-gutter: stable; }
     if (backStage) backStage.hidden = s.back !== 'en';
     if (frontTag) frontTag.hidden = s.back !== 'en';
     if (backCard && s.back === 'en') renderMeishiFace(backCard, 'back');
+    try { meiArtUi(); } catch (eArtUi) { /* ignore */ }
   }
 
   function meishiPrintCss(style) {
@@ -11327,7 +11978,7 @@ html { scrollbar-gutter: stable; }
     el.innerHTML = '';
     var lines = meishiFaceLines(side);
     if (s.accent === 'bar') { var bar = document.createElement('span'); bar.className = 'mei-bar'; bar.setAttribute('aria-hidden', 'true'); el.appendChild(bar); }
-    if (s.accent === 'crest') { var cr = document.createElement('span'); cr.className = 'mei-crest'; cr.innerHTML = MEI_CREST_SVG; el.appendChild(cr); }
+    if (s.accent === 'crest') { var cr = document.createElement('span'); cr.className = 'mei-crest'; cr.innerHTML = meiArtFaceHtml('crest', s.theme) || MEI_CREST_SVG; el.appendChild(cr); }
     var body = document.createElement('div');
     body.className = 'mei-body';
     el.appendChild(body);
@@ -11355,15 +12006,16 @@ html { scrollbar-gutter: stable; }
       body.appendChild(d);
     });
     if (s.seal === 'hanko' && side !== 'back') {
+      /* 1.3.3-lab: the seal is a drawn SVG (or the user's own image), not CSS text in a vertical-writing flex box */
       var seal = document.createElement('span');
-      seal.className = 'mei-seal';
+      seal.className = 'mei-seal mei-seal-art';
       seal.setAttribute('aria-hidden', 'true');
-      var st = meishiSealText();
-      seal.setAttribute('data-n', String(Math.min(st.length, 4)));
-      seal.textContent = st;
+      seal.innerHTML = meiArtFaceHtml('hanko', s.theme) || meiHankoSvg({ shape: 'round', border: 2, ink: 'shu' }, { text: meishiSealText(), color: s.theme === 'dark' ? MEI_INK_DARK.shu : null });
       el.appendChild(seal);
     }
   }
+
+  try { wireMeishiArt(); } catch (eArt) { /* never break boot */ }
 
   if (meishiAddBtn) {
     meishiAddBtn.addEventListener('click', function () {
@@ -12768,7 +13420,12 @@ html { scrollbar-gutter: stable; }
     var ids = (pro && (!all || all.checked)) ? hhVisible().map(function (m) { return m.id; }) : [hhActiveId()];
     var entries = ids.map(function (id) { return { member: hhMember(id) || hhBlankMember(id, 'head'), profile: hhProfileOf(id) }; });
     var fields = pro ? hhState.fields : { name: true };
-    return hhBuildExport(entries, pro ? readAddressFromDom() : null, fields, { lang: hhLang(), today: hhTodayIso() }, {
+    return hhBuildExport(entries, pro ? readAddressFromDom() : null, fields, { lang: hhLang(), today: hhTodayIso(), artOf: function (id) {
+      var pid = (state.proUnlocked && id) ? String(id) : '_solo';
+      var o = {}; var h = meiArtGet('hanko', pid), c = meiArtGet('crest', pid);
+      if (h) o.hanko = h; if (c) o.crest = c;
+      return o;
+    } }, {
       kataToHira: kataToHira, kanaToRomaji: kanaToRomaji, toWareki: toWareki, toFullwidth: toFullwidth, toHalfwidth: toHalfwidth
     });
   }
@@ -12972,7 +13629,7 @@ html { scrollbar-gutter: stable; }
         { in: [cardOf('phoneInput')], out: [cardOf('postInput')] },
         fix ? { in: [fix.querySelector('.fix-head'), fix.querySelector('.fix-field'), byId('fixArrow'), fix.querySelector('.fix-opts')], outHead: fixOutHead(), out: [byId('fixEmpty'), byId('fixLadder'), byId('fixFit'), byId('fixSuggestWrap'), byId('fixNoChanges'), byId('fixChangesBox')] } : null,
         addrCard ? { in: addrIn, out: addrOut } : null,
-        { in: [byId('meishiDesignCard'), byId('meishiContentCard')], out: [byId('meishiPreviewCard')] }
+        { in: [byId('meishiDesignCard'), byId('meishiArtCard'), byId('meishiContentCard')], out: [byId('meishiPreviewCard')] }
       ];
     }
     function split() {

@@ -1,4 +1,4 @@
-/* MojiFill service worker (1.3.2-lab; file added in 1.3.0-lab). Served as a real same-origin file at /sw.js, scope '/'.
+/* MojiFill service worker (1.3.3-lab; file added in 1.3.0-lab). Served as a real same-origin file at /sw.js, scope '/'.
    Before 1.3.0 the worker was registered from a blob: URL, which browsers reject, so offline never worked.
    - CACHE is bumped every release (build-prod.mjs swaps it to mojifill-vNN for mojifill.app). Old caches are deleted on activate.
    - HTML navigations: network-first, cache fallback (so an online user always gets the latest page).
@@ -6,7 +6,7 @@
    - Other same-origin GETs: network-first, cache fallback.
    - Never touches /api/*, non-GET, or any cross-origin request (cross-origin requests go straight to the network).
    - skipWaiting + clients.claim: a new version takes over on the next load; HTML is network-first, so nobody is stranded. */
-const CACHE='mojifill-1.3.2-lab';
+const CACHE='mojifill-1.3.3-lab';
 const SHELL = [
   '/',
   '/terms',

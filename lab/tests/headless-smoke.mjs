@@ -846,6 +846,67 @@ try {
       await P.send('Emulation.setDeviceMetricsOverride', { width: 1280, height: 800, deviceScaleFactor: 1, mobile: false });
       await sleep(200);
     }
+    // 1.3.3-lab: inactive tabs never keep a ring after fast stepping; hanko / crest art (generate, upload on-device, export, import)
+    {
+      await P.send('Emulation.setDeviceMetricsOverride', { width: 390, height: 844, deviceScaleFactor: 2, mobile: true });
+      await ev("document.getElementById('tab-fix').click(); 1"); await sleep(250);
+      for (let i = 0; i < 6; i++) { await ev("document.getElementById('tabNext').click(); 1"); await sleep(60); }
+      await sleep(120);
+      const tf1 = await ev("[].filter.call(document.querySelectorAll('.tabs .tab'),function(t){return t.getAttribute('aria-selected')!=='true'&&t.classList.contains('tab-flash')}).length");
+      await sleep(900);
+      const tf2 = await ev("(function(){var off=[].filter.call(document.querySelectorAll('.tabs .tab'),function(t){return t.getAttribute('aria-selected')!=='true'});var sig=off.map(function(t){var c=getComputedStyle(t);return [c.boxShadow,c.outlineStyle,c.borderColor,c.backgroundColor,c.color].join('|')});return {n:off.length,uniq:new Set(sig).size,shadow:sig.filter(function(x){return x.split('|')[0]!=='none'}).length,flash:document.querySelectorAll('.tab.tab-flash').length,active:document.querySelector('.tab[aria-selected=true]').id};})()");
+      ok(tf1 === 0 && tf2.uniq === 1 && tf2.shadow === 0 && tf2.flash === 0 && tf2.n === 9, `1.3.3 tabs: after 6 fast 》 steps no inactive tab keeps a flash ring; all 9 inactive tabs look identical (left mid-step ${tf1}, ${JSON.stringify(tf2)})`);
+      await P.send('Emulation.setDeviceMetricsOverride', { width: 1280, height: 800, deviceScaleFactor: 1, mobile: false });
+      await ev(`localStorage.removeItem('mojifill.meishiArt.v1'); 1`);
+      await load(`${ORIGIN}/index.html?lang=en&art=133`);
+      await ev("(function(){var set=function(id,v){var e=document.getElementById(id);e.value=v;e.dispatchEvent(new Event('input',{bubbles:true}));};set('family','Young');set('given','Ronald');set('familyKana','ヤング');set('givenKana','ロナルド');document.getElementById('tab-meishi').click();return 1})()");
+      await sleep(200);
+      const pickJs = (k, v) => `document.querySelector('#meishiStyleRow .ms-group[data-key="${k}"] button[data-val="${v}"]').click();`;
+      await ev(`(function(){${pickJs('seal', 'hanko')}${pickJs('accent', 'crest')}return 1})()`); await sleep(200);
+      const sv = await ev("(function(){var c=document.getElementById('meishiCard');var s=c.querySelector('.mei-seal');if(!s)return {seal:false};var r=s.getBoundingClientRect();var hit=document.elementFromPoint(r.left+r.width/2,r.top+r.height/2);var t=s.querySelectorAll('text');var cr=c.querySelector('.mei-crest');var crr=cr&&cr.getBoundingClientRect();return {seal:true,w:Math.round(r.width),inCard:r.right<=c.getBoundingClientRect().right&&r.bottom<=c.getBoundingClientRect().bottom,onTop:!!(hit&&s.contains(hit)),text:[].map.call(t,function(x){return x.textContent}).join(''),vis:getComputedStyle(s).visibility,crest:!!(crr&&crr.width>20)};})()");
+      ok(sv.seal && sv.w >= 36 && sv.inCard && sv.onTop && sv.text === 'ヤング' && sv.vis === 'visible' && sv.crest, `1.3.3 Seal = Hanko: drawn seal visible on the card (family kana), on top, inside the card; crest accent renders (${JSON.stringify(sv)})`);
+      const hg = await ev("(function(){var A=window.__mfArt;var dp=new DOMParser();var q=function(svg){var d=dp.parseFromString(svg,'image/svg+xml').documentElement;var t=[].slice.call(d.querySelectorAll('text')).map(function(e){var m=/translate\\(([\\d.]+) ([\\d.]+)\\)/.exec(e.getAttribute('transform')||'');return {c:e.textContent,x:m?+m[1]:50,y:m?+m[2]:50};});return {shape:d.getAttribute('data-shape'),cols:+d.getAttribute('data-cols'),t:t,frame:!!d.querySelector(d.getAttribute('data-shape')==='round'?'circle':'rect'),scripts:d.querySelectorAll('script').length};};var sq=q(A.hankoSvg({shape:'square',border:3},{text:'山田花子'}));var rd=q(A.hankoSvg({shape:'round',rough:true},{text:'ヤマ'}));var la=q(A.hankoSvg({shape:'round'},{text:'LEE'}));var cr=A.motifs.map(function(m){var d=dp.parseFromString(A.crestSvg({motif:m,ring:true}),'image/svg+xml').documentElement;return d.querySelectorAll('path,circle,rect').length>1&&d.getAttribute('data-motif')===m;});return {sq:sq,rd:rd,la:la,motifs:A.motifs.length,crestOk:cr.every(Boolean)};})()");
+      const sqOk = hg.sq.shape === 'square' && hg.sq.cols === 2 && hg.sq.t.length === 4 && hg.sq.t[0].c === '山' && hg.sq.t[0].x > hg.sq.t[2].x && hg.sq.t[1].y > hg.sq.t[0].y && hg.sq.frame;
+      const rdOk = hg.rd.shape === 'round' && hg.rd.cols === 1 && hg.rd.t.length === 2 && hg.rd.t[0].x === hg.rd.t[1].x && hg.rd.t[1].y > hg.rd.t[0].y && hg.rd.frame;
+      ok(sqOk && rdOk && hg.la.t.length === 1 && hg.la.t[0].c === 'LEE' && hg.motifs >= 7 && hg.crestOk, `1.3.3 hanko generator: 角印 4 chars in 2 columns read right→left, 丸印 2 chars stacked, romaji on one line; crest generator draws ${hg.motifs} motifs (${JSON.stringify({ sq: hg.sq.t, rd: hg.rd.t, la: hg.la.t[0] })})`);
+      await ev("(function(){document.getElementById('meiHankoGen').open=true;document.querySelector('[data-hg=shape][data-val=square]').click();document.querySelector('[data-hg=src][data-val=custom]').click();var c=document.getElementById('meiHankoCustom');c.value='ヤマ';c.dispatchEvent(new Event('input',{bubbles:true}));document.getElementById('meiHankoUse').click();document.getElementById('meiCrestGen').open=true;document.querySelector('#meiCrestMotifs [data-motif=kikko]').click();document.getElementById('meiCrestUse').click();return 1})()");
+      await sleep(250);
+      const used = await ev("(function(){var o=JSON.parse(localStorage.getItem('mojifill.meishiArt.v1')||'{}');var r=(o.by||{})[Object.keys(o.by||{})[0]]||{};var c=document.getElementById('meishiCard');return {h:r.hanko&&r.hanko.kind+':'+r.hanko.p.shape+':'+r.hanko.p.text,c:r.crest&&r.crest.kind+':'+r.crest.p.motif,cardSeal:!!c.querySelector('.mei-seal svg[data-shape=square]'),cardCrest:!!c.querySelector('.mei-crest svg[data-motif=kikko]')};})()");
+      ok(used.h === 'gen:square:ヤマ' && used.c === 'gen:kikko' && used.cardSeal && used.cardCrest, `1.3.3 generators "Use this": saved on this device and shown on the card (${JSON.stringify(used)})`);
+      // upload: processed with FileReader/canvas — no network request at all
+      await P.send('Network.enable');
+      const netMark = P.events.length;
+      const doc = await P.send('DOM.getDocument', { depth: -1 });
+      const fileNode = async (sel) => (await P.send('DOM.querySelector', { nodeId: doc.root.nodeId, selector: sel })).nodeId;
+      await P.send('DOM.setFileInputFiles', { nodeId: await fileNode('#meiHankoFile'), files: [path.join(LAB, 'tests/fixtures/hanko-scan.png')] });
+      await sleep(1200);
+      await P.send('DOM.setFileInputFiles', { nodeId: await fileNode('#meiCrestFile'), files: [path.join(LAB, 'tests/fixtures/crest-unsafe.svg')] });
+      await sleep(1200);
+      const net = P.events.slice(netMark).filter((e) => e.method === 'Network.requestWillBeSent' && !/^(data|blob):/.test(e.params.request.url)).map((e) => e.params.request.url);
+      await P.send('Network.disable');
+      const up = await ev("(async function(){var A=window.__mfArt;var h=A.get('hanko'),c=A.get('crest');if(!h||!c)return {h:!!h,c:!!c};var im=new Image();im.src=h.src;await im.decode();var cv=document.createElement('canvas');cv.width=im.width;cv.height=im.height;var x=cv.getContext('2d');x.drawImage(im,0,0);var d=x.getImageData(0,0,im.width,im.height).data;var red=0,clear=0;for(var i=0;i<d.length;i+=4){if(d[i+3]===0)clear++;else if(d[i+3]>200&&d[i]>150&&d[i+1]<110)red++;}var card=document.getElementById('meishiCard');return {h:h.kind,c:c.kind,png:/^data:image\\/png;base64,/.test(h.src),cpng:/^data:image\\/(png|webp);base64,/.test(c.src),w:im.width,maxSide:Math.max(im.width,im.height)<=512,corner:d[3],clearPct:Math.round(clear*100/(d.length/4)),red:red,pwned:!!window.__mfPwned,cardImg:!!card.querySelector('.mei-seal img'),cardCrestImg:!!card.querySelector('.mei-crest img')};})()");
+      ok(up.h === 'img' && up.png && up.maxSide && up.corner === 0 && up.clearPct > 20 && up.red > 50 && up.cardImg, `1.3.3 hanko upload: paper knocked out to transparent, recoloured vermilion, ≤512px PNG, shown on the card (${JSON.stringify(up)})`);
+      ok(up.c === 'img' && up.cpng && !up.pwned && up.cardCrestImg, `1.3.3 crest SVG upload: scripts/handlers stripped and rasterised — nothing ran (${JSON.stringify({ c: up.c, pwned: up.pwned })})`);
+      ok(net.length === 0, `1.3.3 uploads made no network request (${net.join(', ') || 'none'})`);
+      const pr = await ev("(function(){var w=null;var orig=window.open;window.open=function(){w={doc:'',document:{open:function(){},write:function(h){w.doc+=h},close:function(){}}};return w};document.getElementById('meishiPrintBtn').click();window.open=orig;return w?{img:(w.doc.match(/<img src=\"data:image\\/png/g)||[]).length,mm:w.doc.indexOf('91mm')>=0}:null})()");
+      ok(pr && pr.img >= 2 && pr.mm, `1.3.3 print (91×55mm) includes the uploaded hanko + crest (${JSON.stringify(pr)})`);
+      // export: tickbox default off; JSON carries the images only when ticked; import restores them
+      await ev("document.getElementById('tab-names').click(); 1"); await sleep(200);
+      const exp = await ev("(async function(){var cb=document.querySelector('#expFields input[data-exp-field=seal]');if(!cb)return {cb:false};var def=cb.checked;var blobs=[];var o=URL.createObjectURL;URL.createObjectURL=function(b){blobs.push(b);return o.call(URL,b)};var btn=document.getElementById('expDlJson');btn.click();var off=blobs.length?await blobs[0].text():'';if(!cb.disabled){cb.checked=true;cb.dispatchEvent(new Event('change',{bubbles:true}));}btn.click();var on=blobs.length>1?await blobs[1].text():'';URL.createObjectURL=o;cb.checked=false;cb.dispatchEvent(new Event('change',{bubbles:true}));window.__mfExpOn=on;return {cb:true,def:def,offHas:off.indexOf('meishiArt')>=0,onHas:on.indexOf('\"meishiArt\"')>=0&&on.indexOf('data:image/png;base64')>=0,offLen:off.length};})()");
+      ok(exp.cb && exp.def === false && !exp.offHas && exp.onHas, `1.3.3 export: "Hanko & crest images" tickbox off by default; JSON includes images only when ticked (${JSON.stringify(exp)})`);
+      const expOn = await ev('window.__mfExpOn');
+      const impFile = path.join(os.tmpdir(), 'mf-art-import-' + Date.now() + '.json');
+      fs.writeFileSync(impFile, expOn || '{}');
+      await ev(`localStorage.removeItem('mojifill.meishiArt.v1'); document.getElementById('tab-meishi').click(); 1`); await sleep(150);
+      const doc2 = await P.send('DOM.getDocument', { depth: -1 });
+      const impNode = (await P.send('DOM.querySelector', { nodeId: doc2.root.nodeId, selector: '#meiArtImport' })).nodeId;
+      await P.send('DOM.setFileInputFiles', { nodeId: impNode, files: [impFile] });
+      await sleep(700);
+      const imp = await ev("(function(){var A=window.__mfArt;var h=A.get('hanko'),c=A.get('crest');return {h:h&&h.kind,c:c&&c.kind,card:!!document.querySelector('#meishiCard .mei-seal img')};})()");
+      ok(imp.h === 'img' && imp.c === 'img' && imp.card, `1.3.3 import JSON restores hanko + crest on this device (${JSON.stringify(imp)})`);
+      await ev(`localStorage.removeItem('mojifill.meishiArt.v1'); (function(){${pickJs('seal', 'none')}${pickJs('accent', 'none')}return 1})()`);
+      await sleep(150);
+    }
     await ev(`localStorage.setItem('mojifill.pro.v1', JSON.stringify({unlocked:true,code:'TEST',at:Date.now()})); 1`);
     await load(`${ORIGIN}/index.html?lang=ja&desk=141p`);
     await ev("document.getElementById('tab-address').click(); 1"); await sleep(300);
@@ -1194,7 +1255,7 @@ try {
       ok(await ev2("navigator.serviceWorker.getRegistration().then(function(r){return !!r && r.scope === location.origin + '/' && !!r.active && r.active.scriptURL === location.origin + '/sw.js';})"), "1.2.50 SW: registration scope '/' with /sw.js active");
       const keys = await ev2("caches.keys()");
       const SW_CACHE = (fs.readFileSync(path.join(LAB, 'sw.js'), 'utf8').match(/const CACHE='([^']+)'/) || [])[1];
-      ok(SW_CACHE === 'mojifill-1.3.2-lab' && keys.indexOf(SW_CACHE) >= 0 && keys.indexOf('mojifill-1.3.0-lab') < 0, `1.3.2 SW: CACHE ${SW_CACHE} present, old 1.3.0 cache deleted (${keys.join(',')})`);
+      ok(SW_CACHE === 'mojifill-1.3.3-lab' && keys.indexOf(SW_CACHE) >= 0 && keys.indexOf('mojifill-1.3.0-lab') < 0, `1.3.3 SW: CACHE ${SW_CACHE} present, old 1.3.0 cache deleted (${keys.join(',')})`);
       const shell = await ev2("caches.open('" + SW_CACHE + "').then(function(c){return c.keys();}).then(function(ks){return ks.map(function(k){var u=new URL(k.url);return u.pathname+u.search;});})");
       for (const k of ['/', '/terms', '/manifest.webmanifest?v=1.3.0', '/favicon-32.png?v=1.3.0', '/icon-192.png?v=1.3.0', '/icon-512.png?v=1.3.0', '/icon-maskable-512.png?v=1.3.0', '/apple-touch-icon.png?v=1.3.0']) ok(shell.indexOf(k) >= 0, `1.3.0 SW precache: ${k}`);
       ok(shell.every((k) => k.indexOf('/api/') !== 0), '1.2.50 SW: /api/ never cached');

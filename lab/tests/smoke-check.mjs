@@ -30,7 +30,7 @@ function ok(cond, msg) {
 console.log('MojiFill lab smoke —', labHtml);
 
 // CACHE
-const EXPECTED_CACHE = 'mojifill-1.3.2-lab';
+const EXPECTED_CACHE = 'mojifill-1.3.3-lab';
 const cacheM = swJs.match(/const CACHE='([^']+)'/);
 ok(cacheM && cacheM[1] === EXPECTED_CACHE, `sw.js CACHE is ${EXPECTED_CACHE} (got ${cacheM && cacheM[1]})`);
 ok(!/const CACHE=/.test(html), '1.3.0: no inline CACHE / worker code left in index.html');
@@ -651,7 +651,7 @@ ok(html.includes('/* ---------- HOUSEHOLD CORE') && html.includes('/* ----------
 ok(html.includes('id="hhCard"') && html.includes('id="exportCard"') && html.includes('id="memberBar"'), 'household card, export card, member bar present');
 ok(html.includes('id="hhResFields" hidden'), 'residence fields masked by default (hidden)');
 ok(!/cardNumber|cardNo['"]?\s*:/.test(html), 'no card-number field in the model');
-ok(html.includes("var HH_EXPORT_DEFAULTS = { name: true, relation: true, birth: false, residence: false, phone: false, address: false };"), 'sensitive export fields unticked by default');
+ok(html.includes("var HH_EXPORT_DEFAULTS = { name: true, relation: true, birth: false, residence: false, phone: false, address: false, seal: false };"), 'sensitive export fields unticked by default');
 ok(html.includes("'exp.warn': '⚠ AIに渡すと、そのサービスに送信されます。'") && html.includes("'exp.warn': '⚠ Pasting this into an AI sends it to that company.'"), 'AI warning line JA + EN');
 for (const k of ['hh.title','hh.relation','hh.occupation','hh.dependent','hh.resTitle','hh.status','hh.expiry','hh.noCardNo','hh.addLocked','hh.lockedLabel','exp.title','exp.hint','exp.copyMd','exp.dlMd','exp.dlJson','exp.freeNote','exp.f.birth','exp.f.residence','exp.f.phone','exp.f.address']) {
   const n = (html.match(new RegExp("'" + k.replace(/\./g, '\\.') + "': '", 'g')) || []).length;
@@ -865,7 +865,7 @@ ok(/@media \(min-width: 1024px\) \{ \.tabs \.tab \{ padding: 0 13px; \} \}/.test
   let built = '', builtSw = '';
   try { execFileSync(process.execPath, [path.join(__dirname, 'build-prod.mjs'), tmp, 'mojifill-v39'], { stdio: 'pipe' }); built = fs.readFileSync(path.join(tmp, 'public', 'index.html'), 'utf8'); builtSw = fs.readFileSync(path.join(tmp, 'public', 'sw.js'), 'utf8'); } catch (e) { built = ''; }
   // 1.3.0-lab: prod build ships the real worker + manifest + _headers
-  okPaid(builtSw === swJs.replace("const CACHE='mojifill-1.3.2-lab';", "const CACHE='mojifill-v39';") && !/-lab'/.test(builtSw), '1.3.0: prod build copies sw.js with CACHE mojifill-v39 (only change)');
+  okPaid(builtSw === swJs.replace("const CACHE='mojifill-1.3.3-lab';", "const CACHE='mojifill-v39';") && !/-lab'/.test(builtSw), '1.3.0: prod build copies sw.js with CACHE mojifill-v39 (only change)');
   okPaid(fs.existsSync(path.join(tmp, 'public', 'manifest.webmanifest')) && fs.readFileSync(path.join(tmp, 'public', 'manifest.webmanifest'), 'utf8') === manifestTxt, '1.3.0: prod build copies manifest.webmanifest');
   okPaid(fs.existsSync(path.join(tmp, 'public', '_headers')) && fs.readFileSync(path.join(tmp, 'public', '_headers'), 'utf8') === headersTxt, '1.3.0: prod build copies _headers');
   okPaid(built.includes("navigator.serviceWorker.register('/sw.js'") && built.includes('<link rel="manifest" href="/manifest.webmanifest?v=1.3.0">'), '1.3.0: prod index.html registers /sw.js and links the real manifest');
