@@ -9,6 +9,12 @@ Free, open-source PWA for foreign residents in Japan. Names, furigana, dates, ph
 
 日本語の政府・銀行・会社のフォームで弾かれがちな全角/半角・カタカナ・日付・電話/〒を、端末内で直してコピーする無料PWAです。
 
+## How it works
+
+![MojiFill demo: paste the text a form rejected into Fix text, tap the fixed version to copy, then copy a paste-ready name](lab/demo/mojifill-demo.gif)
+
+Paste what the form rejected → tap the fixed version to copy → Names: copy any format. All on this device. (Recorded headless from the lab with neutral demo data — `lab/tests/record-demo.mjs` + `lab/tests/build-demo.sh`.)
+
 ## Screenshots
 
 See the live app, or drop PNGs into `docs/shots/` when publishing release notes.

@@ -64,6 +64,8 @@ for (const f of ['favicon-32.png', 'apple-touch-icon.png', 'icon-192.png', 'icon
   else if (!['robots.txt','sitemap.xml','og.png'].includes(f)) fail('missing ' + f);
 }
 fs.cpSync(path.join(LAB, 'functions'), path.join(out, 'functions'), { recursive: true });
+// 1.3.2-lab: how-it-works demo media (About tab)
+if (fs.existsSync(path.join(LAB, 'demo'))) fs.cpSync(path.join(LAB, 'demo'), path.join(out, 'public', 'demo'), { recursive: true });
 const listing = fs.readdirSync(path.join(out, 'public')).sort();
 if (listing.some((f) => /PRO_CODES|\.md$|\.txt$/i.test(f))) fail('unexpected file in public/: ' + listing.join(', '));
 console.log(`build-prod: ${path.join(out, 'public')} = ${listing.join(', ')} + functions/api/geo.js · CACHE ${cache} (sw.js) · from lab ${labVer}`);

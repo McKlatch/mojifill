@@ -2579,12 +2579,10 @@ header.app-bar::after { content: ""; position: absolute; left: 0; right: 0; bott
   /* ladders inside a half column stay one card per row (values never squeezed) */
   .mf-split .ladder:not(.top-list) { grid-template-columns: minmax(0, 1fr); }
   /* the input side of the Fix card: arrow points across, not down */
-  .fix-card .mf-split { gap: 22px; }
   .fix-card .mf-col-in .fix-arrow-big { display: inline-block; transform: rotate(-90deg); }
   .fix-card .mf-col-out > :first-child { margin-top: 0; }
   #top-address { display: none !important; }
   /* tabs without an input/output pair stay a comfortable reading width */
-  #panel-work, #panel-marks, #panel-about { max-width: 52rem; margin-left: auto; margin-right: auto; }
   /* meishi: the preview stays in view while you edit */
   .mf-col-out > .mei-preview-card { position: sticky; top: 64px; }
   .mei-design-card .meishi-style { display: grid; grid-template-columns: minmax(0, 1fr); }
@@ -2599,6 +2597,74 @@ header.app-bar::after { content: ""; position: absolute; left: 0; right: 0; bott
 .mei-swatches button::before { content: ""; display: inline-block; width: 0.8em; height: 0.8em; border-radius: 50%; background: var(--sw); box-shadow: 0 0 0 1px color-mix(in srgb, var(--text) 28%, transparent); flex: 0 0 auto; }
 .mei-swatches button[data-val="ai"] { --sw: #27467a; } .mei-swatches button[data-val="shu"] { --sw: #b8432c; } .mei-swatches button[data-val="matsu"] { --sw: #3c6646; } .mei-swatches button[data-val="sumi"] { --sw: #2b2b2b; }
 .mei-content-card .card-head .btn-subtle { white-space: nowrap; }
+/* ===================== 1.3.2-lab: transparent logo, one grid, Marks tiles, demo ===================== */
+/* Header mark: inline SVG on a transparent background — vermilion ring + 字; dark mode = washi 字 + brighter ring */
+.brand-mark { display: block; width: 28px; height: 28px; flex: 0 0 auto; border-radius: 0; }
+.brand-mark .mk-ring { fill: #e8735a; }
+.brand-mark .mk-ji { fill: #f3ead9; }
+@media (prefers-color-scheme: light) {
+  .brand-mark .mk-ring { fill: #cb6153; }
+  .brand-mark .mk-ji { fill: #363638; }
+}
+@media (max-width: 420px) { .brand-mark { width: 26px; height: 26px; } }
+@media (max-width: 380px) { .brand-mark { width: 22px; height: 22px; } }
+@media (max-width: 345px) { .brand-mark { width: 20px; height: 20px; } }
+
+/* Marks: uniform tiles — symbol large on top, short label below, ? in the tile's top-right corner */
+#marksChips, #spacesChips { display: grid; grid-template-columns: repeat(auto-fill, minmax(96px, 1fr)); gap: 8px; }
+#marksChips > .chip-row-help, #spacesChips > .chip-row-help { position: relative; display: block; min-width: 0; margin: 0; }
+#marksChips .chip, #spacesChips .chip {
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px;
+  width: 100%; height: 100%; min-height: 78px; margin: 0; padding: 12px 6px 9px; border-radius: 12px; text-align: center;
+}
+#marksChips .chip > span:first-child, #spacesChips .chip > span:first-child { font-size: 1.55rem; line-height: 1.1; font-weight: 600; }
+#marksChips .chip .chip-label, #spacesChips .chip .chip-label { font-size: 0.72rem; line-height: 1.25; white-space: normal; overflow-wrap: anywhere; margin: 0; color: var(--muted); }
+#marksChips .chip-help, #spacesChips .chip-help { position: absolute; top: 5px; right: 5px; width: 20px; height: 20px; min-width: 20px; min-height: 20px; margin: 0; font-size: 0.66rem; }
+.emoji-stash .emoji-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 8px; padding: 2px 10px 10px; }
+.emoji-chip { flex-direction: column; align-items: center; justify-content: flex-start; gap: 5px; text-align: center; min-height: 112px; height: 100%; padding: 12px 8px 10px; border-radius: 12px; }
+.emoji-glyph { font-size: 2rem; line-height: 1.1; width: auto; }
+.emoji-expl { font-size: 0.74rem; line-height: 1.35; overflow-wrap: anywhere; }
+@media (max-width: 380px) { .emoji-stash .emoji-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+
+/* Demo (About + README): responsive animated WebP / GIF via <picture>; a still under reduced motion */
+.demo-card .demo-media { display: block; width: 100%; height: auto; border-radius: 10px; border: 1px solid var(--border); background: var(--bg); aspect-ratio: var(--demo-ar, 9 / 16); }
+.demo-card picture { display: block; max-width: 360px; margin: 0 auto; }
+.demo-card .demo-cap { margin: 8px 0 0; text-align: center; }
+@media (min-width: 768px) { .demo-card picture { max-width: 960px; } .demo-card .demo-media { --demo-ar: 2 / 1; } }
+.hero-how { border: 0; background: transparent; color: var(--accent); font: inherit; font-size: 0.78rem; font-weight: 600; padding: 4px 2px; min-height: 28px; cursor: pointer; text-decoration: underline; text-underline-offset: 2px; white-space: nowrap; }
+/* 1.3.2: same content edges on every tab — reserve the scrollbar gutter so short tabs don't shift 7px sideways */
+html { scrollbar-gutter: stable; }
+/* 1.3.2: tablet (768–1023) — a little wider than the phone column, still one column */
+@media (min-width: 768px) and (max-width: 1023px) { .app { max-width: min(100%, 40rem); } }
+/* 1.3.2: on phones the header chip already says on-device · free, so the compact hero row keeps the CTA on one line + the how-it-works link */
+@media (max-width: 480px) { .hero-line.hero-compact.hero-go .hero-free { display: none; } .hero-line.hero-compact.hero-go .hero-cta { white-space: nowrap; } }
+
+/* Desktop grid (≥1024px): one content width for header, hero, tabs and cards; 16px gutters everywhere */
+@media (min-width: 1024px) {
+  .tabs { justify-content: flex-start; }
+  .tabs-rail { padding-left: 0; padding-right: 0; }
+  .panel > .mf-split, #meishiUnlocked > .mf-split { gap: 16px; align-items: stretch; margin-bottom: 16px; }
+  .panel > .mf-split > .mf-col, #meishiUnlocked > .mf-split > .mf-col { display: flex; flex-direction: column; gap: 16px; }
+  .panel > .mf-split > .mf-col > .card, #meishiUnlocked > .mf-split > .mf-col > .card { margin: 0; }
+  /* both columns end on the same line: the last card in each column takes the slack */
+  .panel > .mf-split > .mf-col > .card:last-child, #meishiUnlocked > .mf-split > .mf-col-in > .card:last-child { flex: 1 1 auto; }
+  #meishiUnlocked > .mf-split > .mf-col-out > .mei-preview-card { flex: none; }
+  .panel > .card { margin-bottom: 16px; }
+  /* Fix card: head (Example / Clear) lives over the input column; the output column gets a matching heading */
+  .fix-card .mf-split { gap: 0 32px; }
+  .fix-card .mf-col > .card-head { min-height: 34px; margin-bottom: 8px; }
+  .fix-card .mf-col-in .fix-arrow-row { justify-content: flex-start; margin-left: 2px; }
+  .fix-card .mf-col-out > .fix-out-head h2 { margin: 0; }
+  .fix-card .mf-col-out > .fix-out-head + * { margin-top: 0; }
+  /* Address card: the same two headings line up */
+  #addressUnlocked > .card .mf-split { gap: 0 32px; }
+  #addressUnlocked > .card .mf-col > h2:first-child { margin-top: 0; }
+  /* text-only tabs: full content width, cards in two balanced columns */
+  #panel-work, #panel-marks, #panel-about { max-width: none; }
+  #panel-work.active, #aboutTools { columns: 2; column-gap: 16px; }
+  #panel-work.active > .card, #aboutTools > .card { break-inside: avoid; display: inline-block; width: 100%; margin: 0 0 16px; }
+  #panel-about > .demo-card { margin-bottom: 16px; }
+}
 </style>
 <style id="meiFaceCss">
 /* 1.3.1-lab meishi face — shared by the preview and the print window (container units: --u = 1% of the card's long side) */
@@ -2678,7 +2744,7 @@ header.app-bar::after { content: ""; position: absolute; left: 0; right: 0; bott
 <div class="lab-banner" role="status"><span data-i18n="chrome.labBanner">LAB — stable share:</span> <a href="https://mojifill.app">mojifill.app</a></div>
 
   <header class="app-bar">
-    <h1 class="brand"><img class="brand-mark" src="./icon-192.png?v=1.3.0" width="28" height="28" alt="" decoding="async"><span class="brand-name">MojiFill</span></h1>
+    <h1 class="brand"><svg class="brand-mark" viewBox="0 0 409.2 413.8" width="28" height="28" aria-hidden="true" focusable="false"><path class="mk-ring" fill-rule="evenodd" d="M171.5 2.2 169.0 3.2 154.8 5.8 139.8 10.5 137.2 10.8 135.2 12.0 120.5 17.5 109.8 22.8 97.8 29.8 85.8 37.8 66.8 53.2 53.2 66.8 38.8 85.0 27.5 102.2 18.8 119.2 12.0 135.8 5.0 160.2 1.8 177.8 0.2 193.8 0.0 216.8 1.8 235.5 5.2 254.0 10.5 272.8 14.8 283.0 15.2 285.5 23.8 303.2 29.5 313.2 40.5 329.8 50.2 341.8 63.5 355.8 80.5 370.5 96.0 381.5 113.5 391.5 133.2 400.5 153.5 407.2 179.0 412.2 198.2 413.8 212.0 413.8 230.5 412.5 233.8 411.5 242.0 410.5 245.5 409.2 250.5 408.8 262.5 405.5 278.0 400.2 293.2 393.5 303.2 388.2 316.5 380.2 326.5 373.2 338.0 364.0 350.2 352.8 364.2 337.0 374.2 323.2 381.2 312.2 391.2 292.8 391.0 291.2 371.0 283.8 365.5 282.2 364.5 283.2 356.2 299.2 345.5 315.2 337.5 325.0 329.5 333.5 315.0 346.8 301.8 356.5 284.0 366.8 265.0 375.0 249.2 380.0 231.0 383.8 212.5 385.5 194.2 385.2 177.8 383.5 161.2 380.0 145.2 375.0 130.8 368.8 119.8 363.0 101.0 350.8 88.0 340.0 76.2 328.5 63.8 313.5 54.2 299.5 45.5 283.5 37.2 263.2 32.2 245.5 31.5 239.8 30.5 237.0 28.2 215.2 28.8 188.8 32.2 167.2 35.5 154.8 43.8 133.0 54.0 113.2 62.8 100.2 71.5 89.0 80.8 79.0 94.5 66.5 107.8 56.8 121.8 48.2 136.5 41.0 149.5 36.0 158.8 33.8 160.8 32.8 177.8 29.2 188.2 28.5 191.0 27.8 218.2 27.8 231.8 29.2 249.0 32.8 269.2 39.5 284.5 46.5 299.0 54.8 308.8 61.8 321.0 71.8 331.5 82.0 345.2 98.0 354.5 111.8 361.2 123.8 367.8 137.8 374.5 156.8 377.0 169.2 378.0 171.8 378.8 178.8 380.0 183.5 381.2 198.5 381.5 213.5 379.8 232.2 376.2 250.8 373.5 259.0 373.0 262.5 371.5 265.5 371.5 267.0 396.5 276.0 398.2 275.5 401.5 264.8 404.0 253.2 405.0 251.2 405.5 246.2 406.8 242.2 407.5 234.0 408.5 230.8 409.2 213.8 409.0 193.0 406.8 171.8 401.5 148.5 396.8 133.8 393.8 127.0 393.2 124.5 386.2 109.8 380.0 98.5 367.2 79.8 353.0 63.0 340.0 50.5 322.8 36.8 303.2 24.5 289.2 17.5 272.5 10.8 255.2 5.8 241.2 3.2 238.5 2.2 216.2 0.0 192.5 0.0Z"/><path class="mk-ji" fill-rule="evenodd" d="M261.2 151.2 136.2 173.0 135.8 174.5 140.5 199.5 194.0 190.8 224.8 185.0 226.0 185.8 196.5 215.5 197.5 223.0 199.2 230.0 198.5 231.8 99.2 249.2 104.0 276.5 104.8 277.8 203.5 259.8 205.5 260.5 213.5 301.0 213.5 304.8 212.8 307.5 209.5 310.8 205.2 312.2 172.5 317.8 189.2 346.5 215.5 341.8 228.0 338.2 237.5 333.5 242.2 329.5 244.8 326.2 247.0 321.2 248.0 317.0 248.5 308.0 247.0 298.2 238.0 255.2 238.8 254.0 332.8 236.8 338.0 236.2 339.2 235.2 334.2 207.8 314.5 210.8 233.8 225.5 231.8 225.2 231.2 222.5 281.0 168.0 278.2 165.0ZM305.0 94.5 303.5 94.0 210.8 109.2 209.8 107.8 204.8 83.0 171.8 88.5 171.2 90.2 176.0 113.2 175.2 115.2 82.5 131.2 93.8 194.0 94.2 194.8 124.2 189.8 125.2 189.0 119.0 154.2 120.5 153.2 276.2 126.2 277.8 127.0 281.5 148.0 283.2 156.8 284.0 157.8 314.5 152.5 315.0 151.0Z"/></svg><span class="brand-name">MojiFill</span></h1>
     <div class="header-actions">
       <div class="lang-seg" role="group" id="langSeg" aria-label="Language">
         <button type="button" class="lang-opt" data-lang="en" aria-pressed="true">EN</button>
@@ -2695,6 +2761,7 @@ header.app-bar::after { content: ""; position: absolute; left: 0; right: 0; bott
     <div class="hero-actions">
       <button type="button" class="hero-cta" id="heroFixBtn" data-i18n="hero.cta">Try Fix text →</button>
       <span class="hero-free" data-i18n="hero.free">Free · stays on this phone</span>
+      <button type="button" class="hero-how" id="heroHowBtn" data-ja-html="使い方を見る">How it works</button>
     </div>
     <button type="button" class="hero-dismiss" id="heroDismiss" data-i18n-title="ui.close" data-i18n-aria="ui.close" title="Close" aria-label="Close">×</button>
   </div>
@@ -3109,71 +3176,71 @@ header.app-bar::after { content: ""; position: absolute; left: 0; right: 0; bott
         <div class="emoji-grid">
           <button type="button" class="emoji-chip" data-copy="🈶" title="有 — 「あり」— available / in stock (shop sign)" data-ja-title="有 —「あり」— 在庫あり・空きあり（店の表示）">
             <span class="emoji-glyph" aria-hidden="true">🈶</span>
-            <span class="emoji-expl" data-ja-html="&lt;strong&gt;🈶&lt;/strong&gt; · 有 —「あり」— 在庫あり・空きあり（店の表示）"><strong>🈶</strong> · 有 — 「あり」— available / in stock (shop sign)</span>
+            <span class="emoji-expl" data-ja-html="有 —「あり」— 在庫あり・空きあり（店の表示）">有 — 「あり」— available / in stock (shop sign)</span>
           </button>
           <button type="button" class="emoji-chip" data-copy="🈚" title="無 — 「なし」— free of charge, or “none”" data-ja-title="無 —「なし」— 無料、または「なし」">
             <span class="emoji-glyph" aria-hidden="true">🈚</span>
-            <span class="emoji-expl" data-ja-html="&lt;strong&gt;🈚&lt;/strong&gt; · 無 —「なし」— 無料、または「なし」"><strong>🈚</strong> · 無 — 「なし」— free of charge, or “none”</span>
+            <span class="emoji-expl" data-ja-html="無 —「なし」— 無料、または「なし」">無 — 「なし」— free of charge, or “none”</span>
           </button>
           <button type="button" class="emoji-chip" data-copy="🈳" title="空 — 「あき」— vacancy / seats free" data-ja-title="空 —「あき」— 空席・空室あり">
             <span class="emoji-glyph" aria-hidden="true">🈳</span>
-            <span class="emoji-expl" data-ja-html="&lt;strong&gt;🈳&lt;/strong&gt; · 空 —「あき」— 空席・空室あり"><strong>🈳</strong> · 空 — 「あき」— vacancy / seats free</span>
+            <span class="emoji-expl" data-ja-html="空 —「あき」— 空席・空室あり">空 — 「あき」— vacancy / seats free</span>
           </button>
           <button type="button" class="emoji-chip" data-copy="🈵" title="満 — 「まん」— full / no vacancy" data-ja-title="満 —「まん」— 満席・満室">
             <span class="emoji-glyph" aria-hidden="true">🈵</span>
-            <span class="emoji-expl" data-ja-html="&lt;strong&gt;🈵&lt;/strong&gt; · 満 —「まん」— 満席・満室"><strong>🈵</strong> · 満 — 「まん」— full / no vacancy</span>
+            <span class="emoji-expl" data-ja-html="満 —「まん」— 満席・満室">満 — 「まん」— full / no vacancy</span>
           </button>
           <button type="button" class="emoji-chip" data-copy="㊗️" title="祝 — celebration / congratulations" data-ja-title="祝 — お祝い・おめでとう">
             <span class="emoji-glyph" aria-hidden="true">㊗️</span>
-            <span class="emoji-expl" data-ja-html="&lt;strong&gt;㊗️&lt;/strong&gt; · 祝 — お祝い・おめでとう"><strong>㊗️</strong> · 祝 — celebration / congratulations</span>
+            <span class="emoji-expl" data-ja-html="祝 — お祝い・おめでとう">祝 — celebration / congratulations</span>
           </button>
           <button type="button" class="emoji-chip" data-copy="㊙️" title="秘 — secret / confidential" data-ja-title="秘 — 秘密・機密">
             <span class="emoji-glyph" aria-hidden="true">㊙️</span>
-            <span class="emoji-expl" data-ja-html="&lt;strong&gt;㊙️&lt;/strong&gt; · 秘 — 秘密・機密"><strong>㊙️</strong> · 秘 — secret / confidential</span>
+            <span class="emoji-expl" data-ja-html="秘 — 秘密・機密">秘 — secret / confidential</span>
           </button>
           <button type="button" class="emoji-chip" data-copy="🈴" title="合 — pass / agreement mark" data-ja-title="合 — 合格・一致のしるし">
             <span class="emoji-glyph" aria-hidden="true">🈴</span>
-            <span class="emoji-expl" data-ja-html="&lt;strong&gt;🈴&lt;/strong&gt; · 合 — 合格・一致のしるし"><strong>🈴</strong> · 合 — pass / agreement mark</span>
+            <span class="emoji-expl" data-ja-html="合 — 合格・一致のしるし">合 — pass / agreement mark</span>
           </button>
           <button type="button" class="emoji-chip" data-copy="🈲" title="禁 — prohibited / forbidden" data-ja-title="禁 — 禁止">
             <span class="emoji-glyph" aria-hidden="true">🈲</span>
-            <span class="emoji-expl" data-ja-html="&lt;strong&gt;🈲&lt;/strong&gt; · 禁 — 禁止"><strong>🈲</strong> · 禁 — prohibited / forbidden</span>
+            <span class="emoji-expl" data-ja-html="禁 — 禁止">禁 — prohibited / forbidden</span>
           </button>
           <button type="button" class="emoji-chip" data-copy="🉑" title="可 — acceptable / OK" data-ja-title="可 — 可・OK">
             <span class="emoji-glyph" aria-hidden="true">🉑</span>
-            <span class="emoji-expl" data-ja-html="&lt;strong&gt;🉑&lt;/strong&gt; · 可 — 可・OK"><strong>🉑</strong> · 可 — acceptable / OK</span>
+            <span class="emoji-expl" data-ja-html="可 — 可・OK">可 — acceptable / OK</span>
           </button>
           <button type="button" class="emoji-chip" data-copy="🉐" title="得 — bargain / good deal" data-ja-title="得 — お得">
             <span class="emoji-glyph" aria-hidden="true">🉐</span>
-            <span class="emoji-expl" data-ja-html="&lt;strong&gt;🉐&lt;/strong&gt; · 得 — お得"><strong>🉐</strong> · 得 — bargain / good deal</span>
+            <span class="emoji-expl" data-ja-html="得 — お得">得 — bargain / good deal</span>
           </button>
           <button type="button" class="emoji-chip" data-copy="🈹" title="割 — discount / on sale" data-ja-title="割 — 割引・セール">
             <span class="emoji-glyph" aria-hidden="true">🈹</span>
-            <span class="emoji-expl" data-ja-html="&lt;strong&gt;🈹&lt;/strong&gt; · 割 — 割引・セール"><strong>🈹</strong> · 割 — discount / on sale</span>
+            <span class="emoji-expl" data-ja-html="割 — 割引・セール">割 — discount / on sale</span>
           </button>
           <button type="button" class="emoji-chip" data-copy="🈯" title="指 — reserved seat (train)" data-ja-title="指 — 指定席（電車）">
             <span class="emoji-glyph" aria-hidden="true">🈯</span>
-            <span class="emoji-expl" data-ja-html="&lt;strong&gt;🈯&lt;/strong&gt; · 指 — 指定席（電車）"><strong>🈯</strong> · 指 — reserved seat (train)</span>
+            <span class="emoji-expl" data-ja-html="指 — 指定席（電車）">指 — reserved seat (train)</span>
           </button>
           <button type="button" class="emoji-chip" data-copy="🈺" title="営 — open for business" data-ja-title="営 — 営業中">
             <span class="emoji-glyph" aria-hidden="true">🈺</span>
-            <span class="emoji-expl" data-ja-html="&lt;strong&gt;🈺&lt;/strong&gt; · 営 — 営業中"><strong>🈺</strong> · 営 — open for business</span>
+            <span class="emoji-expl" data-ja-html="営 — 営業中">営 — open for business</span>
           </button>
           <button type="button" class="emoji-chip" data-copy="🈷" title="月 — monthly fee / monthly pass" data-ja-title="月 — 月額・定期">
             <span class="emoji-glyph" aria-hidden="true">🈷</span>
-            <span class="emoji-expl" data-ja-html="&lt;strong&gt;🈷&lt;/strong&gt; · 月 — 月額・定期"><strong>🈷</strong> · 月 — monthly fee / monthly pass</span>
+            <span class="emoji-expl" data-ja-html="月 — 月額・定期">月 — monthly fee / monthly pass</span>
           </button>
           <button type="button" class="emoji-chip" data-copy="🈸" title="申 — application / apply here" data-ja-title="申 — 申込・申請">
             <span class="emoji-glyph" aria-hidden="true">🈸</span>
-            <span class="emoji-expl" data-ja-html="&lt;strong&gt;🈸&lt;/strong&gt; · 申 — 申込・申請"><strong>🈸</strong> · 申 — application / apply here</span>
+            <span class="emoji-expl" data-ja-html="申 — 申込・申請">申 — application / apply here</span>
           </button>
           <button type="button" class="emoji-chip" data-copy="🈂" title="サ — service charge" data-ja-title="サ — サービス料">
             <span class="emoji-glyph" aria-hidden="true">🈂</span>
-            <span class="emoji-expl" data-ja-html="&lt;strong&gt;🈂&lt;/strong&gt; · サ — サービス料"><strong>🈂</strong> · サ — service charge</span>
+            <span class="emoji-expl" data-ja-html="サ — サービス料">サ — service charge</span>
           </button>
           <button type="button" class="emoji-chip" data-copy="🈁" title="ココ — “here” location marker" data-ja-title="ココ —「ここ」の目印">
             <span class="emoji-glyph" aria-hidden="true">🈁</span>
-            <span class="emoji-expl" data-ja-html="&lt;strong&gt;🈁&lt;/strong&gt; · ココ —「ここ」の目印"><strong>🈁</strong> · ココ — “here” location marker</span>
+            <span class="emoji-expl" data-ja-html="ココ —「ここ」の目印">ココ — “here” location marker</span>
           </button>
         </div>
       </details>
@@ -3182,47 +3249,47 @@ header.app-bar::after { content: ""; position: absolute; left: 0; right: 0; bott
         <div class="emoji-grid">
           <button type="button" class="emoji-chip" data-copy="🔺" title="red triangle up — map / caution pointer" data-ja-title="赤い上向き三角 — 地図・注意の目印">
             <span class="emoji-glyph" aria-hidden="true">🔺</span>
-            <span class="emoji-expl" data-ja-html="&lt;strong&gt;🔺&lt;/strong&gt; — 赤い上向き三角 — 地図・注意の目印"><strong>🔺</strong> — red triangle up — map / caution pointer</span>
+            <span class="emoji-expl" data-ja-html="赤い上向き三角 — 地図・注意の目印">red triangle up — map / caution pointer</span>
           </button>
           <button type="button" class="emoji-chip" data-copy="🔻" title="red triangle down — pointer" data-ja-title="赤い下向き三角 — 目印">
             <span class="emoji-glyph" aria-hidden="true">🔻</span>
-            <span class="emoji-expl" data-ja-html="&lt;strong&gt;🔻&lt;/strong&gt; — 赤い下向き三角 — 目印"><strong>🔻</strong> — red triangle down — pointer</span>
+            <span class="emoji-expl" data-ja-html="赤い下向き三角 — 目印">red triangle down — pointer</span>
           </button>
           <button type="button" class="emoji-chip" data-copy="🔰" title="beginner mark (若葉マーク) — new driver / newbie" data-ja-title="若葉マーク — 初心者・初心者ドライバー">
             <span class="emoji-glyph" aria-hidden="true">🔰</span>
-            <span class="emoji-expl" data-ja-html="&lt;strong&gt;🔰&lt;/strong&gt; — 若葉マーク — 初心者・初心者ドライバー"><strong>🔰</strong> — beginner mark (若葉マーク) — new driver / newbie</span>
+            <span class="emoji-expl" data-ja-html="若葉マーク — 初心者・初心者ドライバー">beginner mark (若葉マーク) — new driver / newbie</span>
           </button>
           <button type="button" class="emoji-chip" data-copy="🏧" title="ATM" data-ja-title="ATM">
             <span class="emoji-glyph" aria-hidden="true">🏧</span>
-            <span class="emoji-expl" data-ja-html="&lt;strong&gt;🏧&lt;/strong&gt; — ATM"><strong>🏧</strong> — ATM</span>
+            <span class="emoji-expl" data-ja-html="ATM">ATM</span>
           </button>
           <button type="button" class="emoji-chip" data-copy="🚾" title="restroom (WC)" data-ja-title="トイレ（WC）">
             <span class="emoji-glyph" aria-hidden="true">🚾</span>
-            <span class="emoji-expl" data-ja-html="&lt;strong&gt;🚾&lt;/strong&gt; — トイレ（WC）"><strong>🚾</strong> — restroom (WC)</span>
+            <span class="emoji-expl" data-ja-html="トイレ（WC）">restroom (WC)</span>
           </button>
           <button type="button" class="emoji-chip" data-copy="🅿️" title="parking" data-ja-title="駐車場">
             <span class="emoji-glyph" aria-hidden="true">🅿️</span>
-            <span class="emoji-expl" data-ja-html="&lt;strong&gt;🅿️&lt;/strong&gt; — 駐車場"><strong>🅿️</strong> — parking</span>
+            <span class="emoji-expl" data-ja-html="駐車場">parking</span>
           </button>
           <button type="button" class="emoji-chip" data-copy="🚭" title="no smoking" data-ja-title="禁煙">
             <span class="emoji-glyph" aria-hidden="true">🚭</span>
-            <span class="emoji-expl" data-ja-html="&lt;strong&gt;🚭&lt;/strong&gt; — 禁煙"><strong>🚭</strong> — no smoking</span>
+            <span class="emoji-expl" data-ja-html="禁煙">no smoking</span>
           </button>
           <button type="button" class="emoji-chip" data-copy="🚮" title="put litter in the bin" data-ja-title="ゴミはゴミ箱へ">
             <span class="emoji-glyph" aria-hidden="true">🚮</span>
-            <span class="emoji-expl" data-ja-html="&lt;strong&gt;🚮&lt;/strong&gt; — ゴミはゴミ箱へ"><strong>🚮</strong> — put litter in the bin</span>
+            <span class="emoji-expl" data-ja-html="ゴミはゴミ箱へ">put litter in the bin</span>
           </button>
           <button type="button" class="emoji-chip" data-copy="🚸" title="children crossing" data-ja-title="通学路・子ども横断">
             <span class="emoji-glyph" aria-hidden="true">🚸</span>
-            <span class="emoji-expl" data-ja-html="&lt;strong&gt;🚸&lt;/strong&gt; — 通学路・子ども横断"><strong>🚸</strong> — children crossing</span>
+            <span class="emoji-expl" data-ja-html="通学路・子ども横断">children crossing</span>
           </button>
           <button type="button" class="emoji-chip" data-copy="🚥" title="traffic lights" data-ja-title="信号機">
             <span class="emoji-glyph" aria-hidden="true">🚥</span>
-            <span class="emoji-expl" data-ja-html="&lt;strong&gt;🚥&lt;/strong&gt; — 信号機"><strong>🚥</strong> — traffic lights</span>
+            <span class="emoji-expl" data-ja-html="信号機">traffic lights</span>
           </button>
           <button type="button" class="emoji-chip" data-copy="🚏" title="bus stop" data-ja-title="バス停">
             <span class="emoji-glyph" aria-hidden="true">🚏</span>
-            <span class="emoji-expl" data-ja-html="&lt;strong&gt;🚏&lt;/strong&gt; — バス停"><strong>🚏</strong> — bus stop</span>
+            <span class="emoji-expl" data-ja-html="バス停">bus stop</span>
           </button>
         </div>
       </details>
@@ -3231,63 +3298,63 @@ header.app-bar::after { content: ""; position: absolute; left: 0; right: 0; bott
         <div class="emoji-grid">
           <button type="button" class="emoji-chip" data-copy="🏯" title="Japanese castle" data-ja-title="日本の城">
             <span class="emoji-glyph" aria-hidden="true">🏯</span>
-            <span class="emoji-expl" data-ja-html="&lt;strong&gt;🏯&lt;/strong&gt; — 日本の城"><strong>🏯</strong> — Japanese castle</span>
+            <span class="emoji-expl" data-ja-html="日本の城">Japanese castle</span>
           </button>
           <button type="button" class="emoji-chip" data-copy="🗼" title="TV tower (Tokyo Tower vibe)" data-ja-title="電波塔（東京タワー風）">
             <span class="emoji-glyph" aria-hidden="true">🗼</span>
-            <span class="emoji-expl" data-ja-html="&lt;strong&gt;🗼&lt;/strong&gt; — 電波塔（東京タワー風）"><strong>🗼</strong> — TV tower (Tokyo Tower vibe)</span>
+            <span class="emoji-expl" data-ja-html="電波塔（東京タワー風）">TV tower (Tokyo Tower vibe)</span>
           </button>
           <button type="button" class="emoji-chip" data-copy="🗻" title="Mt. Fuji" data-ja-title="富士山">
             <span class="emoji-glyph" aria-hidden="true">🗻</span>
-            <span class="emoji-expl" data-ja-html="&lt;strong&gt;🗻&lt;/strong&gt; — 富士山"><strong>🗻</strong> — Mt. Fuji</span>
+            <span class="emoji-expl" data-ja-html="富士山">Mt. Fuji</span>
           </button>
           <button type="button" class="emoji-chip" data-copy="⛩️" title="torii — Shinto shrine gate" data-ja-title="鳥居 — 神社の門">
             <span class="emoji-glyph" aria-hidden="true">⛩️</span>
-            <span class="emoji-expl" data-ja-html="&lt;strong&gt;⛩️&lt;/strong&gt; — 鳥居 — 神社の門"><strong>⛩️</strong> — torii — Shinto shrine gate</span>
+            <span class="emoji-expl" data-ja-html="鳥居 — 神社の門">torii — Shinto shrine gate</span>
           </button>
           <button type="button" class="emoji-chip" data-copy="🗾" title="map of Japan" data-ja-title="日本地図">
             <span class="emoji-glyph" aria-hidden="true">🗾</span>
-            <span class="emoji-expl" data-ja-html="&lt;strong&gt;🗾&lt;/strong&gt; — 日本地図"><strong>🗾</strong> — map of Japan</span>
+            <span class="emoji-expl" data-ja-html="日本地図">map of Japan</span>
           </button>
           <button type="button" class="emoji-chip" data-copy="🏣" title="Japanese post office" data-ja-title="郵便局（日本）">
             <span class="emoji-glyph" aria-hidden="true">🏣</span>
-            <span class="emoji-expl" data-ja-html="&lt;strong&gt;🏣&lt;/strong&gt; — 郵便局（日本）"><strong>🏣</strong> — Japanese post office</span>
+            <span class="emoji-expl" data-ja-html="郵便局（日本）">Japanese post office</span>
           </button>
           <button type="button" class="emoji-chip" data-copy="🏤" title="post office (EU-style icon)" data-ja-title="郵便局（欧州風アイコン）">
             <span class="emoji-glyph" aria-hidden="true">🏤</span>
-            <span class="emoji-expl" data-ja-html="&lt;strong&gt;🏤&lt;/strong&gt; — 郵便局（欧州風アイコン）"><strong>🏤</strong> — post office (EU-style icon)</span>
+            <span class="emoji-expl" data-ja-html="郵便局（欧州風アイコン）">post office (EU-style icon)</span>
           </button>
           <button type="button" class="emoji-chip" data-copy="🏥" title="hospital" data-ja-title="病院">
             <span class="emoji-glyph" aria-hidden="true">🏥</span>
-            <span class="emoji-expl" data-ja-html="&lt;strong&gt;🏥&lt;/strong&gt; — 病院"><strong>🏥</strong> — hospital</span>
+            <span class="emoji-expl" data-ja-html="病院">hospital</span>
           </button>
           <button type="button" class="emoji-chip" data-copy="🏦" title="bank" data-ja-title="銀行">
             <span class="emoji-glyph" aria-hidden="true">🏦</span>
-            <span class="emoji-expl" data-ja-html="&lt;strong&gt;🏦&lt;/strong&gt; — 銀行"><strong>🏦</strong> — bank</span>
+            <span class="emoji-expl" data-ja-html="銀行">bank</span>
           </button>
           <button type="button" class="emoji-chip" data-copy="🏨" title="hotel" data-ja-title="ホテル">
             <span class="emoji-glyph" aria-hidden="true">🏨</span>
-            <span class="emoji-expl" data-ja-html="&lt;strong&gt;🏨&lt;/strong&gt; — ホテル"><strong>🏨</strong> — hotel</span>
+            <span class="emoji-expl" data-ja-html="ホテル">hotel</span>
           </button>
           <button type="button" class="emoji-chip" data-copy="🏩" title="love hotel (JP meaning — know before you send)" data-ja-title="ラブホテル（日本ではこの意味 — 送る前に注意）">
             <span class="emoji-glyph" aria-hidden="true">🏩</span>
-            <span class="emoji-expl" data-ja-html="&lt;strong&gt;🏩&lt;/strong&gt; — ラブホテル（日本ではこの意味 — 送る前に注意）"><strong>🏩</strong> — love hotel (JP meaning — know before you send)</span>
+            <span class="emoji-expl" data-ja-html="ラブホテル（日本ではこの意味 — 送る前に注意）">love hotel (JP meaning — know before you send)</span>
           </button>
           <button type="button" class="emoji-chip" data-copy="🏪" title="convenience store (konbini)" data-ja-title="コンビニ">
             <span class="emoji-glyph" aria-hidden="true">🏪</span>
-            <span class="emoji-expl" data-ja-html="&lt;strong&gt;🏪&lt;/strong&gt; — コンビニ"><strong>🏪</strong> — convenience store (konbini)</span>
+            <span class="emoji-expl" data-ja-html="コンビニ">convenience store (konbini)</span>
           </button>
           <button type="button" class="emoji-chip" data-copy="🏫" title="school" data-ja-title="学校">
             <span class="emoji-glyph" aria-hidden="true">🏫</span>
-            <span class="emoji-expl" data-ja-html="&lt;strong&gt;🏫&lt;/strong&gt; — 学校"><strong>🏫</strong> — school</span>
+            <span class="emoji-expl" data-ja-html="学校">school</span>
           </button>
           <button type="button" class="emoji-chip" data-copy="🏭" title="factory" data-ja-title="工場">
             <span class="emoji-glyph" aria-hidden="true">🏭</span>
-            <span class="emoji-expl" data-ja-html="&lt;strong&gt;🏭&lt;/strong&gt; — 工場"><strong>🏭</strong> — factory</span>
+            <span class="emoji-expl" data-ja-html="工場">factory</span>
           </button>
           <button type="button" class="emoji-chip" data-copy="🏮" title="red paper lantern (izakaya)" data-ja-title="赤ちょうちん（居酒屋）">
             <span class="emoji-glyph" aria-hidden="true">🏮</span>
-            <span class="emoji-expl" data-ja-html="&lt;strong&gt;🏮&lt;/strong&gt; — 赤ちょうちん（居酒屋）"><strong>🏮</strong> — red paper lantern (izakaya)</span>
+            <span class="emoji-expl" data-ja-html="赤ちょうちん（居酒屋）">red paper lantern (izakaya)</span>
           </button>
         </div>
       </details>
@@ -3296,39 +3363,39 @@ header.app-bar::after { content: ""; position: absolute; left: 0; right: 0; bott
         <div class="emoji-grid">
           <button type="button" class="emoji-chip" data-copy="👹" title="oni — horned ogre / “nightmare demon” (Setsubun bean-throwing)" data-ja-title="鬼 — 角のある鬼（節分の豆まき）">
             <span class="emoji-glyph" aria-hidden="true">👹</span>
-            <span class="emoji-expl" data-ja-html="&lt;strong&gt;👹&lt;/strong&gt; — 鬼 — 角のある鬼（節分の豆まき）"><strong>👹</strong> — oni — horned ogre / “nightmare demon” (Setsubun bean-throwing)</span>
+            <span class="emoji-expl" data-ja-html="鬼 — 角のある鬼（節分の豆まき）">oni — horned ogre / “nightmare demon” (Setsubun bean-throwing)</span>
           </button>
           <button type="button" class="emoji-chip" data-copy="👺" title="tengu — long-nosed goblin mask" data-ja-title="天狗 — 鼻の長いお面">
             <span class="emoji-glyph" aria-hidden="true">👺</span>
-            <span class="emoji-expl" data-ja-html="&lt;strong&gt;👺&lt;/strong&gt; — 天狗 — 鼻の長いお面"><strong>👺</strong> — tengu — long-nosed goblin mask</span>
+            <span class="emoji-expl" data-ja-html="天狗 — 鼻の長いお面">tengu — long-nosed goblin mask</span>
           </button>
           <button type="button" class="emoji-chip" data-copy="👻" title="ghost (obake vibe)" data-ja-title="おばけ">
             <span class="emoji-glyph" aria-hidden="true">👻</span>
-            <span class="emoji-expl" data-ja-html="&lt;strong&gt;👻&lt;/strong&gt; — おばけ"><strong>👻</strong> — ghost (obake vibe)</span>
+            <span class="emoji-expl" data-ja-html="おばけ">ghost (obake vibe)</span>
           </button>
           <button type="button" class="emoji-chip" data-copy="💀" title="skull" data-ja-title="ドクロ">
             <span class="emoji-glyph" aria-hidden="true">💀</span>
-            <span class="emoji-expl" data-ja-html="&lt;strong&gt;💀&lt;/strong&gt; — ドクロ"><strong>💀</strong> — skull</span>
+            <span class="emoji-expl" data-ja-html="ドクロ">skull</span>
           </button>
           <button type="button" class="emoji-chip" data-copy="🎃" title="Halloween pumpkin (also used in JP)" data-ja-title="ハロウィンのかぼちゃ（日本でも使う）">
             <span class="emoji-glyph" aria-hidden="true">🎃</span>
-            <span class="emoji-expl" data-ja-html="&lt;strong&gt;🎃&lt;/strong&gt; — ハロウィンのかぼちゃ（日本でも使う）"><strong>🎃</strong> — Halloween pumpkin (also used in JP)</span>
+            <span class="emoji-expl" data-ja-html="ハロウィンのかぼちゃ（日本でも使う）">Halloween pumpkin (also used in JP)</span>
           </button>
           <button type="button" class="emoji-chip" data-copy="🎏" title="koinobori — carp streamers (Children’s Day)" data-ja-title="こいのぼり（こどもの日）">
             <span class="emoji-glyph" aria-hidden="true">🎏</span>
-            <span class="emoji-expl" data-ja-html="&lt;strong&gt;🎏&lt;/strong&gt; — こいのぼり（こどもの日）"><strong>🎏</strong> — koinobori — carp streamers (Children’s Day)</span>
+            <span class="emoji-expl" data-ja-html="こいのぼり（こどもの日）">koinobori — carp streamers (Children’s Day)</span>
           </button>
           <button type="button" class="emoji-chip" data-copy="🎐" title="fūrin — glass wind chime (summer)" data-ja-title="風鈴（夏）">
             <span class="emoji-glyph" aria-hidden="true">🎐</span>
-            <span class="emoji-expl" data-ja-html="&lt;strong&gt;🎐&lt;/strong&gt; — 風鈴（夏）"><strong>🎐</strong> — fūrin — glass wind chime (summer)</span>
+            <span class="emoji-expl" data-ja-html="風鈴（夏）">fūrin — glass wind chime (summer)</span>
           </button>
           <button type="button" class="emoji-chip" data-copy="🎎" title="Hina dolls (Girls’ Day)" data-ja-title="ひな人形（ひな祭り）">
             <span class="emoji-glyph" aria-hidden="true">🎎</span>
-            <span class="emoji-expl" data-ja-html="&lt;strong&gt;🎎&lt;/strong&gt; — ひな人形（ひな祭り）"><strong>🎎</strong> — Hina dolls (Girls’ Day)</span>
+            <span class="emoji-expl" data-ja-html="ひな人形（ひな祭り）">Hina dolls (Girls’ Day)</span>
           </button>
           <button type="button" class="emoji-chip" data-copy="🎌" title="crossed flags (often Japan)" data-ja-title="交差した旗（日本でよく使う）">
             <span class="emoji-glyph" aria-hidden="true">🎌</span>
-            <span class="emoji-expl" data-ja-html="&lt;strong&gt;🎌&lt;/strong&gt; — 交差した旗（日本でよく使う）"><strong>🎌</strong> — crossed flags (often Japan)</span>
+            <span class="emoji-expl" data-ja-html="交差した旗（日本でよく使う）">crossed flags (often Japan)</span>
           </button>
         </div>
       </details>
@@ -3337,51 +3404,51 @@ header.app-bar::after { content: ""; position: absolute; left: 0; right: 0; bott
         <div class="emoji-grid">
           <button type="button" class="emoji-chip" data-copy="🍜" title="ramen — noodle soup bowl" data-ja-title="ラーメン">
             <span class="emoji-glyph" aria-hidden="true">🍜</span>
-            <span class="emoji-expl" data-ja-html="&lt;strong&gt;🍜&lt;/strong&gt; — ラーメン"><strong>🍜</strong> — ramen — noodle soup bowl</span>
+            <span class="emoji-expl" data-ja-html="ラーメン">ramen — noodle soup bowl</span>
           </button>
           <button type="button" class="emoji-chip" data-copy="🍣" title="sushi — vinegared rice + topping" data-ja-title="寿司">
             <span class="emoji-glyph" aria-hidden="true">🍣</span>
-            <span class="emoji-expl" data-ja-html="&lt;strong&gt;🍣&lt;/strong&gt; — 寿司"><strong>🍣</strong> — sushi — vinegared rice + topping</span>
+            <span class="emoji-expl" data-ja-html="寿司">sushi — vinegared rice + topping</span>
           </button>
           <button type="button" class="emoji-chip" data-copy="🍱" title="bento — boxed meal (lunch box)" data-ja-title="弁当">
             <span class="emoji-glyph" aria-hidden="true">🍱</span>
-            <span class="emoji-expl" data-ja-html="&lt;strong&gt;🍱&lt;/strong&gt; — 弁当"><strong>🍱</strong> — bento — boxed meal (lunch box)</span>
+            <span class="emoji-expl" data-ja-html="弁当">bento — boxed meal (lunch box)</span>
           </button>
           <button type="button" class="emoji-chip" data-copy="🍙" title="onigiri — rice ball wrapped in nori" data-ja-title="おにぎり（のり巻き）">
             <span class="emoji-glyph" aria-hidden="true">🍙</span>
-            <span class="emoji-expl" data-ja-html="&lt;strong&gt;🍙&lt;/strong&gt; — おにぎり（のり巻き）"><strong>🍙</strong> — onigiri — rice ball wrapped in nori</span>
+            <span class="emoji-expl" data-ja-html="おにぎり（のり巻き）">onigiri — rice ball wrapped in nori</span>
           </button>
           <button type="button" class="emoji-chip" data-copy="🍡" title="dango — sweet rice dumplings on a stick" data-ja-title="団子（串）">
             <span class="emoji-glyph" aria-hidden="true">🍡</span>
-            <span class="emoji-expl" data-ja-html="&lt;strong&gt;🍡&lt;/strong&gt; — 団子（串）"><strong>🍡</strong> — dango — sweet rice dumplings on a stick</span>
+            <span class="emoji-expl" data-ja-html="団子（串）">dango — sweet rice dumplings on a stick</span>
           </button>
           <button type="button" class="emoji-chip" data-copy="🍛" title="curry rice (Japanese-style)" data-ja-title="カレーライス（日本風）">
             <span class="emoji-glyph" aria-hidden="true">🍛</span>
-            <span class="emoji-expl" data-ja-html="&lt;strong&gt;🍛&lt;/strong&gt; — カレーライス（日本風）"><strong>🍛</strong> — curry rice (Japanese-style)</span>
+            <span class="emoji-expl" data-ja-html="カレーライス（日本風）">curry rice (Japanese-style)</span>
           </button>
           <button type="button" class="emoji-chip" data-copy="🍲" title="hot pot / nabe" data-ja-title="鍋">
             <span class="emoji-glyph" aria-hidden="true">🍲</span>
-            <span class="emoji-expl" data-ja-html="&lt;strong&gt;🍲&lt;/strong&gt; — 鍋"><strong>🍲</strong> — hot pot / nabe</span>
+            <span class="emoji-expl" data-ja-html="鍋">hot pot / nabe</span>
           </button>
           <button type="button" class="emoji-chip" data-copy="🍥" title="narutomaki — swirly fish cake" data-ja-title="なると">
             <span class="emoji-glyph" aria-hidden="true">🍥</span>
-            <span class="emoji-expl" data-ja-html="&lt;strong&gt;🍥&lt;/strong&gt; — なると"><strong>🍥</strong> — narutomaki — swirly fish cake</span>
+            <span class="emoji-expl" data-ja-html="なると">narutomaki — swirly fish cake</span>
           </button>
           <button type="button" class="emoji-chip" data-copy="🍤" title="fried shrimp (ebi fry)" data-ja-title="エビフライ">
             <span class="emoji-glyph" aria-hidden="true">🍤</span>
-            <span class="emoji-expl" data-ja-html="&lt;strong&gt;🍤&lt;/strong&gt; — エビフライ"><strong>🍤</strong> — fried shrimp (ebi fry)</span>
+            <span class="emoji-expl" data-ja-html="エビフライ">fried shrimp (ebi fry)</span>
           </button>
           <button type="button" class="emoji-chip" data-copy="🍵" title="green tea (often oolong/sencha cup)" data-ja-title="お茶（湯のみ）">
             <span class="emoji-glyph" aria-hidden="true">🍵</span>
-            <span class="emoji-expl" data-ja-html="&lt;strong&gt;🍵&lt;/strong&gt; — お茶（湯のみ）"><strong>🍵</strong> — green tea (often oolong/sencha cup)</span>
+            <span class="emoji-expl" data-ja-html="お茶（湯のみ）">green tea (often oolong/sencha cup)</span>
           </button>
           <button type="button" class="emoji-chip" data-copy="🍶" title="sake — Japanese rice wine bottle + cup" data-ja-title="日本酒（とっくりとおちょこ）">
             <span class="emoji-glyph" aria-hidden="true">🍶</span>
-            <span class="emoji-expl" data-ja-html="&lt;strong&gt;🍶&lt;/strong&gt; — 日本酒（とっくりとおちょこ）"><strong>🍶</strong> — sake — Japanese rice wine bottle + cup</span>
+            <span class="emoji-expl" data-ja-html="日本酒（とっくりとおちょこ）">sake — Japanese rice wine bottle + cup</span>
           </button>
           <button type="button" class="emoji-chip" data-copy="🍺" title="beer" data-ja-title="ビール">
             <span class="emoji-glyph" aria-hidden="true">🍺</span>
-            <span class="emoji-expl" data-ja-html="&lt;strong&gt;🍺&lt;/strong&gt; — ビール"><strong>🍺</strong> — beer</span>
+            <span class="emoji-expl" data-ja-html="ビール">beer</span>
           </button>
         </div>
       </details>
@@ -3668,6 +3735,20 @@ header.app-bar::after { content: ""; position: absolute; left: 0; right: 0; bott
 
   <!-- PRO -->
   <section class="panel" id="panel-about" role="tabpanel" aria-labelledby="tab-about" hidden>
+    <!-- 1.3.2-lab: how-it-works demo. Recorded from the lab with neutral demo text; animated WebP, GIF fallback, still under reduced motion. Loads only when About is opened. -->
+    <div class="card demo-card" id="demoCard">
+      <h2 data-ja-html="使い方（デモ）">How it works</h2>
+      <div class="demo-row">
+        <picture>
+          <source media="(prefers-reduced-motion: reduce) and (min-width: 768px)" srcset="/demo/mojifill-demo-desktop-still.webp?v=1.3.2" type="image/webp" width="960" height="480">
+          <source media="(prefers-reduced-motion: reduce)" srcset="/demo/mojifill-demo-mobile-still.webp?v=1.3.2" type="image/webp">
+          <source media="(min-width: 768px)" srcset="/demo/mojifill-demo-desktop.webp?v=1.3.2" type="image/webp" width="960" height="480">
+          <source srcset="/demo/mojifill-demo-mobile.webp?v=1.3.2" type="image/webp">
+          <img class="demo-media" src="/demo/mojifill-demo-mobile.gif?v=1.3.2" width="360" height="640" loading="lazy" decoding="async" alt="Demo: paste text a form rejected into Fix text, get the fixed version, tap to copy; then type a name and tap a paste-ready card." data-ja-alt="デモ：フォームで弾かれた文字を文字修正に貼り付け、修正版をタップでコピー。次に名前を入力して貼り付け用カードをタップ。">
+        </picture>
+        <p class="hint demo-cap" data-ja-html="①弾かれた文字を貼る → ②修正版をタップでコピー → ③名前タブで各形式をコピー。すべてこの端末内。">1 Paste what the form rejected → 2 tap the fixed version to copy → 3 Names: copy any format. All on this device.</p>
+      </div>
+    </div>
     <div id="aboutTools">
       <div class="card">
         <div class="pro-status" data-i18n="about.freeStatus">Free · every feature · on this device</div>
@@ -7522,8 +7603,8 @@ header.app-bar::after { content: ""; position: absolute; left: 0; right: 0; bott
       'mark.odoriji': '踊り字',
       'mark.shime': '締め',
       'mark.kome': '米印',
-      'mark.kagil': '「',
-      'mark.kagir': '」',
+      'mark.kagil': 'Quote open',
+      'mark.kagir': 'Quote close',
       'space.ascii': 'ASCII space',
       'space.ideo': '全角スペース',
       'space.nbsp': 'NBSP',
@@ -8056,8 +8137,8 @@ header.app-bar::after { content: ""; position: absolute; left: 0; right: 0; bott
       'mark.odoriji': '踊り字',
       'mark.shime': '締め',
       'mark.kome': '米印',
-      'mark.kagil': '「',
-      'mark.kagir': '」',
+      'mark.kagil': 'かぎ括弧（始）',
+      'mark.kagir': 'かぎ括弧（終）',
       'space.ascii': '半角スペース',
       'space.ideo': '全角スペース',
       'space.nbsp': 'NBSP（改行しない空白）',
@@ -8372,7 +8453,7 @@ header.app-bar::after { content: ""; position: absolute; left: 0; right: 0; bott
       var next = ja ? el.getAttribute('data-ja-html') : el.getAttribute('data-en-html');
       if (el.innerHTML !== next) el.innerHTML = next;
     });
-    ['title', 'aria-label', 'placeholder'].forEach(function (a) {
+    ['title', 'aria-label', 'placeholder', 'alt'].forEach(function (a) {
       document.querySelectorAll('[data-ja-' + a + ']').forEach(function (el) {
         if (!el.hasAttribute('data-en-' + a)) el.setAttribute('data-en-' + a, el.getAttribute(a) || '');
         el.setAttribute(a, ja ? el.getAttribute('data-ja-' + a) : el.getAttribute('data-en-' + a));
@@ -12842,6 +12923,17 @@ header.app-bar::after { content: ""; position: absolute; left: 0; right: 0; bott
   rebuildPhone();
   rebuildPost();
 
+  /* 1.3.2-lab: hero "How it works" → About tab demo (the demo image only loads once About is shown) */
+  (function () {
+    var how = document.getElementById('heroHowBtn');
+    if (!how) return;
+    how.addEventListener('click', function () {
+      activateTab('about', { emphasize: true });
+      var c = document.getElementById('demoCard');
+      if (c) setTimeout(function () { try { c.scrollIntoView({ block: 'start', behavior: 'auto' }); } catch (e) { c.scrollIntoView(); } }, 30);
+    });
+  })();
+
   /* ---------- 1.3.1-lab: desktop two columns (≥1024px) — input left, paste-ready output right ----------
      Moves existing nodes (ids, listeners and observers stay intact) into .mf-col-in / .mf-col-out, leaving a comment
      marker where each one lived; below 1024px every node goes back to its marker, so mobile keeps the original DOM order. */
@@ -12851,6 +12943,17 @@ header.app-bar::after { content: ""; position: absolute; left: 0; right: 0; bott
     var applied = [];
     function byId(id) { return document.getElementById(id); }
     function cardOf(id) { var e = byId(id); return e ? e.closest('.card') : null; }
+    /* 1.3.2-lab: a heading over the output column so both columns start on the same baseline */
+    var outHeadEl = null;
+    function fixOutHead() {
+      if (!outHeadEl) {
+        outHeadEl = document.createElement('div');
+        outHeadEl.className = 'card-head fix-out-head';
+        outHeadEl.innerHTML = '<h2 data-ja-html="結果 — タップでコピー" data-en-html="Result — tap to copy"></h2>';
+      }
+      outHeadEl.firstChild.innerHTML = L('Result — tap to copy', '結果 — タップでコピー');
+      return outHeadEl;
+    }
     function plan() {
       var fix = document.querySelector('#panel-fix .fix-card');
       var addrCard = document.querySelector('#addressUnlocked > .card');
@@ -12867,7 +12970,7 @@ header.app-bar::after { content: ""; position: absolute; left: 0; right: 0; bott
         { in: [cardOf('furiInput')], out: [cardOf('furiLadder')] },
         { in: [cardOf('dateInput')], out: [byId('top-dates'), cardOf('dateLadder')] },
         { in: [cardOf('phoneInput')], out: [cardOf('postInput')] },
-        fix ? { in: [fix.querySelector('.fix-field'), byId('fixArrow'), fix.querySelector('.fix-opts')], out: [byId('fixEmpty'), byId('fixLadder'), byId('fixFit'), byId('fixSuggestWrap'), byId('fixNoChanges'), byId('fixChangesBox')] } : null,
+        fix ? { in: [fix.querySelector('.fix-head'), fix.querySelector('.fix-field'), byId('fixArrow'), fix.querySelector('.fix-opts')], outHead: fixOutHead(), out: [byId('fixEmpty'), byId('fixLadder'), byId('fixFit'), byId('fixSuggestWrap'), byId('fixNoChanges'), byId('fixChangesBox')] } : null,
         addrCard ? { in: addrIn, out: addrOut } : null,
         { in: [byId('meishiDesignCard'), byId('meishiContentCard')], out: [byId('meishiPreviewCard')] }
       ];
@@ -12889,15 +12992,17 @@ header.app-bar::after { content: ""; position: absolute; left: 0; right: 0; bott
         parent.insertBefore(wrap, first);
         var marks = all.map(function (el) { var m = document.createComment('mf-split'); el.parentNode.insertBefore(m, el); return [m, el]; });
         ins.forEach(function (e) { ci.appendChild(e); });
+        if (p.outHead) co.appendChild(p.outHead);
         outs.forEach(function (e) { co.appendChild(e); });
         parent.classList.add('mf-has-split');
-        applied.push({ parent: parent, wrap: wrap, marks: marks });
+        applied.push({ parent: parent, wrap: wrap, marks: marks, outHead: p.outHead || null });
       });
       document.documentElement.classList.add('mf-desk');
     }
     function unsplit() {
       applied.forEach(function (a) {
         a.marks.forEach(function (pair) { if (pair[0].parentNode) pair[0].parentNode.replaceChild(pair[1], pair[0]); });
+        if (a.outHead && a.outHead.parentNode) a.outHead.parentNode.removeChild(a.outHead);
         if (a.wrap.parentNode) a.wrap.parentNode.removeChild(a.wrap);
         a.parent.classList.remove('mf-has-split');
       });

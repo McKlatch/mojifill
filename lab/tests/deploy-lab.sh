@@ -20,6 +20,8 @@ cp "$LAB/index.html" "$LAB/terms.html" "$LAB/favicon-32.png" "$LAB/apple-touch-i
 for f in robots.txt sitemap.xml og.png; do
   [ -f "$LAB/$f" ] && cp "$LAB/$f" "$STAGE/public/"
 done
+# 1.3.2-lab: how-it-works demo media (About tab; animated WebP + GIF + stills)
+[ -d "$LAB/demo" ] && cp -R "$LAB/demo" "$STAGE/public/demo"
 # 1.2.50-lab: real service worker at /sw.js (scope '/'), real manifest, and _headers (Cache-Control: no-cache for /sw.js).
 # 1.2.49-lab: terms.html is served by Pages at /terms (pretty URL; /terms.html redirects there).
 # 1.2.34-lab: Pages Functions (/api/geo). Wrangler bundles ./functions from its cwd, so deploy from $STAGE.

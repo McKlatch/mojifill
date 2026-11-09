@@ -805,8 +805,8 @@ try {
     ok(d141.allIn && d141.rows === 1 && d141.steps === 0 && d141.twoCol && d141.w > 800 && !d141.ov && d141.top < 800, `1.3.1 desktop 1280: tabs in one row, input | output side by side, results on the first screen (${JSON.stringify(d141)})`);
     // 1.3.1-lab: two-column split on desktop, restored DOM order on mobile, meishi design options
     {
-      const d131 = await ev("(function(){var m=document.getElementById('meishiPreviewCard');return {splits:document.querySelectorAll('.mf-split').length,mei:!!(m&&m.closest('.mf-col-out')),fixOut:!!document.getElementById('fixLadder').closest('.mf-col-out'),fixIn:!!document.getElementById('fixInput').closest('.mf-col-in'),logo:(function(){var i=document.querySelector('header.app-bar h1 .brand-mark');return i&&i.complete&&i.naturalWidth>0&&Math.round(i.getBoundingClientRect().width);})()};})()");
-      ok(d131.splits >= 6 && d131.mei && d131.fixOut && d131.fixIn && d131.logo >= 24, `1.3.1 desktop: input/output columns on names/fix/meishi/…, header logo loaded (${JSON.stringify(d131)})`);
+      const d131 = await ev("(function(){var m=document.getElementById('meishiPreviewCard');return {splits:document.querySelectorAll('.mf-split').length,mei:!!(m&&m.closest('.mf-col-out')),fixOut:!!document.getElementById('fixLadder').closest('.mf-col-out'),fixIn:!!document.getElementById('fixInput').closest('.mf-col-in'),logo:(function(){var i=document.querySelector('header.app-bar h1 svg.brand-mark');return i&&getComputedStyle(i).backgroundColor==='rgba(0, 0, 0, 0)'&&i.querySelectorAll('path').length===2&&Math.round(i.getBoundingClientRect().width);})()};})()");
+      ok(d131.splits >= 6 && d131.mei && d131.fixOut && d131.fixIn && d131.logo >= 24, `1.3.1 desktop: input/output columns on names/fix/meishi/…, header logo is a transparent inline SVG (${JSON.stringify(d131)})`);
       await P.send('Emulation.setDeviceMetricsOverride', { width: 390, height: 750, deviceScaleFactor: 2, mobile: true });
       await sleep(250);
       const m131 = await ev("(function(){var p=document.getElementById('panel-names');var fam=document.getElementById('family').closest('.card');var kids=[].slice.call(p.children);return {splits:document.querySelectorAll('.mf-split').length,order:kids.indexOf(document.getElementById('top-names'))<kids.indexOf(fam)&&kids.indexOf(fam)<kids.indexOf(document.getElementById('nameLadder').closest('.card')),fix:document.getElementById('fixInput').closest('.fix-card').firstElementChild.classList.contains('fix-head')};})()");
@@ -824,6 +824,25 @@ try {
       const t131 = await ev("(function(){var c=document.getElementById('meishiCard');var r=c.getBoundingClientRect();return {tate:c.classList.contains('mei-tate')&&getComputedStyle(c).writingMode==='vertical-rl',portrait:r.height>r.width,backYoko:document.getElementById('meishiCardBack').classList.contains('mei-yoko')};})()");
       ok(t131.tate && t131.portrait && t131.backYoko, `1.3.1 meishi: 縦書き front is portrait vertical-rl; English back stays horizontal (${JSON.stringify(t131)})`);
       await pick('orient', 'yoko'); await pick('back', 'none'); await pick('seal', 'none'); await pick('accent', 'none');
+      await P.send('Emulation.setDeviceMetricsOverride', { width: 1280, height: 800, deviceScaleFactor: 1, mobile: false });
+      await sleep(200);
+    }
+    // 1.3.2-lab: one content width (tabs / hero / cards share edges), fix columns aligned, marks tile grid, demo media
+    {
+      await ev("document.getElementById('tab-fix').click(); window.scrollTo(0,0); 1"); await sleep(250);
+      const a132 = await ev("(function(){var t=document.querySelector('.tabs .tab').getBoundingClientRect();var c=document.querySelector('#panel-fix .fix-card').getBoundingClientRect();var h=document.querySelector('#panel-fix .fix-head').getBoundingClientRect();var oh=document.querySelector('.fix-out-head');var ar=document.getElementById('fixArrow').getBoundingClientRect();var inC=document.querySelector('#panel-fix .mf-col-in').getBoundingClientRect();return {tabEdge:Math.round(t.left-c.left),headIn:h.right<=inC.right+1,outHead:!!(oh&&oh.closest('.mf-col-out'))&&Math.abs(oh.getBoundingClientRect().top-h.top)<3,arrowLeft:Math.round(ar.left-inC.left)};})()");
+      ok(Math.abs(a132.tabEdge) <= 2 && a132.headIn && a132.outHead && a132.arrowLeft <= 2, `1.3.2 desktop fix: tabs start at the card edge, Example/Clear stay in the input column, result heading level with it, arrow row left-aligned (${JSON.stringify(a132)})`);
+      await ev("document.getElementById('tab-marks').click(); 1"); await sleep(200);
+      const cols = "(function(){var g=document.getElementById('marksChips');var tops={};[].forEach.call(g.children,function(c){var r=c.getBoundingClientRect();if(r.width)tops[Math.round(r.top)]=(tops[Math.round(r.top)]||0)+1;});var ws=[].map.call(g.children,function(c){return Math.round(c.getBoundingClientRect().width)});var first=Object.keys(tops).sort(function(a,b){return a-b})[0];return {cols:tops[first],uniform:Math.max.apply(null,ws)-Math.min.apply(null,ws)<=1,ov:document.documentElement.scrollWidth>document.documentElement.clientWidth+1};})()";
+      const mk = await ev(cols);
+      ok(mk.cols >= 6 && mk.uniform && !mk.ov, `1.3.2 marks desktop: uniform tile grid, ≥6 columns (${JSON.stringify(mk)})`);
+      await ev("document.getElementById('tab-about').click(); 1"); await sleep(150);
+      const dm = await ev("(function(){var p=document.querySelector('#demoCard picture');var i=p&&p.querySelector('img');var ss=p?[].map.call(p.querySelectorAll('source'),function(s){return s.media+'|'+s.srcset}):[];return {pic:!!p,lazy:!!i&&i.loading==='lazy',gif:!!i&&/\.gif/.test(i.getAttribute('src')),reduced:ss.filter(function(x){return /reduce/.test(x)&&/still/.test(x)}).length,anim:ss.filter(function(x){return !/reduce/.test(x)&&/\.webp/.test(x)}).length};})()");
+      ok(dm.pic && dm.lazy && dm.gif && dm.reduced === 2 && dm.anim === 2, `1.3.2 About: lazy demo <picture> (animated WebP desktop/mobile, GIF fallback, still under reduced motion) (${JSON.stringify(dm)})`);
+      await P.send('Emulation.setDeviceMetricsOverride', { width: 390, height: 750, deviceScaleFactor: 2, mobile: true });
+      await ev("document.getElementById('tab-marks').click(); 1"); await sleep(250);
+      const mm = await ev(cols);
+      ok(mm.cols >= 2 && mm.cols <= 4 && mm.uniform && !mm.ov, `1.3.2 marks 390: 2–4 uniform columns, no sideways scroll (${JSON.stringify(mm)})`);
       await P.send('Emulation.setDeviceMetricsOverride', { width: 1280, height: 800, deviceScaleFactor: 1, mobile: false });
       await sleep(200);
     }
@@ -1175,7 +1194,7 @@ try {
       ok(await ev2("navigator.serviceWorker.getRegistration().then(function(r){return !!r && r.scope === location.origin + '/' && !!r.active && r.active.scriptURL === location.origin + '/sw.js';})"), "1.2.50 SW: registration scope '/' with /sw.js active");
       const keys = await ev2("caches.keys()");
       const SW_CACHE = (fs.readFileSync(path.join(LAB, 'sw.js'), 'utf8').match(/const CACHE='([^']+)'/) || [])[1];
-      ok(SW_CACHE === 'mojifill-1.3.1-lab' && keys.indexOf(SW_CACHE) >= 0 && keys.indexOf('mojifill-1.3.0-lab') < 0, `1.3.1 SW: CACHE ${SW_CACHE} present, old 1.3.0 cache deleted (${keys.join(',')})`);
+      ok(SW_CACHE === 'mojifill-1.3.2-lab' && keys.indexOf(SW_CACHE) >= 0 && keys.indexOf('mojifill-1.3.0-lab') < 0, `1.3.2 SW: CACHE ${SW_CACHE} present, old 1.3.0 cache deleted (${keys.join(',')})`);
       const shell = await ev2("caches.open('" + SW_CACHE + "').then(function(c){return c.keys();}).then(function(ks){return ks.map(function(k){var u=new URL(k.url);return u.pathname+u.search;});})");
       for (const k of ['/', '/terms', '/manifest.webmanifest?v=1.3.0', '/favicon-32.png?v=1.3.0', '/icon-192.png?v=1.3.0', '/icon-512.png?v=1.3.0', '/icon-maskable-512.png?v=1.3.0', '/apple-touch-icon.png?v=1.3.0']) ok(shell.indexOf(k) >= 0, `1.3.0 SW precache: ${k}`);
       ok(shell.every((k) => k.indexOf('/api/') !== 0), '1.2.50 SW: /api/ never cached');
