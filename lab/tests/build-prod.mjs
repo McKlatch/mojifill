@@ -10,7 +10,7 @@ import { fileURLToPath } from 'node:url';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const LAB = path.join(__dirname, '..');
 const out = process.argv[2];
-const cache = process.argv[3] || 'mojifill-v39';
+const cache = process.argv[3] || 'mojifill-v40';
 if (!out) { console.error('usage: node build-prod.mjs <out-dir> [cache]'); process.exit(2); }
 if (!/^mojifill-v\d+$/.test(cache)) { console.error('prod cache must look like mojifill-vNN, got ' + cache); process.exit(2); }
 

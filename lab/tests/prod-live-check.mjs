@@ -1,11 +1,11 @@
-// Read-only headless check of live https://mojifill.app (EXPECT_CACHE, default mojifill-v38): SW control, offline / and /terms, desktop install hidden, buy → ¥1,480 link.
+// Read-only headless check of live https://mojifill.app (EXPECT_CACHE, default mojifill-v40): SW control, offline / and /terms, desktop install hidden, buy → ¥1,480 link.
 // Run: node lab/tests/prod-live-check.mjs   (read-only; needs google-chrome + ws)
 import fs from 'fs'; import os from 'os'; import path from 'path'; import { spawn } from 'child_process'; import { createRequire } from 'module';
 const require = createRequire(import.meta.url);
 let WS; for (const p of ['ws', path.join(os.homedir(), '.local/lib/node_modules/ws')]) { try { WS = require(p); break; } catch (e) {} }
 if (!WS) WS = WebSocket;
 const CHROME = ['/usr/bin/google-chrome', '/usr/bin/chromium'].find((p) => fs.existsSync(p));
-const O = 'https://mojifill.app';
+const O = process.env.CHECK_ORIGIN || 'https://mojifill.app';
 let fails = 0; const ok = (c, m) => { console.log((c ? '  PASS ' : '  FAIL ') + m); if (!c) fails++; };
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 const profile = fs.mkdtempSync(path.join(os.tmpdir(), 'mf-prod-'));
@@ -32,7 +32,7 @@ try {
   await load(O + '/?lang=ja'); // second load: controlled
   const sw = await ev("(async()=>({ctrl:!!navigator.serviceWorker.controller, url:navigator.serviceWorker.controller&&navigator.serviceWorker.controller.scriptURL, caches:await caches.keys()}))()");
   ok(sw.ctrl && sw.url === O + '/sw.js', 'SW /sw.js controls page ' + JSON.stringify(sw));
-  const EXPECT = process.env.EXPECT_CACHE || 'mojifill-v38';
+  const EXPECT = process.env.EXPECT_CACHE || 'mojifill-v40';
   ok(sw.caches.includes(EXPECT), `cache ${EXPECT} present`);
   // 1.2.53: truthful analytics wording is live (no 'no trackers' claims)
   const pv = await ev("document.documentElement.innerHTML");
@@ -43,6 +43,13 @@ try {
   // buy → link (capture window.open)
   const buy = await ev("(function(){var u=null;var o=window.open;window.open=function(x){u=x;return null;};var b=document.getElementById('proBuyBtn');var vis=!!b&&!b.hidden;if(b)b.click();window.open=o;return {vis:vis,url:u,text:b?b.textContent.trim():null};})()");
   ok(!buy.vis || !/buy\.stripe\.com/.test(buy.url||''), 'free: no live Stripe buy button');
+  // 1.3.4: no visible Pro / unlock wording on any tab or help, JA + EN
+  const SCAN = fs.readFileSync(new URL('./visible-pro-scan.js', import.meta.url), 'utf8').replace(/^\/\/.*\n/, '');
+  for (const lg of ['ja', 'en']) {
+    await load(O + '/?lang=' + lg);
+    const r = await ev(SCAN);
+    ok(r.hits.length === 0, `${lg}: no visible Pro/unlock wording on any tab or help ${JSON.stringify(r.hits)}`);
+  }
   await load(O + '/terms'); await sleep(300);
   ok(await ev("!!document.getElementById('tokushoho')"), '/terms online renders #tokushoho');
   ok(await ev("!/no (other )?trackers|トラッカー/i.test(document.documentElement.innerHTML) && document.body.innerText.includes('Cloudflare Web Analytics')"), '/terms: no "no trackers" claim, discloses Cloudflare Web Analytics');

@@ -2982,7 +2982,7 @@ html { scrollbar-gutter: stable; }
         <button type="button" class="btn-subtle" id="expDlMd" data-i18n="exp.dlMd">Save .md</button>
         <button type="button" class="btn-subtle" id="expDlJson">Save JSON</button>
       </div>
-      <p class="hint" id="expFreeNote" hidden data-i18n="exp.freeNote">Export is Pro — a form brief for an AI agent or your records (.md + JSON), the whole family, you choose the fields.</p>
+      <p class="hint" id="expFreeNote" hidden data-i18n="exp.freeNote">A form brief for an AI agent or your records (.md + JSON), the whole family, you choose the fields.</p>
       <details class="exp-preview" id="expPreviewWrap"><summary data-i18n="exp.preview">Preview</summary><pre id="expPreview"></pre></details>
     </div>
   </section>
@@ -3508,7 +3508,7 @@ html { scrollbar-gutter: stable; }
     <div id="addressLocked">
       <div class="card pro-sales-gate">
         <h2 data-i18n="addr.proTitle">Paste-ready address lines</h2>
-        <p style="margin:0 0 8px;font-size:0.92rem" data-i18n="addr.gatePitch">Get through the address page without guessing. Free Phone / 〒 still formats postcodes; Pro gives you:</p>
+        <p style="margin:0 0 8px;font-size:0.92rem" data-i18n="addr.gatePitch">Get through the address page without guessing:</p>
         <ul class="pro-list">
           <li data-i18n="addr.gate1">Each box filled right — 都道府県 / 市区町村 / 町域 split, tap to copy</li>
           <li data-i18n="addr.gate2">The 〒 the form wants — digits, dashed, fullwidth, with or without 〒</li>
@@ -3528,7 +3528,7 @@ html { scrollbar-gutter: stable; }
 
     <div id="addressUnlocked" hidden>
       <div class="card">
-        <h2><span data-i18n="addr.title">Address</span> <span class="hint-inline">(Pro)</span></h2>
+        <h2><span data-i18n="addr.title">Address</span></h2>
         <p class="hint" style="margin-top:0" data-ja-html="日本式で入力。〒は電話／〒タブと連動。下の候補をタップでコピー。使用中のプロフィールに保存。">Japanese-style entry. Postal syncs with Phone / 〒. Paste-ready variants below — tap to copy. Saved on the active profile.</p>
         <div class="field">
           <label for="addrPostal"><span class="label-with-help"><span data-i18n="addr.postal">Postal (〒)</span> <button type="button" class="help-q" data-help="addrzip" title="〒 address lookup" aria-label="〒 address lookup" data-ja-title="〒から住所検索" data-ja-aria-label="〒から住所検索">?</button></span></label>
@@ -3637,7 +3637,7 @@ html { scrollbar-gutter: stable; }
   <section class="panel" id="panel-meishi" role="tabpanel" aria-labelledby="tab-meishi" hidden>
     <div id="meishiLocked">
       <div class="card pro-sales-gate">
-        <h2 data-i18n="meishi.titlePro">JP business card (名刺) — Pro</h2>
+        <h2 data-i18n="meishi.titlePro">JP business card (名刺)</h2>
         <p style="margin:0 0 8px;font-size:0.92rem" data-i18n="meishi.gatePitch">Hand over a proper Japanese business card — made from the profile you already typed:</p>
         <ul class="pro-list">
           <li data-i18n="meishi.gate1">Your card, your order — name, kana, phone, 〒, address, custom lines</li>
@@ -7819,11 +7819,11 @@ html { scrollbar-gutter: stable; }
     var sq = squareEraDate(iso);
     var kn = kansujiYmd(iso);
     if (state.proUnlocked) {
-      if (sq) dateLadder.appendChild(makeCopyCard('Pro · コンパクト和暦', styleDateValue(sq)));
-      if (kn) dateLadder.appendChild(makeCopyCard('Pro · 漢数字', styleDateValue(kn)));
+      if (sq) dateLadder.appendChild(makeCopyCard('コンパクト和暦', styleDateValue(sq)));
+      if (kn) dateLadder.appendChild(makeCopyCard('漢数字', styleDateValue(kn)));
     } else {
-      if (sq) dateLadder.appendChild(makeProLockedCard('Pro · コンパクト和暦', sq));
-      if (kn) dateLadder.appendChild(makeProLockedCard('Pro · 漢数字', kn));
+      if (sq) dateLadder.appendChild(makeProLockedCard('コンパクト和暦', sq));
+      if (kn) dateLadder.appendChild(makeProLockedCard('漢数字', kn));
     }
   }
 
@@ -8302,7 +8302,7 @@ html { scrollbar-gutter: stable; }
       'hh.count': '{n} people',
       'hh.add': 'Add',
       'hh.addLocked': '＋ Family · Pro',
-      'hh.lockedLabel': 'Spouse & children too — switch and copy (Pro)',
+      'hh.lockedLabel': 'Spouse & children too — switch and copy',
       'hh.lockedSample': 'Wife 山田 花子 · Child 山田 健',
       'hh.proToast': 'Pro adds family members',
       'hh.relation': 'Relationship',
@@ -8344,11 +8344,11 @@ html { scrollbar-gutter: stable; }
       'exp.dlMd': 'Save .md',
       'exp.dlJson': 'Save JSON',
       'exp.jsonLocked': 'JSON · Pro',
-      'exp.freeNote': 'Export is Pro — a form brief for an AI agent or your records (.md + JSON), the whole family, you choose the fields.',
+      'exp.freeNote': 'A form brief for an AI agent or your records (.md + JSON), the whole family, you choose the fields.',
       'exp.preview': 'Preview',
-      'exp.proToast': 'Export is Pro — unlock in the Pro tab',
+      'exp.proToast': 'Export is free — see About',
       'exp.saved': 'Saved to Downloads',
-      'addr.gatePitch': 'Get through the address page without guessing. Free Phone / 〒 still formats postcodes; Pro gives you:',
+      'addr.gatePitch': 'Get through the address page without guessing:',
       'addr.gate1': 'Each box filled right — 都道府県 / 市区町村 / 町域 split, tap to copy',
       'addr.gate2': 'The 〒 the form wants — digits, dashed, fullwidth, with or without 〒',
       'addr.gate3': 'One-line or multi-line JP address, ready to paste',
@@ -8837,7 +8837,7 @@ html { scrollbar-gutter: stable; }
       'hh.count': '{n}人',
       'hh.add': '追加',
       'hh.addLocked': '＋ 家族 · Pro',
-      'hh.lockedLabel': '配偶者・子も切り替えてコピー（Pro）',
+      'hh.lockedLabel': '配偶者・子も切り替えてコピー',
       'hh.lockedSample': '妻 山田 花子 · 子 山田 健',
       'hh.proToast': 'Proで家族を追加',
       'hh.relation': '続柄',
@@ -8879,11 +8879,11 @@ html { scrollbar-gutter: stable; }
       'exp.dlMd': '.mdで保存',
       'exp.dlJson': 'JSONで保存',
       'exp.jsonLocked': 'JSON · Pro',
-      'exp.freeNote': '書き出しはPro — AIエージェント・控え用のフォーム指示書（.md＋JSON）、家族全員、項目を選べます。',
+      'exp.freeNote': 'AIエージェント・控え用のフォーム指示書（.md＋JSON）、家族全員、項目を選べます。',
       'exp.preview': 'プレビュー',
-      'exp.proToast': '書き出しはProで使えます — Proタブで解除',
+      'exp.proToast': '書き出しは無料 — Aboutを参照',
       'exp.saved': 'ダウンロードに保存',
-      'addr.gatePitch': '住所欄で迷わない。電話／〒タブの郵便番号は無料のまま。Proなら：',
+      'addr.gatePitch': '住所欄で迷わない：',
       'addr.gate1': '欄ごとに正しく — 都道府県・市区町村・町域を分けてコピー',
       'addr.gate2': 'フォーム通りの〒 — 数字のみ・ハイフン・全角・〒つき／なし',
       'addr.gate3': '1行・複数行の住所をそのまま貼付',
@@ -9065,7 +9065,7 @@ html { scrollbar-gutter: stable; }
       'chrome.privacyOnDevice': '端末内処理',
       'chrome.howToInstall': 'インストール手順',
       'pro.tapUnlock': 'タップで解除',
-      'pro.unlockInTab': 'Proで解除',
+      'pro.unlockInTab': 'Aboutを開く',
       'meishi.title': '名刺',
       'meishi.titlePro': '名刺',
       'emoji.title': '記号・絵文字',
@@ -10033,7 +10033,7 @@ html { scrollbar-gutter: stable; }
     },
     dates: {
       title: 'Dates · sources · 西暦 · 和暦',
-      body: 'Pick one date, then tap a paste card. Sources above the picker: Today / 今日 (device local today), Birthdate / 生年月日 (free — pick & format; remembered on this profile), Pick / 選ぶ, plus Saved dates (Pro: keep up to 5 named dates, e.g. 誕生日・入社日… — dates you saved before stay usable).\n\nFree ladder (半角): ISO, compact ISO, 西暦, dotted, YYYY/MM/DD, 和暦, compact 和暦. Year 1 of an era is 元年 (gannen) on plain 和暦.\n\nPro on the same date: 全角 style; era+year (年号); era telegraph (㋿8年㋈㏱ — telegraph uses arabic 1年, and some forms reject the compact glyphs); compact square-era (㋿/㍻/…) and 漢数字年月日 rows.'
+      body: 'Pick one date, then tap a paste card. Sources above the picker: Today / 今日 (device local today), Birthdate / 生年月日 (pick & format; remembered on this profile), Pick / 選ぶ, plus Saved dates (keep up to 5 named dates, e.g. 誕生日・入社日…).\n\nLadder (半角): ISO, compact ISO, 西暦, dotted, YYYY/MM/DD, 和暦, compact 和暦. Year 1 of an era is 元年 (gannen) on plain 和暦.\n\nMore styles for the same date: 全角 style; era+year (年号); era telegraph (㋿8年㋈㏱ — telegraph uses arabic 1年, and some forms reject the compact glyphs); compact square-era (㋿/㍻/…) and 漢数字年月日 rows.'
     },
     phone: {
       title: 'Phone & 〒 — digits first',
@@ -10132,8 +10132,8 @@ html { scrollbar-gutter: stable; }
       body: 'A common way to write Japanese sounds with Latin letters (e.g. しんじゅく → Shinjuku). MojiFill’s preview uses Hepburn-style romaji so you can check that auto-kana looks right — edit the kana if your preferred spelling differs.'
     },
     addrzip: {
-      title: '〒 → address lookup (Pro)',
-      body: 'When Pro is unlocked, entering a 7-digit Japanese postcode can prefill 都道府県 / 市区町村 / 町域 from zipcloud (Japan Post open data).\n\nOnly the postcode is sent to zipcloud — not your name, phone, or other profile fields. Building / banchi fields are left alone. You can still edit any field after a fill.\n\nPhone / 〒 formatting tools stay free and work without lookup; lookup runs only while Pro is unlocked.'
+      title: '〒 → address lookup',
+      body: 'Entering a 7-digit Japanese postcode can prefill 都道府県 / 市区町村 / 町域 from zipcloud (Japan Post open data).\n\nOnly the postcode is sent to zipcloud — not your name, phone, or other profile fields. Building / banchi fields are left alone. You can still edit any field after a fill.\n\nPhone / 〒 formatting works without the lookup too.'
     },
     install: {
       title: 'Install MojiFill · ホーム画面に追加',
@@ -10146,7 +10146,7 @@ html { scrollbar-gutter: stable; }
     upper: { title: 'なぜ大文字が先？', body: '役所・銀行・会社のフォームでは、外国人の名前を大文字ローマ字（全角の場合も）で求めることが多く、小文字だと弾かれたり窓口で「違う」と見られたりします。\n\nそのため大文字をラダーの一番上に置いています。フォームが求める場合は先頭だけ大文字の形もあります。' },
     zenkaku: { title: '全角とは', body: '全角は、日本語の文字と同じ幅の英字・数字・スペースのこと（ＡＢＣ、１２３、　）。\n\n全角しか受け付けない欄があります。MojiFillの全角カードが変換するので、そのために日本語キーボードを用意する必要はありません。' },
     counts: { title: '文字数とフォーム幅', body: '各カードには2つの数字があります。\n\n• 文字 — 入力したUnicode文字の数（ふつうの「長さ」）。\n• フォーム幅 — 全角マス換算のおおよその幅（以前は「セル」と表示）。半角英字は1、一般的な日本語・全角文字は2。\n\n「全角○文字」や見た目の幅で制限する欄では、文字数よりフォーム幅のほうが目安になります。' },
-    dates: { title: '日付・ソース・西暦・和暦', body: '日付を1つ選んで、貼り付けカードをタップ。選択欄の上のソース：今日（端末の日付）、生年月日（無料・このプロフィールに保存）、選ぶ、保存した日付（Pro：誕生日・入社日など最大5件。以前保存した日付もそのまま使えます）。\n\n無料のラダー（半角）：ISO、ISO短縮、西暦、ドット区切り、YYYY/MM/DD、和暦、和暦短縮。元号の1年は通常の和暦では「元年」。\n\n同じ日付でPro：全角、元号＋年、電報式（㋿8年㋈㏱ — 年は算用数字の1年。合成文字を弾くフォームもあります）、合字の元号（㋿/㍻/…）、漢数字の年月日。' },
+    dates: { title: '日付・ソース・西暦・和暦', body: '日付を1つ選んで、貼り付けカードをタップ。選択欄の上のソース：今日（端末の日付）、生年月日（このプロフィールに保存）、選ぶ、保存した日付（誕生日・入社日など最大5件）。\n\nラダー（半角）：ISO、ISO短縮、西暦、ドット区切り、YYYY/MM/DD、和暦、和暦短縮。元号の1年は通常の和暦では「元年」。\n\n同じ日付の別スタイル：全角、元号＋年、電報式（㋿8年㋈㏱ — 年は算用数字の1年。合成文字を弾くフォームもあります）、合字の元号（㋿/㍻/…）、漢数字の年月日。' },
     phone: { title: '電話・〒は数字だけから', body: '多くのフォームは電話番号と郵便番号をハイフンなしの半角数字で求めます（例：09012345678、1000001）。そのため数字だけのカードが一番上です。\n\n桁数や先頭番号が合えば、標準のハイフン区切り（090-1234-5678、100-0001）と全角版も出ます。まず数字だけを貼り、弾かれたらハイフンや全角を試してください。' },
     manen: { title: '給与欄の「万円」', body: '万円は「1万円単位」のこと。年収（万円）欄の500は、ふつう年¥5,000,000の意味で、¥500ではありません。\n\n仕事タブの換算はこのページ内だけで動き、給与や勤務先は保存しません。' },
     employment: { title: '雇用形態の表記', body: '人事や銀行のフォームは決まった選択肢を使います。給与・契約の形に合うものを選びます（正社員、契約、派遣、パート/アルバイト、業務委託、自営業など）。\n\nこれは説明のための文章で、契約に関する法的助言ではありません。' },
@@ -10171,7 +10171,7 @@ html { scrollbar-gutter: stable; }
     furigana: { title: 'ふりがな', body: '漢字（またはローマ字）の横や上に書く読みのかな。窓口で名前を読み上げられるようにするためのものです。外国人住民は、名前がローマ字でもカタカナの「フリガナ」欄を書くことがよくあります。' },
     ideographic: { title: '全角スペース', body: '日本語の幅広いスペース「　」（U+3000）。文字数・全角の欄でよく必要で、ふつうのスペースとは別の文字。全角1マスとして数えたい空白に使います。' },
     hepburn: { title: 'ヘボン式ローマ字', body: '日本語の音をローマ字で書く一般的な方式（例：しんじゅく → Shinjuku）。MojiFillのプレビューはヘボン式なので、自動のかなが合っているか確認できます。好みの綴りと違えばかなを修正してください。' },
-    addrzip: { title: '〒から住所を検索（Pro）', body: 'Proを解除すると、7桁の郵便番号から都道府県・市区町村・町域をzipcloud（日本郵便のオープンデータ）で自動入力できます。\n\nzipcloudに送るのは郵便番号だけで、名前・電話などは送りません。建物名・番地の欄はそのまま。入力後もすべての欄を編集できます。\n\n電話・〒の整形は無料で、検索なしでも使えます。検索はProが解除されているときだけ動きます。' },
+    addrzip: { title: '〒から住所を検索', body: '7桁の郵便番号から都道府県・市区町村・町域をzipcloud（日本郵便のオープンデータ）で自動入力できます。\n\nzipcloudに送るのは郵便番号だけで、名前・電話などは送りません。建物名・番地の欄はそのまま。入力後もすべての欄を編集できます。\n\n電話・〒の整形は検索なしでも使えます。' },
     install: { title: 'ホーム画面に追加', body: 'MojiFillはスマホにインストールできるWebアプリです。App StoreやPlayストアは不要です。\n\nChrome / Edge（Android・パソコン）：\n1. ChromeでMojiFillを開く\n2. ⋮（メニュー）をタップ\n3.「ホーム画面に追加」／「アプリをインストール」を選ぶ\n\nSafari（iPhone / iPad）：\n1. SafariでMojiFillを開く\n2. 共有ボタン □↑ をタップ\n3.「ホーム画面に追加」をタップ\n\nこれでアプリのように開けます。' }
   };
   var helpModal = document.getElementById('helpModal');

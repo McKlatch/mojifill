@@ -30,7 +30,7 @@ function ok(cond, msg) {
 console.log('MojiFill lab smoke —', labHtml);
 
 // CACHE
-const EXPECTED_CACHE = 'mojifill-1.3.3-lab';
+const EXPECTED_CACHE = 'mojifill-1.3.4-lab';
 const cacheM = swJs.match(/const CACHE='([^']+)'/);
 ok(cacheM && cacheM[1] === EXPECTED_CACHE, `sw.js CACHE is ${EXPECTED_CACHE} (got ${cacheM && cacheM[1]})`);
 ok(!/const CACHE=/.test(html), '1.3.0: no inline CACHE / worker code left in index.html');
@@ -796,7 +796,7 @@ ok(!/hotjar|fullstory|clarity\.ms|logrocket|smartlook|mouseflow|gtag\(|googletag
   ok(/MODE="\$\{1:---dry-run\}"/.test(dp) && !/wrangler/.test(dryPart) && /DRY RUN ONLY/.test(dp), '1.2.35: deploy-prod.sh defaults to dry-run; wrangler only after the --deploy branch');
   ok(/MOJIFILL_PROD_OK/.test(dp) && /buy\\\.stripe\\\.com|plink_/.test(dp) && /functions\/api\/geo\.js/.test(dp) && /--project-name=(?:"\$\{MOJIFILL_PROD_PROJECT:-mojifill\}"|mojifill) --branch=main/.test(dp), '1.3.0: prod deploy guarded (David yes + free/no-Stripe + functions/)');
   const bp = fs.readFileSync(path.join(__dirname, 'build-prod.mjs'), 'utf8');
-  okPaid(/lab banner HTML/.test(bp) && /mojifill-v39/.test(bp) && /cpSync\(path\.join\(LAB, 'functions'\)/.test(bp) && !/PRO_CODES\.txt'/.test(bp), '1.2.35: build-prod strips the LAB banner, bumps cache, copies functions/, never PRO_CODES');
+  okPaid(/lab banner HTML/.test(bp) && /mojifill-v40/.test(bp) && /cpSync\(path\.join\(LAB, 'functions'\)/.test(bp) && !/PRO_CODES\.txt'/.test(bp), '1.2.35: build-prod strips the LAB banner, bumps cache, copies functions/, never PRO_CODES');
   okPaid(/if \(!state\.proUnlocked\) \{[\s\S]{0,120}return;/.test(addrFn) && /parts\.addr/.test(addrFn), '1.2.35: address box chips live behind the Pro gate');
 }
 
@@ -863,13 +863,13 @@ ok(/@media \(min-width: 1024px\) \{ \.tabs \.tab \{ padding: 0 13px; \} \}/.test
   const os = await import('os');
   const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'mf-prodbuild-'));
   let built = '', builtSw = '';
-  try { execFileSync(process.execPath, [path.join(__dirname, 'build-prod.mjs'), tmp, 'mojifill-v39'], { stdio: 'pipe' }); built = fs.readFileSync(path.join(tmp, 'public', 'index.html'), 'utf8'); builtSw = fs.readFileSync(path.join(tmp, 'public', 'sw.js'), 'utf8'); } catch (e) { built = ''; }
+  try { execFileSync(process.execPath, [path.join(__dirname, 'build-prod.mjs'), tmp, 'mojifill-v40'], { stdio: 'pipe' }); built = fs.readFileSync(path.join(tmp, 'public', 'index.html'), 'utf8'); builtSw = fs.readFileSync(path.join(tmp, 'public', 'sw.js'), 'utf8'); } catch (e) { built = ''; }
   // 1.3.0-lab: prod build ships the real worker + manifest + _headers
-  okPaid(builtSw === swJs.replace("const CACHE='mojifill-1.3.3-lab';", "const CACHE='mojifill-v39';") && !/-lab'/.test(builtSw), '1.3.0: prod build copies sw.js with CACHE mojifill-v39 (only change)');
+  okPaid(builtSw === swJs.replace("const CACHE='mojifill-1.3.4-lab';", "const CACHE='mojifill-v40';") && !/-lab'/.test(builtSw), '1.3.0: prod build copies sw.js with CACHE mojifill-v40 (only change)');
   okPaid(fs.existsSync(path.join(tmp, 'public', 'manifest.webmanifest')) && fs.readFileSync(path.join(tmp, 'public', 'manifest.webmanifest'), 'utf8') === manifestTxt, '1.3.0: prod build copies manifest.webmanifest');
   okPaid(fs.existsSync(path.join(tmp, 'public', '_headers')) && fs.readFileSync(path.join(tmp, 'public', '_headers'), 'utf8') === headersTxt, '1.3.0: prod build copies _headers');
   okPaid(built.includes("navigator.serviceWorker.register('/sw.js'") && built.includes('<link rel="manifest" href="/manifest.webmanifest?v=1.3.0">'), '1.3.0: prod index.html registers /sw.js and links the real manifest');
-  okPaid(built.includes("'hero.title': 'フォームで弾かれる文字、貼る前に直す'") && built.includes('>Fix the characters forms reject — before you paste.</p>') && !built.includes("const CACHE=") && builtSw.includes("const CACHE='mojifill-v39';"), '1.2.36: prod build carries the softened JA + EN hero (cache v38)');
+  okPaid(built.includes("'hero.title': 'フォームで弾かれる文字、貼る前に直す'") && built.includes('>Fix the characters forms reject — before you paste.</p>') && !built.includes("const CACHE=") && builtSw.includes("const CACHE='mojifill-v40';"), '1.2.36: prod build carries the softened JA + EN hero (cache v38)');
   okPaid(built && !/もう止まらない|Never get stuck|直った文字列|forms accept your|lab-banner/.test(built), '1.2.36: prod build has no absolute claims and no LAB banner');
   const builtTerms = fs.existsSync(path.join(tmp, 'public', 'terms.html')) ? fs.readFileSync(path.join(tmp, 'public', 'terms.html'), 'utf8') : '';
   okPaid(builtTerms.includes('<tr><th>販売業者</th><td>David McClatchey（デイビッド・マクラッチー）</td></tr>') && builtSw.includes("'/terms'"), '1.3.0: prod build copies terms.html and precaches /terms');
@@ -1040,6 +1040,16 @@ ok(html.includes('（日本在住のキリスト教宣教師で、ASCIIが好き
   ok(html.includes('キリスト教宣教師') && html.includes('Christian missionary in Japan'), '1.3.0: faith credit kept');
   ok(html.includes("'hero.title': 'フォームで弾かれる文字、貼る前に直す'"), '1.3.0: hero JA kept');
   ok(fs.existsSync(path.resolve(__dirname, '../robots.txt')) && fs.existsSync(path.resolve(__dirname, '../sitemap.xml')) && fs.existsSync(path.resolve(__dirname, '../og.png')), '1.3.0 discovery: robots.txt + sitemap.xml + og.png');
+}
+
+// ---- 1.3.4-lab: no leftover Pro / unlock wording in anything a free user sees ----
+{
+  ok(!/<span class="hint-inline">\(Pro\)<\/span>/.test(html), '1.3.4: Address heading has no (Pro) suffix');
+  ok(!/When Pro is unlocked|Proを解除すると|while Pro is unlocked|Proが解除されているとき/.test(html), '1.3.4: 〒 lookup help has no Pro-unlock wording');
+  ok(!/makeCopyCard\('Pro · /.test(html), '1.3.4: date ladder cards are not labelled Pro');
+  ok(!/Pro on the same date|同じ日付でPro|Saved dates \(Pro|保存した日付（Pro/.test(html), '1.3.4: dates help has no Pro wording');
+  ok(!/'Export is Pro|>Export is Pro|'書き出しはPro|Proなら：|Pro gives you|名刺\) — Pro<|'Proで解除'|（Pro）'|\(Pro\)'/.test(html), '1.3.4: no Pro wording in static gates / labels');
+  ok(!/\bPro\b|unlock|解除/i.test(termsHtml.replace(/<!--[\s\S]*?-->/g, '').replace(/<[^>]+hidden[^>]*>[\s\S]*?<\/section>/g, '').replace(/<[^>]*>/g, ' ')), '1.3.4: terms text has no Pro / unlock wording');
 }
 
 console.log(fails ? `\n${fails} FAILURE(S)` : '\nAll smoke checks passed.');

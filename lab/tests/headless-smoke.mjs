@@ -1255,7 +1255,7 @@ try {
       ok(await ev2("navigator.serviceWorker.getRegistration().then(function(r){return !!r && r.scope === location.origin + '/' && !!r.active && r.active.scriptURL === location.origin + '/sw.js';})"), "1.2.50 SW: registration scope '/' with /sw.js active");
       const keys = await ev2("caches.keys()");
       const SW_CACHE = (fs.readFileSync(path.join(LAB, 'sw.js'), 'utf8').match(/const CACHE='([^']+)'/) || [])[1];
-      ok(SW_CACHE === 'mojifill-1.3.3-lab' && keys.indexOf(SW_CACHE) >= 0 && keys.indexOf('mojifill-1.3.0-lab') < 0, `1.3.3 SW: CACHE ${SW_CACHE} present, old 1.3.0 cache deleted (${keys.join(',')})`);
+      ok(SW_CACHE === 'mojifill-1.3.4-lab' && keys.indexOf(SW_CACHE) >= 0 && keys.indexOf('mojifill-1.3.0-lab') < 0, `1.3.4 SW: CACHE ${SW_CACHE} present, old 1.3.0 cache deleted (${keys.join(',')})`);
       const shell = await ev2("caches.open('" + SW_CACHE + "').then(function(c){return c.keys();}).then(function(ks){return ks.map(function(k){var u=new URL(k.url);return u.pathname+u.search;});})");
       for (const k of ['/', '/terms', '/manifest.webmanifest?v=1.3.0', '/favicon-32.png?v=1.3.0', '/icon-192.png?v=1.3.0', '/icon-512.png?v=1.3.0', '/icon-maskable-512.png?v=1.3.0', '/apple-touch-icon.png?v=1.3.0']) ok(shell.indexOf(k) >= 0, `1.3.0 SW precache: ${k}`);
       ok(shell.every((k) => k.indexOf('/api/') !== 0), '1.2.50 SW: /api/ never cached');
