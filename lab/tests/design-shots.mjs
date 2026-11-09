@@ -51,7 +51,7 @@ for (const spec of SPECS) {
   await sleep(500);
   await ev(`(function(){var b=document.querySelector('.lang-opt[data-lang="${lang}"]'); if(b) b.click(); var t=document.getElementById('tab-${tab}'); if(t) t.click();
     if('${tab}'==='names'||'${tab}'==='meishi'){var f=document.getElementById('family'),g=document.getElementById('given');
-      if(f&&!f.value){f.value='Sato';f.dispatchEvent(new Event('input',{bubbles:true}));} if(g&&!g.value){g.value='Emma';g.dispatchEvent(new Event('input',{bubbles:true}));}}
+      var m=document.getElementById('middles'); [[f,'Sato'],[g,'Emma'],[m,'']].forEach(function(p){if(p[0]){p[0].value=p[1];p[0].dispatchEvent(new Event('input',{bubbles:true}));}});}
     if('${tab}'==='fix'){var i=document.getElementById('fixInput'); if(i){i.value='サトウ　　エマ\\u200b ①';i.dispatchEvent(new Event('input',{bubbles:true}));i.blur();}}
     if('${tab}'==='meishi'){
       var pick=function(k,v){var b=document.querySelector('#meishiStyleRow .ms-group[data-key="'+k+'"] button[data-val="'+v+'"]'); if(b) b.click();};
